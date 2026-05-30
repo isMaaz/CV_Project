@@ -1,0 +1,16 @@
+# Python and notebook caches
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary archives
+*.zip
+*.tar
+*.tar.gz
+*.7z

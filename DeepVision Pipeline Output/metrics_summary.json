@@ -1,0 +1,27 @@
+{
+  "project_name": "231192_231200_Final_Deep_Vision_Pipeline",
+  "model_kind": "3d_transformer",
+  "recognition_task": "tumor_presence",
+  "num_samples": 158,
+  "num_classes": 2,
+  "class_names": [
+    "no_tumor",
+    "tumor"
+  ],
+  "test_accuracy": 0.78125,
+  "macro_precision": 0.8478260869565217,
+  "macro_recall": 0.78125,
+  "macro_f1": 0.7702564102564102,
+  "confusion_matrix": [
+    [
+      9,
+      7
+    ],
+    [
+      0,
+      16
+    ]
+  ],
+  "decision_threshold": 0.5562949180603027,
+  "precision_recall_auc": 0.537214213375204
+}

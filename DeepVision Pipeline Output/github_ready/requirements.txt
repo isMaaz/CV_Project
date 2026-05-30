@@ -1,0 +1,12 @@
+nibabel
+scikit-image
+scipy
+matplotlib
+kagglehub
+tqdm
+scikit-learn
+pandas
+seaborn
+pillow
+tensorflow
+python-docx

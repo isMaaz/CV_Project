@@ -1,0 +1,3 @@
+Classifier,Accuracy (%),Train Samples,Test Samples
+Random Forest,100.00,37,13
+SVM (RBF),92.31,37,13
