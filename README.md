@@ -44,7 +44,9 @@ Summary:
 - `CV_ProjectA2_231192_231200.ipynb`: Assignment 2 notebook
 - `231192_231200_CV_Project_Assignment3.ipynb`: Assignment 3 notebook
 - `231192_231200_Final_Deep_Vision_Pipeline_Colab.ipynb`: Final Colab notebook
-- `DeepVision Pipeline Output/`: Final trained model, dataset exports, metrics, figures, report draft, and GitHub-ready files
+- `231192_231200_Final_Project_Research_Paper.docx`: Final research paper for submission
+- `231192_231200_Final_Project_Research_Paper.md`: Markdown copy of the final paper
+- `DeepVision Pipeline Output/`: Final trained model, dataset exports, metrics, figures, report files, and GitHub-ready files
 
 ## Final Output Artifacts
 
@@ -54,7 +56,7 @@ Inside `DeepVision Pipeline Output/`:
 - `features/deep_pipeline_features.csv`: GLCM and geometric feature vectors
 - `figures/`: confusion matrix, training curves, precision-recall curve, descriptor distributions, preprocessing previews, and prediction examples
 - `models/`: trained Keras model
-- `report/`: generated report draft
+- `report/`: generated report draft and final research paper
 - `classification_report.csv`: precision, recall, F1-score, and support
 - `metrics_summary.json`: final summary metrics
 - `test_predictions.csv`: held-out test predictions
