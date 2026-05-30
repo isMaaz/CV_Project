@@ -92,13 +92,23 @@ def make_markdown():
     lines = []
     lines.append("# Deep Vision Pipeline for Brain Tumor MRI Slice Understanding")
     lines.append("")
-    lines.append("Student IDs: 231192, 231200")
+    lines.append("Submitted By:")
+    lines.append("")
+    lines.append("231192 - Muhammad Maaz Akram")
+    lines.append("")
+    lines.append("231200 - Muhammad Umar")
+    lines.append("")
+    lines.append("BSAI-6A")
+    lines.append("")
+    lines.append("Submitted to Ms Hina Rashid")
+    lines.append("")
+    lines.append("Computer Vision Semester Project")
     lines.append("")
     lines.append("Course: AI303 Computer Vision")
     lines.append("")
     lines.append("## Abstract")
     lines.append(
-        "This research paper presents a complete Computer Vision pipeline for brain tumor MRI slice understanding. "
+        "This paper presents our Computer Vision semester project on brain tumor MRI slice understanding. "
         "The work extends three prior assignments into a single workflow that performs acquisition, radiometric "
         "pre-processing, segmentation, statistical description, and deep recognition. The final recognition model "
         "uses a 3D transformer-style architecture to learn dependencies across neighboring MRI slices. On the "
@@ -370,7 +380,12 @@ def build_docx():
     body = []
     body.append(paragraph("Deep Vision Pipeline for Brain Tumor MRI Slice Understanding", "Title"))
     body.append(paragraph("Final Semester Project Research Paper", "Subtitle"))
-    body.append(paragraph("Student IDs: 231192, 231200"))
+    body.append(paragraph("Submitted By:", bold=True))
+    body.append(paragraph("231192 - Muhammad Maaz Akram"))
+    body.append(paragraph("231200 - Muhammad Umar"))
+    body.append(paragraph("BSAI-6A"))
+    body.append(paragraph("Submitted to Ms Hina Rashid"))
+    body.append(paragraph("Computer Vision Semester Project"))
     body.append(paragraph("Course: AI303 Computer Vision"))
     body.append(paragraph("GitHub Repository: https://github.com/isMaaz/CV_Project.git"))
     body.append(paragraph("Abstract", "Heading1"))
@@ -546,7 +561,7 @@ def core_props():
  xmlns:dcmitype="http://purl.org/dc/dcmitype/"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <dc:title>Deep Vision Pipeline for Brain Tumor MRI Slice Understanding</dc:title>
- <dc:creator>231192, 231200</dc:creator>
+ <dc:creator>Muhammad Maaz Akram and Muhammad Umar</dc:creator>
  <cp:lastModifiedBy>Codex</cp:lastModifiedBy>
  <dcterms:created xsi:type="dcterms:W3CDTF">{now}</dcterms:created>
  <dcterms:modified xsi:type="dcterms:W3CDTF">{now}</dcterms:modified>

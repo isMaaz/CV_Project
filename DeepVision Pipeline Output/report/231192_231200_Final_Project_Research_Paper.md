@@ -1,11 +1,21 @@
 # Deep Vision Pipeline for Brain Tumor MRI Slice Understanding
 
-Student IDs: 231192, 231200
+Submitted By:
+
+231192 - Muhammad Maaz Akram
+
+231200 - Muhammad Umar
+
+BSAI-6A
+
+Submitted to Ms Hina Rashid
+
+Computer Vision Semester Project
 
 Course: AI303 Computer Vision
 
 ## Abstract
-This research paper presents a complete Computer Vision pipeline for brain tumor MRI slice understanding. The work extends three prior assignments into a single workflow that performs acquisition, radiometric pre-processing, segmentation, statistical description, and deep recognition. The final recognition model uses a 3D transformer-style architecture to learn dependencies across neighboring MRI slices. On the held-out test split, the model achieved 78.12% accuracy, 84.78% macro precision, 78.12% macro recall, and 77.03% macro F1-score. The system correctly detected all tumor test slices, with the main remaining error mode being false positives on no-tumor slices.
+This paper presents our Computer Vision semester project on brain tumor MRI slice understanding. The work extends three prior assignments into a single workflow that performs acquisition, radiometric pre-processing, segmentation, statistical description, and deep recognition. The final recognition model uses a 3D transformer-style architecture to learn dependencies across neighboring MRI slices. On the held-out test split, the model achieved 78.12% accuracy, 84.78% macro precision, 78.12% macro recall, and 77.03% macro F1-score. The system correctly detected all tumor test slices, with the main remaining error mode being false positives on no-tumor slices.
 
 ## 1. Introduction
 

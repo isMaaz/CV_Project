@@ -1,6 +1,18 @@
 # 231192_231200_Final_Deep_Vision_Pipeline
 
-Final Computer Vision project continuing Assignments 1-3.
+Submitted By:
+
+231192 - Muhammad Maaz Akram
+
+231200 - Muhammad Umar
+
+BSAI-6A
+
+Submitted to Ms Hina Rashid
+
+Computer Vision Semester Project
+
+This is our final Computer Vision project. It continues Assignments 1-3 and completes the Deep Vision Pipeline on brain tumor MRI slices.
 
 ## Pipeline
 

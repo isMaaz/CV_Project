@@ -3,8 +3,20 @@
 ## Title
 Deep Vision Pipeline for Brain Tumor MRI Slice Understanding
 
+Submitted By:
+
+231192 - Muhammad Maaz Akram
+
+231200 - Muhammad Umar
+
+BSAI-6A
+
+Submitted to Ms Hina Rashid
+
+Computer Vision Semester Project
+
 ## Abstract
-This project extends the first three Computer Vision assignments into an end-to-end deep vision workflow. The system performs data acquisition, radiometric pre-processing, segmentation, feature description, and final recognition using a deep model. The current run used `3d_transformer` for the recognition stage and produced a held-out test accuracy of 0.7812, macro precision of 0.8478, macro recall of 0.7812, and macro F1 of 0.7703.
+This project extends our first three Computer Vision assignments into one complete deep vision workflow. The system performs data acquisition, radiometric pre-processing, segmentation, feature description, and final recognition using a deep model. The current run used `3d_transformer` for the recognition stage and produced a held-out test accuracy of 0.7812, macro precision of 0.8478, macro recall of 0.7812, and macro F1 of 0.7703.
 
 ## Literature Review Notes
 Medical image analysis pipelines commonly combine radiometric correction, denoising, segmentation, handcrafted descriptors, and deep learning. GLCM features capture local texture statistics, while geometric descriptors capture object shape and compactness. CNNs learn hierarchical image representations directly from pixels. For the bonus research challenge, the 3D transformer option uses neighboring MRI slices so attention can model voxel-to-voxel dependencies across slice context.

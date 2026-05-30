@@ -1,8 +1,18 @@
 # CV Project - Deep Vision Pipeline
 
-Student IDs: 231192, 231200
+Submitted By:
 
-This repository contains the full AI303 Computer Vision semester project, continuing Assignments 1-3 and completing the final Deep Vision Pipeline.
+231192 - Muhammad Maaz Akram
+
+231200 - Muhammad Umar
+
+BSAI-6A
+
+Submitted to Ms Hina Rashid
+
+Computer Vision Semester Project
+
+This repository contains our AI303 Computer Vision semester project. It continues the first three assignments and completes the final Deep Vision Pipeline on brain tumor MRI slices.
 
 ## Project Flow
 
