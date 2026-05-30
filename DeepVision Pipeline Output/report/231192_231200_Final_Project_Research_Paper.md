@@ -41,29 +41,37 @@ This project uses the classical stages for interpretability and continuity with 
 
 ## 3. Dataset and Acquisition
 
-The dataset was acquired through KaggleHub using the brain tumor MRI dataset referenced in the project notebook. The final run selected paired NIfTI MRI volumes and segmentation files. The exported dataset contains PNG slice images, binary masks, overlays, and a manifest CSV describing each sample.
+The dataset information used in this final paper is the same dataset information written in Assignment 1 and Assignment 2 reports. The original dataset selected for the project was BraTS-PEDs from The Cancer Imaging Archive. The original collection page is https://www.cancerimagingarchive.net/collection/brats-peds/ and the DOI is 10.7937/dx5c-tj86. The complete TCIA collection is large, with about 457 subjects and around 32.7 GB of image data.
 
-The final annotated dataset contains 158 samples. The labels are balanced: 80 no-tumor slices and 78 tumor slices. The train, validation, and test split sizes are 107, 19, and 32, respectively.
+For the lab work and Colab runs, we did not download the full TCIA collection every time. A smaller uploaded chunk was used through KaggleHub with the dataset name awansaad6797/cancer-dataset. This is the same reason given in the Assignment 1 and Assignment 2 reports: the full BraTS-PEDs dataset was too large for repeated notebook testing, so a smaller practical subset was used for processing.
 
-The dataset used for final testing is stored inside the repository under DeepVision Pipeline Output/annotated_dataset. This satisfies the final deliverable requirement that the annotated dataset used for training and testing be included with the project submission.
+The data files are NIfTI MRI volumes. Across the earlier assignments, the project used MRI modalities and labels such as T1CE_to_SRI_defaced, T1_to_SRI_defaced, FL_to_SRI_defaced, T2_to_SRI_defaced, and selected BraTS-PED subject files such as BraTS-PED-00195-000-t1n and BraTS-PED-00195-000-t2w. These names are visible in the output CSV files and saved figures from Assignment 1 and Assignment 2.
+
+The final annotated dataset contains 158 exported slice samples. The labels are balanced: 80 no-tumor slices and 78 tumor slices. The train, validation, and test split sizes are 107, 19, and 32, respectively.
+
+The dataset used for final training and testing is stored inside the repository under DeepVision Pipeline Output/annotated_dataset. It includes image slices, binary masks, overlays, and a manifest CSV. This satisfies the final deliverable requirement that the annotated dataset used for training and testing be included with the project submission.
 
 
 ## 4. Assignment 1 Integration: Pre-processing
 
-The pre-processing stage follows the Assignment 1 theme of radiometric correction and noise mitigation. Each MRI slice is converted to floating point, normalized using percentile clipping, and rescaled to the range 0 to 1. This reduces the effect of extreme intensity values and creates a stable input range for later operations.
+The pre-processing stage follows the Assignment 1 theme of radiometric correction and noise mitigation. Assignment 1 used the same KaggleHub chunk of the TCIA BraTS-PEDs data. The notebook loaded MRI volumes with NiBabel, selected useful center slices, normalized the image intensity values, and then saved original, filtered, and comparison images.
 
-Denoising combines Gaussian filtering, median filtering, and mean filtering. Gaussian smoothing reduces high-frequency acquisition noise. Median filtering suppresses isolated salt-and-pepper artifacts while preserving stronger edges. Mean filtering provides a final local averaging step. These operations connect directly to the original Assignment 1 deliverables, where Gaussian, median, and mean filters were evaluated with visual outputs and image quality metrics.
+The Assignment 1 report recorded 4,800 metric rows in content_A1/output/metrics.csv. The metric table contains 13 unique MRI labels or subject names. It includes the main SRI-defaced modalities T1CE, T1, FL, and T2, plus selected BraTS-PED and sub002 files. The filters tested were Gaussian, mean, and median, with 1,600 metric rows for each filter. The saved outputs also include 56 comparison images.
+
+In the final project, the same idea is used before recognition. Each MRI slice is converted to floating point, normalized using percentile clipping, and rescaled to the range 0 to 1. Denoising combines Gaussian filtering, median filtering, and mean filtering. This keeps the final model connected to Assignment 1 instead of treating the deep model as a separate task.
 
 The final deep model receives pre-processed slices, not raw image values. This matters because deep networks are sensitive to input scale and distribution. Consistent pre-processing makes training more stable and improves reproducibility between Colab runs.
 
 
 ## 5. Assignment 2 Integration: Segmentation and Masking
 
-The segmentation stage continues the Assignment 2 work. When a paired segmentation volume exists, the pipeline uses the annotated mask directly. This is preferable for the final training/testing dataset because the label source is explicit and reproducible. If masks are not available, the notebook contains a fallback classical segmentation method based on thresholding, Canny edges, morphological closing/opening, hole filling, and connected-component selection.
+The segmentation stage continues the Assignment 2 work. Assignment 2 used the same TCIA BraTS-PEDs source and the same KaggleHub dataset chunk, awansaad6797/cancer-dataset. In that assignment, the notebook focused on T1CE_to_SRI_defaced, T1_to_SRI_defaced, FL_to_SRI_defaced, and T2_to_SRI_defaced MRI slices. The main slices used for the shape analysis were slices 76, 77, and 78.
 
-For each exported sample, the pipeline saves the original pre-processed image, its mask, and an overlay showing the segmented region. The overlays make it possible to visually audit whether the mask is aligned with the anatomical region of interest. This is important because poor masks can damage both handcrafted feature extraction and model interpretation.
+The Assignment 2 output CSV, content_A2/output_a2/chain_code_report.csv, contains 15 rows. It records chain code length, first difference, shape number preview, and convex hull vertices. The chain lengths ranged from 446 to 476 steps, and the convex hull vertex counts ranged from 45 to 60. The report also saved masks, morphology images, chain code images, and convex hull overlays.
 
-The final output folder contains 158 image slices, 158 masks, and 158 overlays. This directly supports the deliverable requiring the final annotated dataset used for training and testing.
+In the final project, when a paired segmentation volume exists, the pipeline uses the annotated mask directly. This is preferable for the final training/testing dataset because the label source is explicit and reproducible. If masks are not available, the notebook still contains the classical fallback from Assignment 2: thresholding, Canny edges, morphological closing and opening, hole filling, and connected component selection.
+
+For each exported sample, the final pipeline saves the pre-processed image, its mask, and an overlay showing the segmented region. The final output folder contains 158 image slices, 158 masks, and 158 overlays. This directly supports the deliverable requiring the final annotated dataset used for training and testing.
 
 
 ## 6. Assignment 3 Integration: Description

@@ -18,11 +18,18 @@ Computer Vision Semester Project
 ## Abstract
 This project extends our first three Computer Vision assignments into one complete deep vision workflow. The system performs data acquisition, radiometric pre-processing, segmentation, feature description, and final recognition using a deep model. The current run used `3d_transformer` for the recognition stage and produced a held-out test accuracy of 0.7812, macro precision of 0.8478, macro recall of 0.7812, and macro F1 of 0.7703.
 
+## Dataset Used
+The dataset information follows the same details already written in Assignment 1 and Assignment 2 reports. The original dataset selected for the work was BraTS-PEDs from The Cancer Imaging Archive. The original source link is https://www.cancerimagingarchive.net/collection/brats-peds/ and the DOI is 10.7937/dx5c-tj86. The full collection contains about 457 subjects and around 32.7 GB of image data.
+
+For the notebooks, we used a smaller KaggleHub chunk named `awansaad6797/cancer-dataset`. This was done because the full TCIA dataset is large and not practical to download again and again in Colab. Assignment 1 used this data for MRI filtering and quality checks, producing 4,800 metric rows across Gaussian, mean, and median filters. Assignment 2 used the same data for segmentation, morphology, chain code, and convex hull analysis on T1CE, T1, FL, and T2 SRI-defaced MRI slices, mainly slices 76, 77, and 78.
+
+The final Deep Vision run exported 158 annotated slice samples with image, mask, and overlay files. These final training and testing files are stored in `DeepVision Pipeline Output/annotated_dataset/`.
+
 ## Literature Review Notes
 Medical image analysis pipelines commonly combine radiometric correction, denoising, segmentation, handcrafted descriptors, and deep learning. GLCM features capture local texture statistics, while geometric descriptors capture object shape and compactness. CNNs learn hierarchical image representations directly from pixels. For the bonus research challenge, the 3D transformer option uses neighboring MRI slices so attention can model voxel-to-voxel dependencies across slice context.
 
 ## Methodology
-The dataset was acquired from KaggleHub using `awansaad6797/cancer-dataset`. Each NIfTI volume was normalized with percentile clipping, denoised with Gaussian, median, and mean filtering, and converted to 2D slice samples with a local 3D context window. If a paired tumor segmentation volume was available, it was used as the annotation source. Otherwise, a classical segmentation fallback based on thresholding, Canny edges, morphology, hole filling, and connected components was used for descriptor extraction.
+The dataset was acquired from KaggleHub using `awansaad6797/cancer-dataset`, which is the smaller working chunk of the TCIA BraTS-PEDs dataset. Each NIfTI volume was normalized with percentile clipping, denoised with Gaussian, median, and mean filtering, and converted to 2D slice samples with a local 3D context window. If a paired tumor segmentation volume was available, it was used as the annotation source. Otherwise, a classical segmentation fallback based on thresholding, Canny edges, morphology, hole filling, and connected components was used for descriptor extraction.
 
 ## Feature Description
 For every sample, the pipeline exported GLCM energy, entropy, contrast, homogeneity, and correlation. It also exported area, perimeter, centroid, and circularity for the segmented region.
