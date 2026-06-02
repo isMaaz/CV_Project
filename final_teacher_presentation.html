@@ -715,38 +715,6 @@
         </div>
       </section>
 
-      <section class="slide" data-title="Model">
-        <span class="kicker">Recognition model</span>
-        <h3>3D Transformer Architecture</h3>
-        <svg class="model-svg" viewBox="0 0 1000 260" role="img" aria-label="3D transformer model flow">
-          <rect x="35" y="82" width="125" height="76" rx="8" fill="#eaf0ff" stroke="#2457d6"/>
-          <text x="97" y="112" text-anchor="middle" font-size="15" font-weight="700">5 MRI slices</text>
-          <text x="97" y="136" text-anchor="middle" font-size="13">5 x 96 x 96 x 1</text>
-          <text x="182" y="128" font-size="24" fill="#2457d6">></text>
-          <rect x="220" y="82" width="130" height="76" rx="8" fill="#e7f5ee" stroke="#13754d"/>
-          <text x="285" y="112" text-anchor="middle" font-size="15" font-weight="700">Conv3D</text>
-          <text x="285" y="136" text-anchor="middle" font-size="13">Local 3D features</text>
-          <text x="372" y="128" font-size="24" fill="#2457d6">></text>
-          <rect x="410" y="82" width="140" height="76" rx="8" fill="#fff1dc" stroke="#a65a00"/>
-          <text x="480" y="112" text-anchor="middle" font-size="15" font-weight="700">Tokens</text>
-          <text x="480" y="136" text-anchor="middle" font-size="13">Voxel-patch features</text>
-          <text x="572" y="128" font-size="24" fill="#2457d6">></text>
-          <rect x="610" y="82" width="150" height="76" rx="8" fill="#e5f7fa" stroke="#087b8b"/>
-          <text x="685" y="112" text-anchor="middle" font-size="15" font-weight="700">Attention</text>
-          <text x="685" y="136" text-anchor="middle" font-size="13">Token relationships</text>
-          <text x="782" y="128" font-size="24" fill="#2457d6">></text>
-          <rect x="820" y="82" width="140" height="76" rx="8" fill="#fff0ee" stroke="#b42318"/>
-          <text x="890" y="112" text-anchor="middle" font-size="15" font-weight="700">Sigmoid</text>
-          <text x="890" y="136" text-anchor="middle" font-size="13">Tumor probability</text>
-        </svg>
-        <div class="grid four">
-          <div class="card"><span class="tag">Conv3D</span><p>Learns local patterns across image height, width, and slice depth.</p></div>
-          <div class="card"><span class="tag">Tokens</span><p>Encoded voxel-patch representations after convolution.</p></div>
-          <div class="card"><span class="tag">Attention</span><p>Learns relationships between important token regions.</p></div>
-          <div class="card"><span class="tag">Sigmoid</span><p>Outputs a probability for binary tumor presence.</p></div>
-        </div>
-      </section>
-
       <section class="slide" data-title="Architecture Details">
         <span class="kicker">Neural network architecture</span>
         <h3>Layer Details, Activations, and Units</h3>
