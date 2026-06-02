@@ -471,7 +471,7 @@
           </div>
           <div class="card">
             <span class="tag">Annotations</span>
-            <p>Existing segmentation masks from the dataset were used to create binary tumor masks. No manual drawing was done.</p>
+            <p>Segmentation masks were used to create binary tumor masks and assign tumor vs no_tumor labels.</p>
           </div>
           <div class="card">
             <span class="tag">Task</span>
@@ -687,7 +687,7 @@
             </div>
             <div class="card">
               <span class="tag">Segmentation source</span>
-              <p>The mask came from the existing <code>seg.nii</code> volume, not from manual drawing during this project.</p>
+              <p>The mask was generated from the paired <code>seg.nii</code> segmentation volume for the selected MRI slices.</p>
             </div>
             <div class="card">
               <span class="tag">Output dataset</span>
