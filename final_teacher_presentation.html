@@ -792,6 +792,11 @@
         <div class="callout">
           <b>Parameter:</b> learned during training, for example model weights. <b>Hyperparameter:</b> chosen before training, for example image size, batch size, dropout, and learning rate.
         </div>
+        <div class="metric" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+          <div class="card blue"><b class="big">8</b><p>Batch size used for training</p></div>
+          <div class="card green"><b class="big">5</b><p>MRI slices per sample</p></div>
+          <div class="card orange"><b class="big">96 x 96</b><p>Resized image size</p></div>
+        </div>
         <table>
           <tr><th>Setting</th><th>Value</th><th>Purpose</th></tr>
           <tr><td>Model kind</td><td><code>3d_transformer</code></td><td>Selected architecture for the research challenge.</td></tr>
@@ -812,9 +817,13 @@
         <div class="image-row">
           <img src="DeepVision Pipeline Output/figures/training_curves.png" alt="Training curves">
           <div>
-            <div class="metric" style="grid-template-columns: 1fr 1fr;">
+            <div class="metric" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
               <div class="card green"><b class="big">90.65%</b><p>Training accuracy</p></div>
               <div class="card orange"><b class="big">47.37%</b><p>Validation accuracy</p></div>
+              <div class="card blue"><b class="big">8</b><p>Batch size</p></div>
+            </div>
+            <div class="callout">
+              <b>Batch size:</b> The final 3D transformer was trained with batch size <code>8</code>. This means the model processed 8 samples at a time before updating its weights. A small batch size was used because each sample contains 5 MRI slices, so memory usage is higher than a normal single-image input.
             </div>
             <table>
               <tr><th>Fit type</th><th>Pattern</th><th>Meaning</th></tr>
