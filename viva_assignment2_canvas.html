@@ -1,0 +1,1387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assignment 2 Viva Canvas</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --ink: #18202f;
+      --muted: #5d6678;
+      --panel: #ffffff;
+      --line: #d9dfeb;
+      --blue: #275efe;
+      --blue-soft: #eaf0ff;
+      --green: #157a52;
+      --green-soft: #e8f6ef;
+      --orange: #a85a00;
+      --orange-soft: #fff2df;
+      --red: #b42318;
+      --red-soft: #fff0ee;
+      --cyan: #087d8f;
+      --cyan-soft: #e6f8fb;
+      --shadow: 0 14px 38px rgba(28, 37, 62, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #111827;
+      color: #fff;
+      padding: 18px 14px;
+    }
+
+    aside h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    aside p {
+      margin: 0 0 14px;
+      color: #c7d2fe;
+      font-size: 13px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #f9fafb;
+      padding: 10px 11px;
+      margin: 5px 0;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav button.active {
+      background: #ffffff;
+      color: #111827;
+      border-color: #ffffff;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 28px;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .topbar h2 {
+      margin: 0 0 5px;
+      font-size: 25px;
+    }
+
+    .topbar p { margin: 0; color: var(--muted); }
+
+    .step {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .step.active { display: block; }
+
+    h3 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 17px;
+    }
+
+    p { margin: 8px 0; }
+    code {
+      background: #f0f3f8;
+      border: 1px solid #d8dee9;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.94em;
+      color: #18202f;
+    }
+
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: #f9fafb;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .card.blue { background: var(--blue-soft); border-color: #c7d6ff; }
+    .card.green { background: var(--green-soft); border-color: #bdebd2; }
+    .card.orange { background: var(--orange-soft); border-color: #ffd7a6; }
+    .card.red { background: var(--red-soft); border-color: #ffc9c2; }
+    .card.cyan { background: var(--cyan-soft); border-color: #b8edf4; }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .tag.green { color: var(--green); }
+    .tag.orange { color: var(--orange); }
+    .tag.red { color: var(--red); }
+    .tag.cyan { color: var(--cyan); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 9px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th { background: #f1f4fa; }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .flow span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-weight: 700;
+    }
+
+    .arrow {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .image-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    img {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .mini {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .diagram {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .callout {
+      border-left: 5px solid var(--blue);
+      background: var(--blue-soft);
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .callout.correct { border-left-color: var(--green); background: var(--green-soft); }
+    .callout.fix { border-left-color: var(--orange); background: var(--orange-soft); }
+
+    .direction-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .dir-cell {
+      min-height: 52px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #fff;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .dir-cell.center {
+      background: #111827;
+      color: #fff;
+    }
+
+    .shape-demo {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .shape-box {
+      min-height: 240px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(#eef2f7 1px, transparent 1px),
+        linear-gradient(90deg, #eef2f7 1px, transparent 1px);
+      background-size: 28px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shape-point {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #111827;
+      transform: translate(-50%, -50%);
+    }
+
+    .shape-path, .hull-path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pixel-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pixels {
+      display: grid;
+      grid-template-columns: repeat(7, 28px);
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .px {
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .px.on { background: #111827; }
+    .px.edge { background: #0ea5e9; }
+    .px.fill { background: #22c55e; }
+    .px.noise { background: #ef4444; }
+    .px.hull { background: #facc15; }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .demo-controls button,
+    .reveal {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .demo-controls button.active,
+    .reveal {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .hidden-answer {
+      display: none;
+      border: 1px solid #c7d6ff;
+      background: var(--blue-soft);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .hidden-answer.show { display: block; }
+
+    .kbd {
+      font-family: Consolas, Monaco, monospace;
+      background: #111827;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 16px; }
+      .grid, .grid.three, .image-row, .pixel-demo { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Assignment 2</h1>
+      <p>Viva canvas: segmentation, morphology, chain code, convex hull.</p>
+      <div class="nav" id="nav"></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <h2>Computer Vision Assignment 2 Viva Preparation</h2>
+        <p>Submitted by Muhammad Maaz Akram 231192 and Muhammad Umar 231200, BSAI-6A. Submitted to Ms Hina Rashid.</p>
+      </div>
+
+      <section class="step active" data-title="1. Two-Minute Overview">
+        <h3>1. Two-Minute Overview</h3>
+        <div class="card blue">
+          <span class="tag">Say this if maam asks: Explain Assignment 2 in two minutes</span>
+          <p><b>English:</b> "In Assignment 2, we moved from filtering to segmentation and shape analysis. We used brain MRI slices from the BraTS-PEDs dataset chunk. First, the notebook loaded NIfTI MRI volumes, selected center slices, and normalized each slice. Then it applied Canny and Sobel edge detection to find boundaries. From the edges, it created binary masks. After that, morphology operations such as erosion, dilation, opening, and closing were applied to clean the mask. The cleaned mask was used for shape description. We extracted Freeman chain code, first difference, shape number, and convex hull using Graham Scan. Finally, the notebook saved visual outputs for masks, morphology, chain code, convex hull, and a CSV report with chain length and hull vertices. The main idea was to convert an MRI slice into a clean object boundary and then describe its shape numerically."</p>
+          <p><b>Roman Urdu:</b> "Assignment 2 mein hum filtering se segmentation aur shape analysis ki taraf aaye. Hum ne MRI slices load kiye, normalize kiye, phir Canny aur Sobel se edges nikale. Edges se binary mask bana. Mask ko erosion, dilation, opening aur closing se clean kiya. Clean mask se Freeman chain code, first difference, shape number aur convex hull nikala. End par images aur CSV report save hui. Simple words mein, hum ne image ke object ko background se separate kiya aur us ki shape ko numbers aur diagrams se describe kiya."</p>
+        </div>
+
+        <div class="flow">
+          <span>MRI slice</span><b class="arrow">to</b>
+          <span>Edges</span><b class="arrow">to</b>
+          <span>Mask</span><b class="arrow">to</b>
+          <span>Morphology</span><b class="arrow">to</b>
+          <span>Boundary</span><b class="arrow">to</b>
+          <span>Chain code and hull</span>
+        </div>
+
+        <div class="grid three">
+          <div class="card green"><b>Main purpose</b><p>Separate the object region and describe its boundary.</p></div>
+          <div class="card green"><b>Main outputs</b><p>Mask images, morphology images, chain overlays, hull overlays, CSV report.</p></div>
+          <div class="card green"><b>Main safe claim</b><p>This is classical computer vision shape analysis, not tumor diagnosis.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="2. Teacher Objective">
+        <h3>2. Teacher-Given Objective</h3>
+        <div class="card">
+          <span class="tag">Objective</span>
+          <p>The assignment objective was to apply segmentation and shape representation methods on medical image slices.</p>
+          <p>In practical terms, this means: detect edges, create masks, clean masks using morphology, trace boundaries, and describe shapes using chain code and convex hull.</p>
+        </div>
+
+        <h4>What you should say in viva</h4>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The objective of Assignment 2 was to segment MRI slices and then study the shape of the segmented region. We used edge detection for masks, morphology for cleaning, and chain code plus convex hull for boundary and shape representation."</p>
+        </div>
+
+        <div class="card red">
+          <span class="tag red">Do not claim</span>
+          <p>Do not say "this detects tumor perfectly" or "this gives final medical diagnosis." Safe wording is: "It creates and studies masks from MRI slices."</p>
+        </div>
+
+        <h4>Your spoken understanding check</h4>
+        <div class="callout correct">
+          <p><b>You said:</b> "Detection mein Canny aur Sobel use hue, right?"</p>
+          <p><b>Correct version:</b> Yes, but say "edge detection" instead of only "detection." Canny and Sobel detect edges, not final tumors.</p>
+          <p><b>Roman Urdu:</b> Haan, Canny aur Sobel edge detection ke liye use hue. Yeh final disease detection nahi kar rahe, sirf boundaries find kar rahe hain.</p>
+        </div>
+        <div class="callout fix">
+          <p><b>A1 filtered images used here?</b> No. Assignment 2 did not take the blurred or filtered PNG outputs from Assignment 1 as input.</p>
+          <p><b>What actually happened:</b> The notebook downloaded or accessed the same KaggleHub dataset chunk again, loaded raw NIfTI MRI volumes, normalized slices, and then ran segmentation.</p>
+          <p><b>Safe viva answer:</b> "Assignment 1 and Assignment 2 use the same dataset source, but Assignment 2 starts again from MRI volumes. It does not directly use the saved blurred images from Assignment 1."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="3. Terms Before Code">
+        <h3>3. Important Terms Before Code</h3>
+        <table>
+          <tr><th>Term</th><th>Simple English</th><th>Roman Urdu</th></tr>
+          <tr><td>Segmentation</td><td>Separating the object or region from background.</td><td>Image mein important area ko background se alag karna.</td></tr>
+          <tr><td>Edge</td><td>A place where pixel intensity changes quickly.</td><td>Jahan brightness achanak change ho, wahan edge hota hai.</td></tr>
+          <tr><td>Binary mask</td><td>An image with only 0 and 1 values. 1 means selected region.</td><td>Black and white image, jahan white selected area hota hai.</td></tr>
+          <tr><td>Canny</td><td>An edge detector that usually gives cleaner edges.</td><td>Edge find karne ka method jo noise ko bhi handle karta hai.</td></tr>
+          <tr><td>Sobel</td><td>An edge detector based on image gradient.</td><td>Brightness ke change ko measure karke edge nikalta hai.</td></tr>
+          <tr><td>Morphology</td><td>Operations that change mask shape.</td><td>Mask ki shape ko clean ya adjust karne ke operations.</td></tr>
+          <tr><td>Connected component</td><td>A group of touching white pixels.</td><td>White pixels ka connected group.</td></tr>
+          <tr><td>Boundary</td><td>The outer line of the selected region.</td><td>Selected region ki outer line.</td></tr>
+          <tr><td>Chain code</td><td>Boundary represented as direction numbers.</td><td>Boundary ko direction numbers ki list mein store karna.</td></tr>
+          <tr><td>Convex hull</td><td>Smallest outer polygon that covers the shape.</td><td>Shape ke around sab se chota outer cover.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="4. Dataset and Counts">
+        <h3>4. Dataset and Counts</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Original source</span>
+            <p>BraTS-PEDs from The Cancer Imaging Archive.</p>
+            <p>Full collection: about 457 subjects and around 32.7 GB. This is subject count, not a simple PNG image count.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Used in code</span>
+            <p>KaggleHub chunk: <code>awansaad6797/cancer-dataset</code>.</p>
+            <p>Reason: full dataset bohat large tha, is liye manageable chunk use kiya.</p>
+          </div>
+        </div>
+
+        <table>
+          <tr><th>Item</th><th>Your actual result</th><th>Meaning</th></tr>
+          <tr><td>Raw dataset total</td><td>About 457 subjects in original TCIA collection</td><td>Important: 457 means subjects or cases, not 457 slices. One subject can have multiple MRI volumes, and each volume has many slices.</td></tr>
+          <tr><td>Approx slices inside one volume</td><td>About 155 z-slices in the processed BraTS-style volumes</td><td>A2 output uses center slices 76, 77, 78. This strongly matches a 155-slice volume because the center is around slice 77.</td></tr>
+          <tr><td>A1 actual run</td><td>80 usable non-seg MRI files, with code limit 100 volumes and 20 center slices each</td><td>A1 used the sorted usable MRI list. It was not random. Since only 80 usable files were found, it used 80, not full 100.</td></tr>
+          <tr><td>A2 submitted setting</td><td>5 volumes and 3 center slices per volume</td><td>This does not mean the notebook can only ever process 15. It means the submitted A2 configuration was set to 5 x 3 = 15 slice records.</td></tr>
+          <tr><td>Which volumes in A2?</td><td>First 5 non-seg NIfTI files after sorting</td><td>The line <code>all_nii = all_nii[:MAX_VOLUMES]</code> takes the first 5 usable image volumes after excluding files with <code>seg</code> in the name.</td></tr>
+          <tr><td>CSV rows</td><td>15</td><td>Each row is one processed slice record in <code>chain_code_report.csv</code>.</td></tr>
+          <tr><td>Unique subject/file names in CSV</td><td>4</td><td><code>T1CE</code>, <code>T1</code>, <code>FL</code>, and <code>T2</code> style MRI files.</td></tr>
+          <tr><td>Slice numbers</td><td>76, 77, 78</td><td>These are center slices selected from each MRI volume.</td></tr>
+          <tr><td>Saved PNGs per stage</td><td>12</td><td>There are 12 unique PNGs in masks, morphology, chain code, and convex hull folders.</td></tr>
+        </table>
+
+        <div class="card orange">
+          <span class="tag orange">Why only 5 volumes in Assignment 2?</span>
+          <p><b>English:</b> This was a lab-scale classical CV task. Each selected slice produced masks, morphology, chain code, hull images, and CSV features. A small limit keeps the notebook fast and the outputs easy to inspect in viva.</p>
+          <p><b>Roman Urdu:</b> A2 ka goal deep training nahi tha. Goal algorithms ko show karna tha. Har slice ke multiple outputs bante hain, is liye 5 volumes aur 3 center slices ka limit practical tha.</p>
+          <p><b>Safe answer:</b> "We used a small subset because Assignment 2 was focused on demonstrating segmentation and shape representation methods clearly, not on training a large model."</p>
+        </div>
+
+        <div class="card blue">
+          <span class="tag">A1 vs A2 simple difference</span>
+          <p><b>Assignment 1:</b> Larger filtering experiment. It used up to 100 volumes, but the actual notebook found 80 usable non-seg MRI files. It selected up to 20 center slices per volume.</p>
+          <p><b>Assignment 2:</b> Smaller shape-analysis demo. It was configured to use 5 volumes and 3 center slices per volume, so the CSV has 15 records.</p>
+          <p><b>Roman Urdu:</b> A1 mein filtering metrics ke liye zyada data use hua. A2 mein algorithms clearly show karne ke liye chota subset use hua. Dono random nahi thay, sorted file list se first usable files li gayi.</p>
+        </div>
+
+        <div class="card orange">
+          <span class="tag orange">Why CSV has 15 rows but folders show 12 images</span>
+          <p><b>English:</b> The CSV keeps every written record. Some output PNG names repeated because the same subject and slice tag appeared again, so a later PNG overwrote an earlier PNG. That is why the CSV has 15 records but each visual folder has 12 unique saved images.</p>
+          <p><b>Roman Urdu:</b> CSV har record save karta hai. Lekin image filename repeat ho gaya to old image overwrite ho gayi. Is liye CSV mein 15 rows hain, magar folders mein 12 unique PNG images hain.</p>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The original dataset has about 457 subjects, not just 457 slices. In Assignment 2, our submitted notebook was configured for 5 MRI volumes and 3 center slices per volume, so the CSV has 15 slice records. Assignment 1 used a larger setting: up to 100 volumes and 20 center slices, but the actual run found 80 usable non-seg MRI files."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="5. Setup Code">
+        <h3>5. Code Block: Setup and Folders</h3>
+        <pre><code>MAX_VOLUMES  = 5
+MAX_SLICES   = 3
+MORPH_ITER   = 2
+CANNY_SIGMA  = 1.5
+OUT_DIR      = Path("output_a2")
+
+for d in [OUT_DIR / "masks",
+          OUT_DIR / "morphology",
+          OUT_DIR / "chain_code",
+          OUT_DIR / "convex_hull"]:
+    d.mkdir(parents=True, exist_ok=True)</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Install and import libraries, set processing limits, and create output folders.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> MRI dataset path after KaggleHub download.</p>
+            <p><b>Output:</b> folders for masks, morphology, chain code, and convex hull.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important lines</span>
+            <p><code>MAX_VOLUMES = 5</code> means only 5 MRI volumes are used.</p>
+            <p><code>MAX_SLICES = 3</code> means 3 center slices are selected from each volume.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to result</span>
+            <p>This block controls why Assignment 2 output is small and organized into four visual stages.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The setup block defines how much data to process and creates separate folders for each output stage."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="6. Segmentation Code">
+        <h3>6. Code Block: Segmentation With Canny and Sobel</h3>
+        <pre><code>def canny_mask(slc, sigma=CANNY_SIGMA):
+    edges  = canny(slc, sigma=sigma)
+    closed = binary_closing(edges, structure=disk(4))
+    labeled, n = nd_label(closed)
+    if n == 0:
+        return edges.astype(np.uint8), edges.astype(np.uint8)
+    sizes   = [(labeled == i).sum() for i in range(1, n + 1)]
+    largest = np.argmax(sizes) + 1
+    mask    = (labeled == largest).astype(np.uint8)
+    return edges.astype(np.uint8), mask
+
+def sobel_mask(slc, threshold=0.1):
+    magnitude = sobel(slc)
+    edges     = (magnitude > threshold).astype(np.uint8)
+    closed    = binary_closing(edges, structure=disk(4))
+    labeled, n = nd_label(closed)
+    ...</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Find edges and convert them into binary masks.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> normalized MRI slice.</p>
+            <p><b>Output:</b> Canny edges, Canny mask, Sobel edges, Sobel mask.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important lines</span>
+            <p><code>canny(slc, sigma=1.5)</code> detects smoother edges.</p>
+            <p><code>sobel(slc)</code> calculates gradient magnitude.</p>
+            <p><code>largest</code> keeps the largest connected component as the main mask.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to output</span>
+            <p>The output image in the <code>masks/</code> folder shows Original, Canny Edges, Canny Mask, Sobel Edges, and Sobel Mask.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"Canny and Sobel detect boundaries in the MRI slice. Then the code closes broken edges and keeps the largest connected region as the mask."</p>
+        </div>
+
+        <h4>How edges become a binary mask</h4>
+        <div class="flow">
+          <span>Original MRI</span><b class="arrow">to</b>
+          <span>Edge pixels</span><b class="arrow">to</b>
+          <span>Close gaps</span><b class="arrow">to</b>
+          <span>Connected regions</span><b class="arrow">to</b>
+          <span>Largest region mask</span>
+        </div>
+        <div class="shape-demo">
+          <div class="card">
+            <span class="tag">1. Edge map</span>
+            <div class="shape-box">
+              <svg class="shape-path" viewBox="0 0 300 240" aria-label="broken edge map">
+                <path d="M70 155 C60 115, 92 78, 140 72" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+                <path d="M160 74 C205 88, 224 124, 214 166" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+                <path d="M198 184 C165 210, 105 201, 80 172" fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="145" cy="72" r="4" fill="#ef4444"/>
+                <circle cx="215" cy="170" r="4" fill="#ef4444"/>
+              </svg>
+            </div>
+            <p>Edges are thin lines. They can be broken. Red dots show small gaps.</p>
+          </div>
+          <div class="card">
+            <span class="tag">2. Closed and filled mask</span>
+            <div class="shape-box">
+              <svg class="shape-path" viewBox="0 0 300 240" aria-label="binary mask">
+                <path d="M70 155 C58 108, 95 68, 150 72 C205 76, 230 121, 214 170 C195 215, 108 210, 70 155 Z" fill="#22c55e" opacity="0.9"/>
+                <path d="M70 155 C58 108, 95 68, 150 72 C205 76, 230 121, 214 170 C195 215, 108 210, 70 155 Z" fill="none" stroke="#111827" stroke-width="4"/>
+              </svg>
+            </div>
+            <p>Closing connects small gaps. The connected region becomes a binary mask: inside is 1, outside is 0.</p>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Edge image</span>
+            <p>Edge image is like thin white lines on black background. It only says "boundary yahan ho sakti hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Binary mask</span>
+            <p>Binary mask is a filled or selected region. White means selected object, black means background.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Segmentation mask vs binary mask</span>
+            <p>A binary mask is a simple segmentation mask with only two classes: background 0 and selected region 1. A full segmentation mask can have many labels, for example background, edema, tumor core, and enhancing tumor.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Broken edge correction</span>
+            <p>Yes, broken edges are connected using morphology. In this code, <code>binary_closing(edges, structure=disk(4))</code> connects small gaps before selecting the main component.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="7. Canny vs Sobel">
+        <h3>7. Canny vs Sobel</h3>
+        <table>
+          <tr><th>Method</th><th>How it works</th><th>Good point</th><th>Limitation</th></tr>
+          <tr><td>Canny</td><td>First smooths the image, then finds gradients, thins edges, and keeps strong connected edges.</td><td>Usually cleaner and less noisy.</td><td>Depends on sigma and thresholds.</td></tr>
+          <tr><td>Sobel</td><td>Uses horizontal and vertical gradient filters to measure intensity change.</td><td>Simple and fast.</td><td>Can show more noisy or thick edges.</td></tr>
+        </table>
+
+        <div class="diagram pixel-demo">
+          <div>
+            <h4>Edge idea</h4>
+            <div class="pixels" id="edgePixels"></div>
+          </div>
+          <div>
+            <p><b>English:</b> Edge detection looks for sudden intensity change. In MRI, this often happens near tissue boundaries.</p>
+            <p><b>Roman Urdu:</b> Edge detection brightness ke sudden change ko find karti hai. MRI mein yeh tissue boundary ke near hota hai.</p>
+            <div class="card green">
+              <span class="tag green">Viva answer</span>
+              <p>"Canny was used as the primary mask because it usually gives cleaner edges, while Sobel was included for comparison."</p>
+            </div>
+          </div>
+        </div>
+
+        <h4>Intuition: gradient kya hota hai?</h4>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Gradient</span>
+            <p><b>English:</b> Gradient means how fast brightness changes from one pixel to the next. If change is high, there may be an edge.</p>
+            <p><b>Roman Urdu:</b> Gradient ka matlab hai brightness kitni fast change ho rahi hai. Jahan change zyada ho, wahan edge ho sakta hai.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Sobel in simple form</span>
+            <p>Sobel checks change in x direction and y direction. Then it combines them.</p>
+            <p><code>edge_strength = sqrt(Gx^2 + Gy^2)</code></p>
+            <p><b>Roman Urdu:</b> Gx left-right change dekhta hai, Gy up-down change dekhta hai.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Canny in simple steps</span>
+            <p>1. Smooth image, 2. find gradient, 3. thin the edge, 4. keep strong edges, 5. connect weak edges if they touch strong edges.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Why both?</span>
+            <p>Using both gives comparison. Sobel is simple gradient view. Canny is cleaner edge pipeline. In our later steps, Canny mask became the primary mask.</p>
+          </div>
+        </div>
+
+        <div class="callout correct">
+          <p><b>You said:</b> "Sobel vertical aur horizontal gradient dekhta hai, aur Canny strong edges rakhta hai."</p>
+          <p><b>Correct:</b> Yes. Say it like this: "Sobel directly measures horizontal and vertical intensity change. Canny is a fuller edge pipeline that smooths, detects gradient, thins edges, and keeps reliable edges."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="8. Morphology Terms">
+        <h3>8. Morphology Operations</h3>
+        <div class="demo-controls">
+          <button class="morphBtn active" onclick="showMorph('original')">Original</button>
+          <button class="morphBtn" onclick="showMorph('erosion')">Erosion</button>
+          <button class="morphBtn" onclick="showMorph('dilation')">Dilation</button>
+          <button class="morphBtn" onclick="showMorph('opening')">Opening</button>
+          <button class="morphBtn" onclick="showMorph('closing')">Closing</button>
+        </div>
+
+        <div class="diagram pixel-demo">
+          <div>
+            <div class="pixels" id="morphPixels"></div>
+          </div>
+          <div>
+            <h4 id="morphTitle">Original mask</h4>
+            <p id="morphText">Original binary mask before cleaning.</p>
+            <p id="morphRoman">Yeh starting mask hai jahan white pixels selected region show karte hain.</p>
+          </div>
+        </div>
+
+        <table>
+          <tr><th>Operation</th><th>Simple meaning</th><th>Roman Urdu</th></tr>
+          <tr><td>Erosion</td><td>Shrinks white region.</td><td>White area ko chota karta hai.</td></tr>
+          <tr><td>Dilation</td><td>Expands white region.</td><td>White area ko phailata hai.</td></tr>
+          <tr><td>Opening</td><td>Erosion then dilation, removes small noise.</td><td>Pehle shrink, phir expand. Choti noise remove hoti hai.</td></tr>
+          <tr><td>Closing</td><td>Dilation then erosion, fills small gaps.</td><td>Pehle expand, phir shrink. Chotay gaps fill hotay hain.</td></tr>
+        </table>
+
+        <h4>Mathematical idea and control factors</h4>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Structuring element</span>
+            <p>This is the small shape that moves over the mask. In the code it is <code>disk(3)</code>.</p>
+            <p><b>Roman Urdu:</b> Structuring element aik choti shape hoti hai jo mask par move karti hai. Disk ka radius jitna bara ho, effect utna strong hota hai.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Iterations</span>
+            <p><code>MORPH_ITER = 2</code> means the operation repeats two times.</p>
+            <p><b>More iterations:</b> more erosion shrink, more dilation expansion, stronger opening or closing.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Erosion formula idea</span>
+            <p><code>A erosion B</code>: keep a pixel white only if the structuring element fully fits inside the white region.</p>
+            <p><b>Roman Urdu:</b> Pixel tab white rahega jab disk poori tarah white area ke andar fit ho.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Dilation formula idea</span>
+            <p><code>A dilation B</code>: make a pixel white if the structuring element touches the white region.</p>
+            <p><b>Roman Urdu:</b> Agar disk white area ko touch kare to nearby pixels bhi white ho jatay hain.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="9. Morphology Code">
+        <h3>9. Code Block: Morphological Cleaning</h3>
+        <pre><code>def morphological_pipeline(mask, iterations=MORPH_ITER):
+    struct  = disk(3).astype(bool)
+    eroded  = binary_erosion(mask,  structure=struct, iterations=iterations)
+    dilated = binary_dilation(mask, structure=struct, iterations=iterations)
+    opened  = binary_opening(mask,  structure=struct, iterations=iterations)
+    closed  = binary_closing(mask,  structure=struct, iterations=iterations)
+    return {
+        "Original Mask": mask,
+        "Erosion": eroded,
+        "Dilation": dilated,
+        "Opening": opened,
+        "Closing": closed,
+    }</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Clean and compare the binary mask using four morphology operations.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> Canny mask.</p>
+            <p><b>Output:</b> original mask, erosion, dilation, opening, closing.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important lines</span>
+            <p><code>disk(3)</code> is the structuring element. It controls the neighborhood shape.</p>
+            <p><code>MORPH_ITER = 2</code> repeats the operation two times.</p>
+            <p>These operations come from <code>scipy.ndimage</code>, while <code>disk</code> comes from <code>skimage.morphology</code>.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to output</span>
+            <p>The <code>morphology/</code> images show how each operation changes the same mask.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"Morphology cleans the binary mask. In our pipeline, closing was used as the cleaned mask because it connects broken boundary parts and fills small gaps."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="10. Chain Code Terms">
+        <h3>10. Chain Code, First Difference, and Shape Number</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Freeman chain code</span>
+            <p>It follows the boundary and stores each movement as a number from 0 to 7.</p>
+            <p><b>Roman Urdu:</b> Boundary par chal kar har direction ko number mein store karta hai.</p>
+          </div>
+          <div class="card">
+            <span class="tag">First difference</span>
+            <p>Difference between consecutive chain directions, calculated modulo 8.</p>
+            <p><b>Roman Urdu:</b> Har next direction aur previous direction ka difference.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Shape number</span>
+            <p>Smallest rotation of first difference, so the description depends less on start point.</p>
+            <p><b>Roman Urdu:</b> First difference ka best rotated version, taake start point ka effect kam ho.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Direction numbers</span>
+            <p>0 right, 1 up-right, 2 up, 3 up-left, 4 left, 5 down-left, 6 down, 7 down-right.</p>
+          </div>
+        </div>
+
+        <div class="direction-grid">
+          <div class="dir-cell">3<br>up-left</div>
+          <div class="dir-cell">2<br>up</div>
+          <div class="dir-cell">1<br>up-right</div>
+          <div class="dir-cell">4<br>left</div>
+          <div class="dir-cell center">current<br>pixel</div>
+          <div class="dir-cell">0<br>right</div>
+          <div class="dir-cell">5<br>down-left</div>
+          <div class="dir-cell">6<br>down</div>
+          <div class="dir-cell">7<br>down-right</div>
+        </div>
+
+        <div class="diagram">
+          <div class="flow">
+            <span>Boundary point</span><b class="arrow">to</b>
+            <span>Next direction</span><b class="arrow">to</b>
+            <span>Chain code</span><b class="arrow">to</b>
+            <span>First difference</span><b class="arrow">to</b>
+            <span>Shape number</span>
+          </div>
+        </div>
+
+        <h4>First difference with tiny example</h4>
+        <div class="card cyan">
+          <p><b>Example chain code:</b> <code>[0, 0, 6, 6, 4, 4, 2, 2]</code></p>
+          <p>This means: right, right, down, down, left, left, up, up. It is like walking around a square.</p>
+          <p><b>First difference:</b> subtract previous direction from current direction using modulo 8.</p>
+          <p><code>(current - previous) mod 8</code></p>
+          <p>For example, from 0 to 6: <code>(6 - 0) mod 8 = 6</code>. From 6 to 4: <code>(4 - 6) mod 8 = 6</code>.</p>
+          <p><b>Why useful:</b> Chain code tells where you moved. First difference tells how your direction changed or turned.</p>
+          <p><b>Roman Urdu:</b> Chain code movement batata hai. First difference batata hai ke turn kitna aaya.</p>
+        </div>
+
+        <h4>Shape number intuition</h4>
+        <div class="card orange">
+          <p>If you start tracing the same boundary from a different point, the chain code list can start differently. Shape number tries different rotations of the first difference and picks the smallest one.</p>
+          <p><b>Why useful:</b> Same shape ko start point change hone par bhi similar description mil sakti hai.</p>
+          <p><b>Safe viva answer:</b> "Shape number is a normalized boundary description made from first difference. It reduces the effect of starting point."</p>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"Chain code converts the boundary into direction numbers. First difference makes the representation more stable to direction changes, and shape number makes it less dependent on the starting point."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="11. Chain Code Code">
+        <h3>11. Code Block: Chain Code</h3>
+        <pre><code>FREEMAN_DIR = {
+    0: ( 0,  1), 1: (-1,  1), 2: (-1,  0), 3: (-1, -1),
+    4: ( 0, -1), 5: ( 1, -1), 6: ( 1,  0), 7: ( 1,  1),
+}
+
+def compute_chain_code(mask):
+    labeled, n = nd_label(mask)
+    sizes  = [(labeled == i).sum() for i in range(1, n + 1)]
+    region = (labeled == (np.argmax(sizes) + 1)).astype(np.uint8)
+    eroded = binary_erosion(region, structure=np.ones((3, 3)))
+    boundary = region - eroded
+    coords = list(zip(*np.where(boundary > 0)))
+    ...
+    return start, chain</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Trace the cleaned mask boundary and save its movement directions.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> cleaned mask from closing.</p>
+            <p><b>Output:</b> starting boundary point and chain code list.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important lines</span>
+            <p><code>boundary = region - eroded</code> extracts only the outer boundary.</p>
+            <p><code>FREEMAN_DIR</code> maps each direction number to row and column movement.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to output</span>
+            <p>The <code>chain_code/</code> image shows the mask overlay and a cyan line following the boundary.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The chain code block first extracts the boundary from the mask, then follows boundary pixels and stores the movement as direction numbers."</p>
+        </div>
+
+        <h4>Why <code>boundary = region - eroded</code>?</h4>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Region</span>
+            <p>The full filled mask. White pixels are the selected object area.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Eroded region</span>
+            <p>A slightly smaller version of the same mask after erosion.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Subtraction</span>
+            <p>Full region minus smaller region leaves only the outer ring. That ring is the boundary.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Roman Urdu</span>
+            <p>Original mask se choti eroded mask minus kar do to beech ka filled area nikal jata hai aur sirf outer line bachti hai.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="12. Convex Hull">
+        <h3>12. Convex Hull and Graham Scan</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Convex hull</span>
+            <p>The smallest outer polygon that covers all boundary points.</p>
+            <p><b>Roman Urdu:</b> Boundary ke around sab se chota outer cover.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Graham Scan</span>
+            <p>An algorithm that sorts points around a pivot and keeps only points that form the outer hull.</p>
+            <p><b>Roman Urdu:</b> Points ko angle ke hisaab se sort karta hai aur outer points rakhta hai.</p>
+          </div>
+        </div>
+
+        <pre><code>def graham_scan(points):
+    points = list(set(points))
+    pivot = min(points, key=lambda p: (p[1], p[0]))
+    sorted_pts = sorted(points_without_pivot,
+                        key=lambda p: (polar_angle(p), dist(p)))
+    hull = [pivot, sorted_pts[0]]
+    for p in sorted_pts[1:]:
+        while len(hull) > 1 and cross_product(hull[-2], hull[-1], p) <= 0:
+            hull.pop()
+        hull.append(p)
+    return hull</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Find the outer polygon around the cleaned boundary points.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> sampled boundary points from cleaned mask.</p>
+            <p><b>Output:</b> hull vertices.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important line</span>
+            <p><code>cross_product</code> decides whether a point keeps the outer turn or should be removed.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to output</span>
+            <p>The <code>convex_hull/</code> image shows the yellow hull line and hull vertices on the MRI slice.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"Convex hull gives a simpler outer shape than chain code. Chain code is detailed, while hull is a compact outer boundary."</p>
+        </div>
+
+        <h4>Why chain code is longer than convex hull</h4>
+        <div class="shape-demo">
+          <div class="card">
+            <span class="tag">Chain code view</span>
+            <div class="shape-box">
+              <svg class="shape-path" viewBox="0 0 300 240" aria-label="Detailed boundary">
+                <polyline points="55,150 60,128 74,108 96,92 122,84 150,88 173,102 188,126 196,150 190,173 168,188 140,193 110,186 84,171 65,162 55,150" fill="none" stroke="#0ea5e9" stroke-width="4"/>
+              </svg>
+            </div>
+            <p>Chain code follows many small boundary steps, so it becomes long.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Convex hull view</span>
+            <div class="shape-box">
+              <svg class="hull-path" viewBox="0 0 300 240" aria-label="Convex hull">
+                <polygon points="55,150 74,108 122,84 150,88 188,126 196,150 168,188 140,193 84,171" fill="rgba(250, 204, 21, 0.20)" stroke="#eab308" stroke-width="4"/>
+                <polyline points="55,150 60,128 74,108 96,92 122,84 150,88 173,102 188,126 196,150 190,173 168,188 140,193 110,186 84,171 65,162 55,150" fill="none" stroke="#111827" stroke-width="2" opacity="0.35"/>
+              </svg>
+            </div>
+            <p>Convex hull keeps only outer cover points, so it has fewer vertices.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="13. Main Loop">
+        <h3>13. Code Block: Main Processing Loop</h3>
+        <pre><code>for nii_path in all_nii:
+    vol = nib.load(str(nii_path)).get_fdata(dtype=np.float32)
+    for z in centre_slice_indices(vol.shape[2], MAX_SLICES):
+        slc = normalise(vol[:, :, z])
+        c_edges, c_mask = canny_mask(slc)
+        s_edges, s_mask = sobel_mask(slc)
+        save_mask_comparison(...)
+
+        morph_results = morphological_pipeline(c_mask)
+        cleaned_mask = morph_results["Closing"]
+
+        start_pt, chain = compute_chain_code(cleaned_mask)
+        fd = first_difference(chain)
+        snum = shape_number(fd)
+
+        hull_pts = graham_scan(boundary_points)
+        writer.writerow(...)</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Run the complete Assignment 2 pipeline on every selected slice.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> selected MRI volumes and center slices.</p>
+            <p><b>Output:</b> four image folders and <code>chain_code_report.csv</code>.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to images</span>
+            <p>Every selected slice can produce mask, morphology, chain code, and convex hull visuals.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to CSV</span>
+            <p>Each CSV row stores subject, slice, chain length, chain preview, first difference preview, shape number preview, and hull vertices.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The main loop connects all steps: load slice, segment it, clean the mask, extract boundary features, save images, and write numeric results to CSV."</p>
+        </div>
+
+        <h4>Main loop in very simple words</h4>
+        <table>
+          <tr><th>Line idea</th><th>What happens</th><th>Output connection</th></tr>
+          <tr><td>Pick one MRI file</td><td>Notebook opens one NIfTI volume.</td><td>Subject name comes from file name.</td></tr>
+          <tr><td>Pick center slices</td><td>It chooses slice 76, 77, 78 style center slices.</td><td>Each slice becomes one record.</td></tr>
+          <tr><td>Normalize slice</td><td>Intensity values are scaled to 0 to 1.</td><td>Edge methods work more consistently.</td></tr>
+          <tr><td>Make edges and masks</td><td>Canny and Sobel are applied.</td><td>Saved in <code>masks/</code>.</td></tr>
+          <tr><td>Clean mask</td><td>Morphology operations are applied.</td><td>Saved in <code>morphology/</code>.</td></tr>
+          <tr><td>Trace shape</td><td>Chain code and convex hull are calculated.</td><td>Saved in <code>chain_code/</code>, <code>convex_hull/</code>, and CSV.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="14. Output Images">
+        <h3>14. Output Images and How to Explain Them</h3>
+        <div class="card blue">
+          <span class="tag">Mask naming clarification</span>
+          <p><b>Original MRI:</b> The grayscale slice from the dataset.</p>
+          <p><b>Canny mask:</b> The first binary mask made from Canny edges after closing gaps and selecting the largest component.</p>
+          <p><b>Clean mask:</b> The Canny mask after morphology, mainly after <code>Closing</code>. This clean mask is used for chain code and convex hull.</p>
+          <p><b>Red overlay in chain image:</b> Clean mask on top of MRI.</p>
+          <p><b>Blue overlay in hull image:</b> Same clean mask on top of MRI, shown with a different color because the plot is for convex hull.</p>
+          <p><b>Roman Urdu:</b> Canny mask pehla mask hai. Clean mask usi Canny mask ka cleaned version hai after morphology. Red aur blue overlay dono clean mask ko show kar rahe hain, bas figures mein color different hai.</p>
+        </div>
+        <h4>Mask comparison</h4>
+        <div class="image-row">
+          <img src="content_A2/output_a2/masks/T1CE_to_SRI_defaced_z0076_masks.png" alt="Assignment 2 mask comparison">
+          <div>
+            <p><b>What you are looking at:</b> Original MRI slice, Canny edges, Canny mask, Sobel edges, and Sobel mask.</p>
+            <p><b>What changed:</b> The grayscale MRI was converted into edge and mask representations.</p>
+            <p><b>Why code produced it:</b> Canny and Sobel searched for intensity changes and the largest connected component was selected.</p>
+            <p><b>How to read colors:</b> In mask comparison, white regions are selected pixels and black regions are background.</p>
+            <p><b>Good output:</b> clear boundary, less random noise, main region visible.</p>
+            <p><b>Bad output:</b> scattered edges, broken object, or background selected as mask.</p>
+            <p><b>Viva answer:</b> "This figure shows how edge detection created binary masks from the MRI slice."</p>
+          </div>
+        </div>
+
+        <h4>Morphology</h4>
+        <div class="image-row">
+          <img src="content_A2/output_a2/morphology/T1CE_to_SRI_defaced_z0076_morphology.png" alt="Assignment 2 morphology">
+          <div>
+            <p><b>What you are looking at:</b> Original mask, erosion, dilation, opening, and closing.</p>
+            <p><b>What changed:</b> The mask shape shrinks, expands, loses small noise, or fills gaps.</p>
+            <p><b>Why code produced it:</b> Morphological operations apply a disk-shaped structuring element to the binary mask.</p>
+            <p><b>Good output:</b> cleaned mask with connected boundary.</p>
+            <p><b>Bad output:</b> too much erosion or dilation that destroys the useful shape.</p>
+            <p><b>Viva answer:</b> "This figure shows how morphology cleans and changes the mask before shape extraction."</p>
+          </div>
+        </div>
+
+        <h4>Chain code and convex hull</h4>
+        <div class="image-row">
+          <img src="content_A2/output_a2/chain_code/T1CE_to_SRI_defaced_z0076_chain.png" alt="Assignment 2 chain code">
+          <div>
+            <p><b>Chain code:</b> The cyan boundary line shows the path followed by the chain code.</p>
+            <p><b>Red overlay:</b> The red transparent area is the cleaned mask placed on top of the MRI slice.</p>
+            <p><b>Cyan line:</b> This is the traced boundary path. Each small movement along this line becomes a chain code direction number.</p>
+            <p><b>Good output:</b> boundary follows the selected mask region.</p>
+            <p><b>Limitation:</b> If the mask is weak, chain code will also be weak because it depends on the mask.</p>
+            <p><b>Viva answer:</b> "Chain code converts this boundary path into direction numbers."</p>
+          </div>
+        </div>
+
+        <div class="image-row">
+          <img src="content_A2/output_a2/convex_hull/T1CE_to_SRI_defaced_z0076_hull.png" alt="Assignment 2 convex hull">
+          <div>
+            <p><b>Convex hull:</b> The yellow polygon is the outer cover around the boundary.</p>
+            <p><b>Blue overlay:</b> The blue transparent area is the cleaned mask. Yellow points and lines show the hull vertices and outer polygon.</p>
+            <p><b>Good output:</b> hull covers the selected region without too many unnecessary points.</p>
+            <p><b>Limitation:</b> Hull does not show inner curves or concave details.</p>
+            <p><b>Viva answer:</b> "Convex hull gives a simpler outer shape compared with the detailed chain code."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="15. Numeric Results">
+        <h3>15. Numeric Results</h3>
+        <table>
+          <tr><th>Metric</th><th>Value</th><th>Meaning</th></tr>
+          <tr><td>CSV rows</td><td>15</td><td>15 processed slice records.</td></tr>
+          <tr><td>Average chain length</td><td>469.5 steps</td><td>Boundary had about 469 direction steps on average.</td></tr>
+          <tr><td>One chain step</td><td>One move to a neighboring boundary pixel</td><td>In 8-direction chain code, one step can move right, left, up, down, or diagonal.</td></tr>
+          <tr><td>Chain length range</td><td>446 to 476</td><td>Different masks had slightly different boundary lengths.</td></tr>
+          <tr><td>Average hull vertices</td><td>54.0</td><td>Convex hull needed about 54 outer points on average.</td></tr>
+          <tr><td>Hull vertex range</td><td>45 to 60</td><td>Outer shape complexity changed across slices.</td></tr>
+        </table>
+
+        <div class="image-row">
+          <img src="report_assets/a2_chain_hull_summary.png" alt="Assignment 2 chain hull summary">
+          <div>
+            <p><b>What this result means:</b> Chain code is longer because it follows the detailed boundary step by step. Convex hull is shorter because it only keeps the outer polygon vertices.</p>
+            <p><b>Roman Urdu:</b> Chain code zyada lamba hota hai kyun ke woh boundary ko detail mein follow karta hai. Convex hull chota hota hai kyun ke woh sirf outer cover rakhta hai.</p>
+            <div class="card green">
+              <span class="tag green">Viva answer</span>
+              <p>"Our average chain length was about 469.5 steps, while average hull vertices were 54. This shows that chain code gives detailed boundary information, and convex hull gives compact outer shape information."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="16. Viva Questions">
+        <h3>16. Viva-Style Questions and Simple Answers</h3>
+        <div class="grid">
+          <div class="card"><b>Q: What was Assignment 2 about?</b><p>A: It was about segmentation, morphology, and shape representation of MRI slices.</p></div>
+          <div class="card"><b>Q: What is segmentation?</b><p>A: Separating the important region from the background.</p></div>
+          <div class="card"><b>Q: Why use Canny?</b><p>A: Canny gives cleaner edges and handles noise better than a very simple edge detector.</p></div>
+          <div class="card"><b>Q: Why use Sobel?</b><p>A: Sobel is a simple gradient-based edge detector, useful for comparison.</p></div>
+          <div class="card"><b>Q: What is a binary mask?</b><p>A: An image where selected region is 1 or white, and background is 0 or black.</p></div>
+          <div class="card"><b>Q: Why use morphology?</b><p>A: To clean masks by removing noise, filling gaps, and improving boundaries.</p></div>
+          <div class="card"><b>Q: What is chain code?</b><p>A: Boundary stored as direction numbers from 0 to 7.</p></div>
+          <div class="card"><b>Q: What is convex hull?</b><p>A: The smallest outer polygon that covers the selected boundary points.</p></div>
+          <div class="card"><b>Q: Why is chain code longer than hull?</b><p>A: Chain code follows every boundary step, while hull keeps only outer polygon vertices.</p></div>
+          <div class="card"><b>Q: What is the limitation?</b><p>A: The quality depends on mask quality. If segmentation is weak, shape features are also weak.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="17. Examiner Follow-Ups">
+        <h3>17. Common Examiner Follow-Up Questions</h3>
+        <div class="grid">
+          <div class="card orange"><b>Why did you choose Canny mask as primary?</b><p>Safe answer: In our output, Canny gave a cleaner connected mask, so we used it for morphology and shape analysis.</p></div>
+          <div class="card orange"><b>Does this identify tumor?</b><p>Safe answer: No. This assignment focuses on segmentation and shape analysis. It is not a clinical tumor detector.</p></div>
+          <div class="card orange"><b>What if Sobel gives better result for some slice?</b><p>Safe answer: Then Sobel can be used. We kept both outputs for comparison, but used Canny as the main mask in the pipeline.</p></div>
+          <div class="card orange"><b>Why largest connected component?</b><p>Safe answer: It removes small scattered components and keeps the main region for analysis.</p></div>
+          <div class="card orange"><b>Why closing before chain code?</b><p>Safe answer: Closing fills small gaps and connects broken boundaries, so chain tracing becomes more stable.</p></div>
+          <div class="card orange"><b>Why first difference?</b><p>Safe answer: It describes changes in direction and makes the representation less dependent on absolute direction.</p></div>
+          <div class="card orange"><b>Why shape number?</b><p>Safe answer: Shape number is a normalized version of first difference, less dependent on where boundary tracing starts.</p></div>
+          <div class="card orange"><b>Why do folders have 12 images but CSV has 15 rows?</b><p>Safe answer: Some output filenames repeated and were overwritten. The CSV kept all 15 written records, while each folder shows 12 unique PNG files.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="18. Final Hidden Explanation">
+        <h3>18. Final Assignment 2 Explanation</h3>
+        <p>Click only when you want the full final speech for Assignment 2.</p>
+        <button class="reveal" onclick="toggleAnswer('finalAnswer')">Show final hidden explanation</button>
+        <div class="hidden-answer" id="finalAnswer">
+          <p><b>English:</b> "Assignment 2 was about segmentation, morphology, and shape representation. We used the same dataset source as Assignment 1, but Assignment 2 did not use the blurred images from Assignment 1. It started again from MRI NIfTI volumes in the KaggleHub chunk of BraTS-PEDs. The notebook loaded MRI volumes, selected center slices, normalized intensity values, and then applied Canny and Sobel edge detection. Canny and Sobel detect edges, not final tumors. From the edge maps, the code created binary masks by closing small gaps and selecting the largest connected component. Canny was used as the primary mask because it produced a cleaner connected region in our pipeline. Then morphology operations were applied. Erosion shrinks the white region, dilation expands it, opening removes small isolated noise, and closing fills small gaps. The closing result was used as the cleaned mask. From this cleaned mask, the code extracted the boundary by subtracting an eroded region from the original region. The boundary was represented using Freeman 8-direction chain code. First difference measured changes between consecutive chain directions, and shape number normalized this idea so the description depends less on the starting point. Finally, boundary points were used in Graham Scan to draw the convex hull, which is the smallest outer polygon around the selected region. The CSV has 15 processed slice records, while visual folders have 12 unique PNGs because repeated filenames overwrote some images. Average chain length was about 469.5 steps, and average hull size was about 54 vertices. This shows that chain code gives detailed boundary information, while convex hull gives compact outer shape information. The limitation is that these results depend on mask quality, so this is classical shape analysis, not final medical diagnosis."</p>
+          <p><b>Roman Urdu:</b> "Assignment 2 segmentation, morphology aur shape representation ke bare mein tha. Dataset source Assignment 1 jaisa tha, lekin A2 ne A1 ki blurred images ko input nahi banaya. A2 ne dobara MRI NIfTI volumes se start kiya. Notebook ne MRI volumes load kiye, center slices select kiye, intensity normalize ki, phir Canny aur Sobel edge detection apply ki. Canny aur Sobel final tumor detect nahi karte, yeh sirf edges ya boundaries find karte hain. Edges se binary mask banaya gaya by closing small gaps aur largest connected component select kar ke. Canny mask ko primary mask liya gaya kyun ke woh cleaner connected region de raha tha. Phir morphology apply hui: erosion white region ko shrink karta hai, dilation white region ko expand karta hai, opening small noise remove karti hai, aur closing small gaps fill karti hai. Closing result clean mask ke taur par use hua. Is clean mask se boundary nikalne ke liye original region se eroded region subtract kiya. Boundary ko Freeman 8-direction chain code se represent kiya gaya. First difference consecutive directions ke changes batata hai, aur shape number start point ka effect kam karta hai. Graham Scan se convex hull banaya gaya, jo selected region ke around smallest outer polygon hota hai. CSV mein 15 processed slice records hain, lekin folders mein 12 unique PNGs hain kyun ke kuch filenames repeat hue aur images overwrite ho gayi. Average chain length 469.5 steps thi aur average hull vertices 54 thay. Is se clear hota hai ke chain code detailed boundary batata hai, jab ke convex hull compact outer shape batata hai. Limitation yeh hai ke result mask quality par depend karta hai, is liye yeh final medical diagnosis nahi hai."</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const nav = document.getElementById("nav");
+
+    steps.forEach((step, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = step.dataset.title;
+      btn.onclick = () => showStep(index);
+      if (index === 0) btn.classList.add("active");
+      nav.appendChild(btn);
+    });
+
+    function showStep(index) {
+      steps.forEach((s, i) => s.classList.toggle("active", i === index));
+      Array.from(nav.children).forEach((b, i) => b.classList.toggle("active", i === index));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleAnswer(id) {
+      document.getElementById(id).classList.toggle("show");
+    }
+
+    const edgePattern = [
+      0,0,0,0,1,1,1,
+      0,0,0,0,1,1,1,
+      0,0,0,2,1,1,1,
+      0,0,0,2,1,1,1,
+      0,0,0,2,1,1,1,
+      0,0,0,0,1,1,1,
+      0,0,0,0,1,1,1
+    ];
+
+    function drawEdgePixels() {
+      const box = document.getElementById("edgePixels");
+      if (!box) return;
+      box.innerHTML = "";
+      edgePattern.forEach(v => {
+        const div = document.createElement("div");
+        div.className = "px" + (v === 1 ? " on" : "") + (v === 2 ? " edge" : "");
+        box.appendChild(div);
+      });
+    }
+
+    const morphStates = {
+      original: {
+        title: "Original mask",
+        text: "Original binary mask before cleaning.",
+        roman: "Yeh starting mask hai jahan white pixels selected region show karte hain.",
+        data: [
+          0,0,0,0,0,0,0,
+          0,0,1,1,1,0,0,
+          0,1,1,1,1,1,0,
+          0,1,1,0,1,1,0,
+          0,1,1,1,1,1,0,
+          0,0,1,1,1,0,1,
+          0,0,0,0,0,0,0
+        ]
+      },
+      erosion: {
+        title: "Erosion",
+        text: "White area shrinks. Thin parts and small weak pixels can disappear.",
+        roman: "White area choti hoti hai. Choti weak details remove ho sakti hain.",
+        data: [
+          0,0,0,0,0,0,0,
+          0,0,0,0,0,0,0,
+          0,0,1,1,1,0,0,
+          0,0,1,0,1,0,0,
+          0,0,1,1,1,0,0,
+          0,0,0,0,0,0,0,
+          0,0,0,0,0,0,0
+        ]
+      },
+      dilation: {
+        title: "Dilation",
+        text: "White area expands. Gaps can become smaller, but area can become too thick.",
+        roman: "White area phailti hai. Gaps kam hotay hain, lekin mask thick bhi ho sakta hai.",
+        data: [
+          0,1,1,1,1,1,0,
+          1,1,1,1,1,1,1,
+          1,1,1,1,1,1,1,
+          1,1,1,1,1,1,1,
+          1,1,1,1,1,1,1,
+          1,1,1,1,1,1,1,
+          0,1,1,1,1,1,1
+        ]
+      },
+      opening: {
+        title: "Opening",
+        text: "Erosion then dilation. It removes small isolated noise.",
+        roman: "Pehle erosion phir dilation. Choti isolated noise remove hoti hai.",
+        data: [
+          0,0,0,0,0,0,0,
+          0,0,1,1,1,0,0,
+          0,1,1,1,1,1,0,
+          0,1,1,0,1,1,0,
+          0,1,1,1,1,1,0,
+          0,0,1,1,1,0,0,
+          0,0,0,0,0,0,0
+        ]
+      },
+      closing: {
+        title: "Closing",
+        text: "Dilation then erosion. It fills small holes and connects small gaps.",
+        roman: "Pehle dilation phir erosion. Chotay holes fill aur gaps connect hotay hain.",
+        data: [
+          0,0,0,0,0,0,0,
+          0,0,1,1,1,0,0,
+          0,1,1,1,1,1,0,
+          0,1,1,1,1,1,0,
+          0,1,1,1,1,1,0,
+          0,0,1,1,1,0,0,
+          0,0,0,0,0,0,0
+        ]
+      }
+    };
+
+    function showMorph(name) {
+      const state = morphStates[name];
+      document.getElementById("morphTitle").textContent = state.title;
+      document.getElementById("morphText").textContent = state.text;
+      document.getElementById("morphRoman").textContent = state.roman;
+      const box = document.getElementById("morphPixels");
+      box.innerHTML = "";
+      state.data.forEach(v => {
+        const div = document.createElement("div");
+        div.className = "px" + (v ? " fill" : "");
+        box.appendChild(div);
+      });
+      Array.from(document.querySelectorAll(".morphBtn")).forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.toLowerCase() === name);
+      });
+    }
+
+    drawEdgePixels();
+    showMorph("original");
+  </script>
+</body>
+</html>

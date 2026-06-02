@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assignment 3 Viva Canvas</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --ink: #18202f;
+      --muted: #5d6678;
+      --panel: #ffffff;
+      --line: #d9dfeb;
+      --blue: #275efe;
+      --blue-soft: #eaf0ff;
+      --green: #157a52;
+      --green-soft: #e8f6ef;
+      --orange: #a85a00;
+      --orange-soft: #fff2df;
+      --red: #b42318;
+      --red-soft: #fff0ee;
+      --cyan: #087d8f;
+      --cyan-soft: #e6f8fb;
+      --shadow: 0 14px 38px rgba(28, 37, 62, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 285px 1fr; }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #111827;
+      color: #fff;
+      padding: 18px 14px;
+    }
+    aside h1 { margin: 0 0 4px; font-size: 18px; letter-spacing: 0; }
+    aside p { margin: 0 0 14px; color: #c7d2fe; font-size: 13px; }
+    .nav button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #f9fafb;
+      padding: 10px 11px;
+      margin: 5px 0;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .nav button.active { background: #fff; color: #111827; border-color: #fff; font-weight: 700; }
+    main { padding: 28px; max-width: 1180px; width: 100%; margin: 0 auto; }
+    .topbar, .step {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .topbar { padding: 18px 20px; margin-bottom: 18px; }
+    .topbar h2 { margin: 0 0 5px; font-size: 25px; }
+    .topbar p { margin: 0; color: var(--muted); }
+    .step { display: none; padding: 22px; margin-bottom: 18px; }
+    .step.active { display: block; }
+    h3 { margin: 0 0 14px; font-size: 24px; }
+    h4 { margin: 18px 0 8px; font-size: 17px; }
+    p { margin: 8px 0; }
+    code {
+      background: #f0f3f8;
+      border: 1px solid #d8dee9;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.94em;
+      color: #18202f;
+    }
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    pre code { background: transparent; border: 0; padding: 0; color: #f9fafb; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 0;
+    }
+    .card.blue { background: var(--blue-soft); border-color: #c7d6ff; }
+    .card.green { background: var(--green-soft); border-color: #bdebd2; }
+    .card.orange { background: var(--orange-soft); border-color: #ffd7a6; }
+    .card.red { background: var(--red-soft); border-color: #ffc9c2; }
+    .card.cyan { background: var(--cyan-soft); border-color: #b8edf4; }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .tag.green { color: var(--green); }
+    .tag.orange { color: var(--orange); }
+    .tag.red { color: var(--red); }
+    .tag.cyan { color: var(--cyan); }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 9px; vertical-align: top; text-align: left; }
+    th { background: #f1f4fa; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+    .flow span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-weight: 700;
+    }
+    .arrow { color: var(--muted); font-weight: 700; }
+    .image-row { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; margin-top: 12px; }
+    img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .mini { font-size: 13px; color: var(--muted); }
+    .diagram { border: 1px solid var(--line); border-radius: 8px; background: #fbfcff; padding: 14px; margin: 12px 0; }
+    .callout { border-left: 5px solid var(--blue); background: var(--blue-soft); padding: 12px 14px; border-radius: 8px; margin: 12px 0; }
+    .callout.correct { border-left-color: var(--green); background: var(--green-soft); }
+    .callout.fix { border-left-color: var(--orange); background: var(--orange-soft); }
+    .feature-vector {
+      display: grid;
+      grid-template-columns: repeat(13, minmax(78px, 1fr));
+      gap: 5px;
+      overflow: auto;
+      padding-bottom: 4px;
+    }
+    .fv-cell {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      padding: 6px;
+      font-size: 12px;
+      text-align: center;
+    }
+    .fv-cell.id { background: var(--blue-soft); }
+    .fv-cell.tex { background: var(--orange-soft); }
+    .fv-cell.geo { background: var(--green-soft); }
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 42px);
+      gap: 4px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .mcell {
+      width: 42px;
+      height: 42px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .mcell.hot { background: #fed7aa; }
+    .mcell.main { background: #bfdbfe; }
+    .tree {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+      align-items: stretch;
+      margin: 12px 0;
+    }
+    .tree-node {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      text-align: center;
+      min-height: 78px;
+    }
+    .tree-node.root { background: var(--blue-soft); border-color: #c7d6ff; }
+    .tree-node.leaf { background: var(--green-soft); border-color: #bdebd2; }
+    .hidden-answer {
+      display: none;
+      border: 1px solid #c7d6ff;
+      background: var(--blue-soft);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .hidden-answer.show { display: block; }
+    .reveal {
+      border: 1px solid var(--blue);
+      background: var(--blue);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .visual-map {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .subject-box {
+      border: 2px solid #275efe;
+      background: #f8fbff;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .volume-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .volume-card {
+      border: 1px solid #b9c8ff;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 130px;
+    }
+    .slice-stack {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 58px;
+      margin: 8px 0;
+    }
+    .slice-thin {
+      width: 18px;
+      border-radius: 4px;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+    }
+    .slice-thin:nth-child(2) { height: 42px; }
+    .slice-thin:nth-child(3) { height: 50px; background: #bfdbfe; }
+    .slice-thin:nth-child(4) { height: 35px; }
+    .slice-thin:nth-child(5) { height: 47px; background: #fde68a; border-color: #f59e0b; }
+    .sample-card {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+    .sample-part {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      min-height: 78px;
+    }
+    .sample-part b { display: block; margin-bottom: 5px; }
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 16px; }
+      .grid, .grid.three { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Assignment 3</h1>
+      <p>Viva canvas: GLCM, geometry, feature vectors, classification.</p>
+      <div class="nav" id="nav"></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <h2>Computer Vision Assignment 3 Viva Preparation</h2>
+        <p>Submitted by Muhammad Maaz Akram 231192 and Muhammad Umar 231200, BSAI-6A. Submitted to Ms Hina Rashid.</p>
+      </div>
+
+      <section class="step active" data-title="1. Two-Minute Overview">
+        <h3>1. Two-Minute Overview</h3>
+        <div class="card blue">
+          <span class="tag">Say this if maam asks: Explain Assignment 3 in two minutes</span>
+          <p><b>English:</b> "Assignment 3 continues the same MRI project. Assignment 1 focused on filtering. Assignment 2 focused on segmentation and shape boundaries. In Assignment 3, we used the mask idea to extract numeric features from each selected MRI slice. First, the notebook loaded NIfTI MRI volumes from the KaggleHub chunk of BraTS-PEDs. It selected center slices and normalized them. Then it created a clean mask using Canny edge detection, closing, and largest connected component selection. From the masked region, it extracted GLCM texture features such as energy, entropy, contrast, homogeneity, and correlation. It also extracted geometric features such as area, centroid, perimeter, and circularity. These numbers formed a feature vector for each slice. Finally, Random Forest and SVM classifiers were trained to classify labels such as Enhancing, Necrotic, Edema, and Other. The notebook produced 50 feature vectors, confusion matrices, feature importance, GLCM plots, geometry plots, and classification accuracy reports."</p>
+          <p><b>Roman Urdu:</b> "Assignment 3 mein hum ne MRI slice ko numbers mein convert kiya. A1 filtering tha, A2 segmentation aur shape tha, aur A3 feature extraction plus classification hai. Notebook ne MRI volumes load kiye, center slices select kiye, mask banaya, phir GLCM texture features aur geometric features nikale. Har slice ki aik row bani jise feature vector kehte hain. In features ko use kar ke Random Forest aur SVM classifiers train aur test hue. Output mein feature CSV, GLCM images, geometry images, confusion matrix aur accuracy report save hui."</p>
+        </div>
+        <div class="flow">
+          <span>MRI slice</span><b class="arrow">to</b>
+          <span>Clean mask</span><b class="arrow">to</b>
+          <span>Texture features</span><b class="arrow">to</b>
+          <span>Geometry features</span><b class="arrow">to</b>
+          <span>Feature vector</span><b class="arrow">to</b>
+          <span>Classifier</span>
+        </div>
+        <div class="grid three">
+          <div class="card green"><b>Main purpose</b><p>Convert images into useful numbers.</p></div>
+          <div class="card green"><b>Main result</b><p>50 feature vectors and classifier outputs.</p></div>
+          <div class="card green"><b>Safe claim</b><p>This is small-scale ML classification, not medical diagnosis.</p></div>
+        </div>
+        <div class="callout fix">
+          <p><b>Important correction:</b> Assignment 3 did not directly load the output CSV or images from Assignment 2. It reused the Assignment 2 idea of making a clean mask, but it ran that mask creation again on MRI slices.</p>
+          <p><b>Roman Urdu:</b> A3 ne A2 ke saved outputs ko direct input nahi banaya. A3 ne A2 wala mask concept dobara use kiya, phir us mask se texture aur geometry features nikale.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="2. Teacher Objective">
+        <h3>2. Teacher-Given Objective</h3>
+        <div class="card">
+          <span class="tag">Objective</span>
+          <p>The objective was to extract useful features from segmented MRI regions and use those features for classification.</p>
+          <p>In simple words: image se important region lo, us region ke texture aur shape numbers nikalo, phir machine learning model ko woh numbers do.</p>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The objective of Assignment 3 was feature extraction and classification. We extracted GLCM texture features and geometric features from MRI slices, saved them as feature vectors, and trained Random Forest and SVM classifiers."</p>
+        </div>
+        <div class="card red">
+          <span class="tag red">Do not claim</span>
+          <p>Do not say the model is clinically reliable. Safe wording: "It worked well on our small selected dataset chunk."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="3. Dataset Visual Basics">
+        <h3>3. Dataset Visual Basics</h3>
+        <div class="callout fix">
+          <p><b>First correction:</b> One subject does not always mean three volumes. One subject can have many MRI volumes. The exact number depends on what files exist in the dataset and what the code selects.</p>
+          <p><b>Roman Urdu:</b> Aik subject ke andar fixed 3 volumes zaroori nahi. Subject ke paas multiple MRI files ho sakti hain.</p>
+        </div>
+
+        <div class="visual-map">
+          <div class="subject-box">
+            <h4>Subject means one patient/case</h4>
+            <p><b>Example subject:</b> <code>brats_ped_00195_000</code></p>
+            <div class="volume-row">
+              <div class="volume-card">
+                <b>T1 volume</b>
+                <div class="slice-stack"><span class="slice-thin" style="height:28px"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span></div>
+                <p class="mini">One 3D MRI file. Contains many 2D slices.</p>
+              </div>
+              <div class="volume-card">
+                <b>T1CE volume</b>
+                <div class="slice-stack"><span class="slice-thin" style="height:28px"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span></div>
+                <p class="mini">Another scan type for same subject.</p>
+              </div>
+              <div class="volume-card">
+                <b>T2 or FLAIR volume</b>
+                <div class="slice-stack"><span class="slice-thin" style="height:28px"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span><span class="slice-thin"></span></div>
+                <p class="mini">Another 3D MRI scan.</p>
+              </div>
+              <div class="volume-card">
+                <b>SEG volume</b>
+                <div class="slice-stack"><span class="slice-thin" style="height:28px;background:#fee2e2;border-color:#ef4444"></span><span class="slice-thin" style="background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="background:#fecaca;border-color:#ef4444"></span></div>
+                <p class="mini">Mask/annotation volume if available.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4>What do T1, T1CE, T2, FLAIR, and SEG mean?</h4>
+        <table>
+          <tr><th>Volume type</th><th>Simple meaning</th><th>Roman Urdu</th><th>In Assignment 3</th></tr>
+          <tr><td>T1</td><td>MRI scan type where anatomy structure is visible in a particular contrast style.</td><td>MRI ka aik scan type.</td><td>Code mapped T1/T1N filename to <code>Necrotic</code> proxy label.</td></tr>
+          <tr><td>T1CE</td><td>T1 contrast-enhanced scan. Contrast agent makes enhancing tumor regions brighter.</td><td>Contrast wali T1 image jahan enhancing areas zyada clear ho sakte hain.</td><td>Code mapped T1CE/T1C filename to <code>Enhancing</code> proxy label.</td></tr>
+          <tr><td>T2</td><td>MRI scan type often useful for fluid-rich regions and anatomy differences.</td><td>MRI ka dusra scan type.</td><td>Code mapped unmatched T2 files to <code>Other</code>.</td></tr>
+          <tr><td>FLAIR or FL</td><td>A scan type useful for edema/fluid-related abnormality visibility.</td><td>Edema/fluid wali abnormality ko highlight karne mein useful.</td><td>Code mapped FL/FLAIR filename to <code>Edema</code> proxy label.</td></tr>
+          <tr><td>SEG</td><td>Segmentation mask volume. It is not a normal MRI image. It stores annotation labels.</td><td>Yeh image nahi, mask/annotation file hoti hai.</td><td>A3 excluded SEG files from image processing. Final pipeline used SEG when available.</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>SEG availability:</b> Not every subject/file necessarily has a usable SEG mask. Some datasets include masks for some subjects. In Assignment 3 notebook, SEG files were excluded and labels came from file names. In the final pipeline, a paired SEG mask existed for the selected subject and was used.</p>
+          <p><b>Roman Urdu:</b> SEG har jagah fixed nahi hota. A3 mein SEG use nahi hua label ke liye. Final pipeline mein selected subject ka SEG mask available tha.</p>
+        </div>
+        <div class="callout correct">
+          <p><b>Is there only one volume for each subject?</b> No. A medical subject can have multiple MRI volumes. Think of one subject as one patient/case folder. Inside that case, there can be T1, T1CE, T2, FLAIR, and sometimes SEG. Each one is a separate 3D file.</p>
+          <p><b>Roman Urdu:</b> Aik subject ke andar aik se zyada volumes ho sakti hain. T1 alag 3D file, T1CE alag, T2 alag, FLAIR alag, aur SEG mask alag.</p>
+        </div>
+        <div class="sample-card">
+          <div class="sample-part"><b>Subject</b>One case or patient folder.</div>
+          <div class="sample-part"><b>Volume</b>One 3D scan type inside that subject.</div>
+          <div class="sample-part"><b>Slice</b>One 2D image from that volume.</div>
+          <div class="sample-part"><b>Sample</b>One selected slice after features plus label.</div>
+        </div>
+
+        <h4>One sample in Assignment 3</h4>
+        <div class="sample-card">
+          <div class="sample-part"><b>Selected slice</b>One 2D MRI image from a 3D volume.</div>
+          <div class="sample-part"><b>Mask</b>A binary region from edge-based mask logic.</div>
+          <div class="sample-part"><b>Features</b>GLCM texture plus geometry numbers.</div>
+          <div class="sample-part"><b>Label</b>Assigned from filename in A3.</div>
+        </div>
+
+        <table>
+          <tr><th>Word</th><th>Visual meaning</th><th>Safe viva line</th></tr>
+          <tr><td>Subject</td><td>One patient/case folder or ID.</td><td>"Subject means one case, not one image."</td></tr>
+          <tr><td>Volume</td><td>One 3D MRI file inside the subject.</td><td>"A volume is a stack of slices."</td></tr>
+          <tr><td>Slice</td><td>One 2D image taken from a volume.</td><td>"A slice is one plane from the 3D MRI."</td></tr>
+          <tr><td>Single image</td><td>One slice saved or displayed as PNG.</td><td>"Single image usually means one exported 2D slice."</td></tr>
+          <tr><td>Sample</td><td>One selected slice with features and label.</td><td>"A sample is one training/testing row."</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="4. Terms Before Code">
+        <h3>4. Important Terms Before Code</h3>
+        <table>
+          <tr><th>Term</th><th>Simple English</th><th>Roman Urdu</th></tr>
+          <tr><td>Feature</td><td>A useful number that describes an image region.</td><td>Image ke region ko describe karne wala number.</td></tr>
+          <tr><td>Feature vector</td><td>One row of features for one slice.</td><td>Aik slice ke numbers ki aik row.</td></tr>
+          <tr><td>Texture</td><td>Pattern of intensities, smoothness, roughness, or variation.</td><td>Brightness pattern, smooth ya rough feel.</td></tr>
+          <tr><td>GLCM</td><td>Gray Level Co-occurrence Matrix. It counts how often gray values appear near each other.</td><td>Yeh count karta hai ke gray values aik dusre ke sath kitni dafa aati hain.</td></tr>
+          <tr><td>Geometry</td><td>Shape measurements such as area and perimeter.</td><td>Shape ke measurements jaise area aur boundary length.</td></tr>
+          <tr><td>Texture features</td><td>Numbers from intensity pattern, such as energy and entropy.</td><td>Brightness pattern se nikle numbers.</td></tr>
+          <tr><td>Geometric features</td><td>Numbers from mask shape, such as area and circularity.</td><td>Mask ki shape se nikle numbers.</td></tr>
+          <tr><td>Classifier</td><td>Model that predicts a class label from feature numbers.</td><td>Model jo numbers dekh kar class predict karta hai.</td></tr>
+          <tr><td>Random Forest</td><td>Many decision trees voting together.</td><td>Multiple trees mil kar vote karte hain.</td></tr>
+          <tr><td>SVM</td><td>Model that separates classes using a boundary.</td><td>Classes ke darmiyan decision boundary banata hai.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="5. Dataset and Counts">
+        <h3>5. Dataset and Counts</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Dataset source</span>
+            <p>Original source: TCIA BraTS-PEDs.</p>
+            <p>Practical notebook source: KaggleHub chunk <code>awansaad6797/cancer-dataset</code>.</p>
+          </div>
+          <div class="card">
+            <span class="tag">A3 submitted setting</span>
+            <p><code>MAX_VOLUMES = 10</code> and <code>MAX_SLICES = 5</code>.</p>
+            <p>This submitted notebook was configured for up to 50 slice records.</p>
+          </div>
+        </div>
+        <table>
+          <tr><th>Item</th><th>Your actual result</th><th>Meaning</th></tr>
+          <tr><td>Feature-vector rows</td><td>50</td><td>50 rows or samples, not 50 features. Each row describes one selected slice.</td></tr>
+          <tr><td>Number of classes or labels</td><td>4</td><td>Enhancing, Necrotic, Edema, and Other.</td></tr>
+          <tr><td>Samples per class</td><td>Enhancing 15, Necrotic 15, Edema 10, Other 10</td><td>These are sample counts inside the 50 feature vectors, not 50 different label names.</td></tr>
+          <tr><td>Center slices</td><td>75, 76, 77, 78, 79 style slices</td><td>These are central z-slices from each 3D volume.</td></tr>
+          <tr><td>Train-test split</td><td>75% train and 25% test</td><td><code>test_size=0.25</code> gave 37 train samples and 13 test samples.</td></tr>
+          <tr><td>Train samples</td><td>37</td><td>Used for training classifiers.</td></tr>
+          <tr><td>Test samples</td><td>13</td><td>Used for testing classifiers.</td></tr>
+          <tr><td>Processed records from setting</td><td>10 volumes x 5 slices = 50 records</td><td>Each processed slice record becomes one feature vector row.</td></tr>
+          <tr><td>Saved visual plots</td><td>20 GLCM and 20 geometry images</td><td>50 rows were calculated, but repeated subject-slice filenames overwrote some PNGs, so 20 unique GLCM and 20 unique geometry plots remain.</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>Very important:</b> In Assignment 3, these labels are not manual ground-truth tumor subregion annotations. They are proxy labels created from the file name. So "Enhancing" means the file looked like T1CE/T1C, "Edema" means FL/FLAIR, "Necrotic" means T1/T1N, and "Other" means the remaining group such as T2.</p>
+          <p><b>Roman Urdu:</b> A3 mein labels file name se aaye, doctor annotation se nahi. Is liye in labels ko proxy labels bolna safe hai.</p>
+        </div>
+        <div class="callout correct">
+          <p><b>Your understanding:</b> Enhancing 15 + Necrotic 15 + Edema 10 + Other 10 = 50 samples. This is correct.</p>
+          <p><b>Small correction:</b> Other is 10, not 5. These are not 50 labels. These are 50 samples distributed across 4 labels.</p>
+          <p><b>Roman Urdu:</b> Labels sirf 4 hain. 15, 15, 10, 10 sample counts hain.</p>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"Assignment 3 used 10 volumes and 5 center slices per volume in the submitted configuration, so it produced 50 feature vectors. There are 4 labels: Enhancing, Necrotic, Edema, and Other. The split was 75 percent training and 25 percent testing, giving 37 train samples and 13 test samples."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="6. Setup Code">
+        <h3>6. Code Block: Setup and Configuration</h3>
+        <pre><code>MAX_VOLUMES  = 10
+MAX_SLICES   = 5
+CANNY_SIGMA  = 1.5
+MORPH_ITER   = 2
+GLCM_DISTS   = [1, 2]
+GLCM_ANGLES  = [0, np.pi/4, np.pi/2, 3*np.pi/4]
+OUT_DIR      = Path("output_a3")</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Set limits, mask parameters, GLCM settings, and output folders.</p></div>
+          <div class="card"><span class="tag">Input</span><p>No image input yet. This block only prepares experiment settings.</p></div>
+          <div class="card"><span class="tag">Output</span><p>Folders: <code>glcm_plots</code>, <code>geometry_plots</code>, and <code>classification</code>.</p></div>
+          <div class="card"><span class="tag">Important point</span><p><code>GLCM_DISTS</code> and <code>GLCM_ANGLES</code> decide which neighbor distances and directions are used for texture calculation.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The setup block controls how many MRI slices are processed and which texture directions and distances are used for GLCM."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="7. Mask Code">
+        <h3>7. Code Block: Clean Mask Creation</h3>
+        <pre><code>def get_clean_mask(slc):
+    edges  = canny(slc, sigma=CANNY_SIGMA)
+    closed = binary_closing(edges, structure=disk(4))
+    labeled, n = nd_label(closed)
+    if n == 0:
+        return edges.astype(np.uint8)
+    sizes = [(labeled == i).sum() for i in range(1, n + 1)]
+    mask = (labeled == (np.argmax(sizes) + 1)).astype(np.uint8)
+    struct = disk(3).astype(bool)
+    cleaned = binary_closing(mask, structure=struct, iterations=MORPH_ITER)
+    return cleaned.astype(np.uint8)</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Create a clean binary mask so features are extracted from the useful region.</p></div>
+          <div class="card"><span class="tag">Input</span><p>One normalized MRI slice.</p></div>
+          <div class="card"><span class="tag">Output</span><p>A clean binary mask with selected region as 1 and background as 0.</p></div>
+          <div class="card"><span class="tag">Connection to output</span><p>The red or blue overlay in A3 plots comes from this mask.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"A3 reuses the A2 idea of mask creation. It uses Canny, closing, largest component selection, and another closing step to get a clean region before feature extraction."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="8. GLCM Intuition">
+        <h3>8. GLCM Texture Features</h3>
+        <div class="card blue">
+          <span class="tag">Core idea</span>
+          <p>GLCM looks at pairs of gray values. It asks: "How often does gray value A appear near gray value B?"</p>
+          <p><b>Roman Urdu:</b> GLCM yeh count karta hai ke aik gray value ke paas dusri gray value kitni dafa aati hai.</p>
+        </div>
+        <div class="card green">
+          <span class="tag green">Why this is useful</span>
+          <p>GLCM converts image texture into numbers. These numbers tell whether the selected region is smooth, random, high-contrast, or uniform. Classifiers cannot understand "this looks rough" directly, but they can understand numbers like entropy and contrast.</p>
+          <p><b>Roman Urdu:</b> GLCM image ke texture ko numbers mein convert karta hai. Model ko image ka feel nahi samajh aata, lekin entropy, contrast, energy jaise numbers samajh aate hain.</p>
+        </div>
+        <div class="diagram">
+          <div class="grid">
+            <div>
+              <h4>Tiny image patch</h4>
+              <div class="matrix">
+                <div class="mcell main">1</div><div class="mcell">1</div><div class="mcell hot">2</div><div class="mcell">2</div><div class="mcell">3</div>
+                <div class="mcell">1</div><div class="mcell hot">2</div><div class="mcell hot">2</div><div class="mcell">3</div><div class="mcell">3</div>
+                <div class="mcell">2</div><div class="mcell">2</div><div class="mcell">3</div><div class="mcell">3</div><div class="mcell">3</div>
+                <div class="mcell">2</div><div class="mcell">3</div><div class="mcell">3</div><div class="mcell">4</div><div class="mcell">4</div>
+                <div class="mcell">3</div><div class="mcell">3</div><div class="mcell">4</div><div class="mcell">4</div><div class="mcell">4</div>
+              </div>
+            </div>
+            <div>
+              <h4>What GLCM counts</h4>
+              <p>If distance is 1 and angle is 0, GLCM checks right-side neighbors. Example: 1 next to 1, 1 next to 2, 2 next to 3.</p>
+              <p>If we change angle, it checks diagonal or vertical neighbors.</p>
+              <p><b>Safe answer:</b> "GLCM captures texture by counting gray-level neighbor relationships."</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout fix">
+          <p><b>Do not read the colors as MRI meaning.</b> In the tiny grid, numbers are fake gray levels. The blue cell only shows "start from this pixel." Yellow cells only show example neighbors. The code does not follow a colored path. It scans the whole masked region and counts many neighbor pairs.</p>
+          <p><b>Roman Urdu:</b> Blue/yellow sirf samjhane ke liye hain. Real code poori masked image scan karta hai aur neighbor pairs count karta hai.</p>
+        </div>
+        <table>
+          <tr><th>Example pair</th><th>What it means</th><th>Why it helps</th></tr>
+          <tr><td><code>1 next to 1</code></td><td>Smooth same-gray neighbor.</td><td>More same pairs usually increase uniformity and homogeneity.</td></tr>
+          <tr><td><code>1 next to 4</code></td><td>Very different gray neighbor.</td><td>More far-apart pairs usually increase contrast.</td></tr>
+          <tr><td>Many different pairs</td><td>Texture is less predictable.</td><td>This usually increases entropy.</td></tr>
+        </table>
+        <h4>GLCM from absolute zero</h4>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Step 1</span>
+            <p>Take the masked region from the MRI slice. The tiny grid above is just an example patch. Blue/yellow colors are only for teaching, not real MRI colors.</p>
+            <p><b>Roman Urdu:</b> Upar wali grid sirf samjhane ke liye hai. Real MRI grayscale hoti hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Step 2</span>
+            <p>Choose a neighbor rule, for example distance 1 and angle 0. This means check the right neighbor.</p>
+            <p><b>Roman Urdu:</b> Distance 1 aur angle 0 ka matlab right side wala neighbor check karna.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Step 3</span>
+            <p>Count pairs. If gray 2 is next to gray 3 many times, that pair gets a high count in the matrix.</p>
+            <p><b>Roman Urdu:</b> Agar 2 ke sath 3 bar bar aa raha hai to matrix mein us pair ka count high hoga.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Step 4</span>
+            <p>Use that matrix to calculate energy, entropy, contrast, homogeneity, and correlation.</p>
+            <p><b>Roman Urdu:</b> Phir isi count matrix se texture features nikalte hain.</p>
+          </div>
+        </div>
+        <div class="callout correct">
+          <p><b>What do we finally get?</b> We get five texture features: energy, entropy, contrast, homogeneity, and correlation. These describe the masked region numerically.</p>
+          <p><b>Example:</b> High entropy means texture is more random or complex. High homogeneity means neighboring pixels are more similar.</p>
+        </div>
+        <table>
+          <tr><th>Feature</th><th>Simple meaning</th><th>Roman Urdu</th></tr>
+          <tr><td>Energy</td><td>Uniformity. High energy means the same gray patterns repeat often.</td><td>Texture kitni regular ya repeated hai.</td></tr>
+          <tr><td>Entropy</td><td>Randomness. High entropy means texture is complex and less predictable.</td><td>Texture kitni random ya complex hai.</td></tr>
+          <tr><td>Contrast</td><td>Intensity difference. High contrast means neighboring pixels differ strongly.</td><td>Brightness difference kitna strong hai.</td></tr>
+          <tr><td>Homogeneity</td><td>Smoothness. High homogeneity means neighboring pixels are similar.</td><td>Nearby pixels kitnay similar hain.</td></tr>
+          <tr><td>Correlation</td><td>Relationship between neighboring gray levels.</td><td>Neighbor gray values ka relation.</td></tr>
+        </table>
+        <h4>What do the shown values tell us?</h4>
+        <table>
+          <tr><th>Feature value</th><th>How to read it</th><th>Simple viva line</th></tr>
+          <tr><td><code>energy = 0.9102</code></td><td>This is high because energy is usually closer to 1 when texture is regular or repeated.</td><td>"Energy high hai, is ka matlab selected region mein texture kaafi uniform/repeated hai."</td></tr>
+          <tr><td><code>entropy = 1.2359</code></td><td>This is not very high in this example, so the selected region is not extremely random.</td><td>"Entropy moderate hai, matlab texture mein kuch variation hai lekin bohat zyada randomness nahi."</td></tr>
+          <tr><td><code>contrast = 8.6215</code></td><td>This means there is some gray-level difference between neighboring pixels, but not the highest contrast case in our results.</td><td>"Contrast batata hai nearby pixels ki brightness difference. Is example mein difference present hai but extreme nahi."</td></tr>
+          <tr><td><code>homogeneity = 0.9252</code></td><td>This is high, so many neighboring pixels are similar to each other.</td><td>"Homogeneity high hai, matlab nearby pixels mostly similar hain aur region smooth lag raha hai."</td></tr>
+          <tr><td><code>correlation = 0.8279</code></td><td>This is high, so neighboring gray values have a strong relationship or pattern.</td><td>"Correlation high hai, matlab neighbor pixels random nahi balkay related pattern follow kar rahe hain."</td></tr>
+        </table>
+        <div class="callout correct">
+          <p><b>Combined interpretation:</b> These example values describe a fairly smooth and regular selected region: high energy, high homogeneity, high correlation, moderate entropy, and moderate contrast.</p>
+          <p><b>Roman Urdu:</b> In numbers ka combined matlab yeh hai ke selected region ka texture kaafi smooth aur regular hai, lekin thori intensity variation bhi present hai.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="9. Texture Features">
+        <h3>9. Texture Features: What These Numbers Tell</h3>
+        <div class="card blue">
+          <span class="tag">Core difference</span>
+          <p>Texture features describe the inside pattern of the selected region. They do not measure the outer shape. They answer questions like: Is the region smooth? random? high contrast? repeated?</p>
+          <p><b>Roman Urdu:</b> Texture features region ke andar brightness pattern batate hain. Shape nahi batate. Yeh batate hain ke region smooth hai, random hai, contrast zyada hai, ya pattern repeat ho raha hai.</p>
+        </div>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Energy</span>
+            <p><b>What it tells:</b> Regularity or uniformity of texture.</p>
+            <p><b>High:</b> Same patterns repeat. Texture is more regular.</p>
+            <p><b>Low:</b> Pattern is spread out and less regular.</p>
+            <p><b>Viva:</b> "Energy batati hai texture kitna uniform ya repeated hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Entropy</span>
+            <p><b>What it tells:</b> Randomness or complexity.</p>
+            <p><b>High:</b> Texture is complex and unpredictable.</p>
+            <p><b>Low:</b> Texture is simple and predictable.</p>
+            <p><b>Viva:</b> "Entropy batati hai texture kitna random ya complex hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Contrast</span>
+            <p><b>What it tells:</b> Difference between neighboring gray values.</p>
+            <p><b>High:</b> Bright and dark pixels change strongly near each other.</p>
+            <p><b>Low:</b> Nearby pixels are not very different.</p>
+            <p><b>Viva:</b> "Contrast nearby pixels ki brightness difference batata hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Homogeneity</span>
+            <p><b>What it tells:</b> Smoothness or neighbor similarity.</p>
+            <p><b>High:</b> Nearby pixels are mostly similar.</p>
+            <p><b>Low:</b> Nearby pixels change a lot.</p>
+            <p><b>Viva:</b> "Homogeneity batati hai ke nearby pixels kitne similar hain."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Correlation</span>
+            <p><b>What it tells:</b> Relationship between neighboring gray values.</p>
+            <p><b>High:</b> Neighbor pixels follow a related pattern.</p>
+            <p><b>Low:</b> Neighbor pixels are less related.</p>
+            <p><b>Viva:</b> "Correlation neighbor gray values ka relation batati hai."</p>
+          </div>
+          <div class="card orange">
+            <span class="tag orange">Important</span>
+            <p>These features are not tumor names. They are numeric texture descriptions. The classifier uses them as evidence.</p>
+            <p><b>Roman Urdu:</b> Yeh tumor ke naam nahi hain. Yeh numbers hain jo texture describe karte hain.</p>
+          </div>
+        </div>
+        <h4>Your example values</h4>
+        <table>
+          <tr><th>Value</th><th>Meaning in simple words</th><th>Speakable viva answer</th></tr>
+          <tr><td><code>energy = 0.9102</code></td><td>High uniformity. Pattern is quite repeated/regular.</td><td>"Energy high hai, so selected region ka texture kaafi uniform hai."</td></tr>
+          <tr><td><code>entropy = 1.2359</code></td><td>Moderate complexity. Not extremely random.</td><td>"Entropy moderate hai, so texture mein variation hai but bohat zyada randomness nahi."</td></tr>
+          <tr><td><code>contrast = 8.6215</code></td><td>Some brightness difference exists, but it is not the strongest contrast case.</td><td>"Contrast batata hai nearby pixels mein brightness difference hai, lekin yeh extreme nahi."</td></tr>
+          <tr><td><code>homogeneity = 0.9252</code></td><td>High smoothness. Neighbor pixels are very similar.</td><td>"Homogeneity high hai, so region smooth aur similar-neighbor wala hai."</td></tr>
+          <tr><td><code>correlation = 0.8279</code></td><td>Strong neighbor relationship. Gray values follow a pattern.</td><td>"Correlation high hai, so neighbor pixels related pattern follow kar rahe hain."</td></tr>
+        </table>
+        <div class="callout correct">
+          <p><b>One-line combined answer:</b> "These values show that this selected region is fairly smooth and regular, with high homogeneity, high energy, high correlation, moderate entropy, and moderate contrast."</p>
+          <p><b>Roman Urdu:</b> In values se lagta hai region ka texture smooth aur regular hai, randomness aur contrast moderate hain.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="10. GLCM Code">
+        <h3>10. Code Block: GLCM Feature Extraction</h3>
+        <pre><code>def compute_glcm_features(slc, mask):
+    region = slc.copy()
+    region[mask == 0] = 0
+    img_uint = (region * 63).astype(np.uint8)
+    glcm = graycomatrix(img_uint, distances=GLCM_DISTS,
+                        angles=GLCM_ANGLES, levels=64,
+                        symmetric=True, normed=True)
+    energy = graycoprops(glcm, "energy").mean()
+    contrast = graycoprops(glcm, "contrast").mean()
+    homogeneity = graycoprops(glcm, "homogeneity").mean()
+    correlation = graycoprops(glcm, "correlation").mean()
+    entropy = -sum(glcm * log2(glcm))</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Extract texture numbers from the masked MRI region.</p></div>
+          <div class="card"><span class="tag">Input</span><p>Normalized slice and clean mask.</p></div>
+          <div class="card"><span class="tag">Output</span><p>Energy, entropy, contrast, homogeneity, correlation.</p></div>
+          <div class="card"><span class="tag">Important lines</span><p><code>region[mask == 0] = 0</code> ignores background. <code>region * 63</code> converts intensities into 64 gray levels for GLCM.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"GLCM converts the masked region into texture features by studying how gray levels occur next to each other."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="11. Geometry Features">
+        <h3>11. Geometry Features: What Shape Numbers Tell</h3>
+        <div class="card blue">
+          <span class="tag">Core difference</span>
+          <p>Geometry features describe the shape of the selected mask region. They do not describe brightness texture inside the region. They answer questions like: How big is the mask? Where is its center? How long is its boundary? Is it round or irregular?</p>
+          <p><b>Roman Urdu:</b> Geometry features mask ki shape batate hain. Yeh brightness pattern nahi batate. Yeh size, center, boundary aur roundness batate hain.</p>
+        </div>
+        <table>
+          <tr><th>Feature</th><th>Meaning</th><th>Roman Urdu</th></tr>
+          <tr><td>Area</td><td>Number of selected pixels in the mask.</td><td>Mask mein white pixels ki quantity.</td></tr>
+          <tr><td>Centroid</td><td>Center point of the selected region.</td><td>Region ka center point.</td></tr>
+          <tr><td>Perimeter</td><td>Boundary length of the region.</td><td>Region ki boundary length.</td></tr>
+          <tr><td>Circularity</td><td>How close the shape is to a circle.</td><td>Shape circle jaisi kitni hai.</td></tr>
+        </table>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Area</span>
+            <p><b>What it tells:</b> Masked region size.</p>
+            <p><b>High:</b> Larger selected region.</p>
+            <p><b>Low:</b> Smaller selected region.</p>
+            <p><b>Viva:</b> "Area selected mask ka size batata hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Centroid</span>
+            <p><b>What it tells:</b> Center position of the selected region.</p>
+            <p><b>Use:</b> Helps locate where the region lies in the image.</p>
+            <p><b>Viva:</b> "Centroid mask region ka center point hota hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Perimeter</span>
+            <p><b>What it tells:</b> Boundary length of the region.</p>
+            <p><b>High:</b> Bigger or more irregular boundary.</p>
+            <p><b>Viva:</b> "Perimeter selected region ki boundary length batata hai."</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Circularity</span>
+            <p><b>What it tells:</b> How round the region is.</p>
+            <p><b>Near 1:</b> More circle-like. <b>Low:</b> Irregular or stretched.</p>
+            <p><b>Viva:</b> "Circularity batati hai shape circle ke kitni close hai."</p>
+          </div>
+        </div>
+        <div class="callout fix">
+          <p><b>Important:</b> In Assignment 3, geometry is calculated from the clean mask made by classical processing. It is not necessarily the exact tumor outline.</p>
+          <p><b>Roman Urdu:</b> Geometry A3 ke clean mask se calculate hoti hai. Is ko exact tumor boundary claim nahi karna.</p>
+        </div>
+        <div class="card blue">
+          <span class="tag">Circularity formula</span>
+          <p><code>circularity = (4 * pi * area) / perimeter^2</code></p>
+          <p>If circularity is closer to 1, shape is more circle-like. If it is low, shape is irregular or stretched.</p>
+        </div>
+        <pre><code>def compute_geometric_features(mask):
+    labeled_mask = sk_label(mask)
+    props = regionprops(labeled_mask)
+    region = max(props, key=lambda r: r.area)
+    area = region.area
+    centroid_r, centroid_c = region.centroid
+    perimeter = region.perimeter
+    circularity = (4 * np.pi * area) / (perimeter ** 2)</code></pre>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"Geometric features describe the shape of the mask, while GLCM features describe its texture."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="12. Feature Vector">
+        <h3>12. Feature Vector</h3>
+        <p>A feature vector is one row of numbers for one MRI slice. It is what the classifier reads.</p>
+        <div class="feature-vector">
+          <div class="fv-cell id"><b>subject</b><br>T1CE...</div>
+          <div class="fv-cell id"><b>slice</b><br>75</div>
+          <div class="fv-cell id"><b>label</b><br>Enhancing</div>
+          <div class="fv-cell tex"><b>energy</b><br>0.9102</div>
+          <div class="fv-cell tex"><b>entropy</b><br>1.2359</div>
+          <div class="fv-cell tex"><b>contrast</b><br>8.6215</div>
+          <div class="fv-cell tex"><b>homogeneity</b><br>0.9252</div>
+          <div class="fv-cell tex"><b>correlation</b><br>0.8279</div>
+          <div class="fv-cell geo"><b>area</b><br>4667</div>
+          <div class="fv-cell geo"><b>centroid</b><br>117, 119</div>
+          <div class="fv-cell geo"><b>perimeter</b><br>1062.8</div>
+          <div class="fv-cell geo"><b>circularity</b><br>0.0519</div>
+        </div>
+        <div class="grid">
+          <div class="card orange"><span class="tag orange">Important</span><p>The classifier did not use subject, slice, centroid row, or centroid column. It used 8 feature columns.</p></div>
+          <div class="card orange"><span class="tag orange">Used by classifier</span><p><code>energy, entropy, contrast, homogeneity, correlation, area, perimeter, circularity</code></p></div>
+        </div>
+        <h4>How many features are in one row?</h4>
+        <table>
+          <tr><th>Column type</th><th>Columns</th><th>Are these classifier features?</th></tr>
+          <tr><td>Identity columns</td><td><code>subject</code>, <code>slice</code>, <code>label</code></td><td>No. They identify the row and label.</td></tr>
+          <tr><td>Texture features</td><td><code>energy</code>, <code>entropy</code>, <code>contrast</code>, <code>homogeneity</code>, <code>correlation</code></td><td>Yes. 5 texture features.</td></tr>
+          <tr><td>Geometry columns</td><td><code>area</code>, <code>centroid_r</code>, <code>centroid_c</code>, <code>perimeter</code>, <code>circularity</code></td><td>Partly. Area, perimeter, and circularity were used. Centroid was saved but not used by classifier.</td></tr>
+          <tr><td>Classifier feature count</td><td>8 features</td><td>5 GLCM + 3 geometry features.</td></tr>
+          <tr><td>Feature-vector rows</td><td>50 rows</td><td>This means 50 samples, not 50 features per sample.</td></tr>
+        </table>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Subject column</span>
+            <p>In this CSV, <code>subject</code> is really a file identifier such as <code>T1CE_to_SRI_defaced</code>. It is not necessarily one patient name.</p>
+            <p><b>Roman Urdu:</b> Yahan subject ka matlab file identifier hai, zaroori nahi ke aik person ka naam ho.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Volume</span>
+            <p>A volume is the full 3D MRI file. It contains many 2D slices. A3 selected 5 center slices from each selected volume.</p>
+            <p><b>Roman Urdu:</b> Volume poori 3D MRI file hoti hai. Us ke andar bohat slices hoti hain.</p>
+          </div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"A feature vector is one numeric description of a slice. In our work it combines texture features and shape features, then the classifier predicts the label from those numbers."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="13. Labels">
+        <h3>13. Label Creation</h3>
+        <pre><code>fname = nii_path.name.lower()
+if "t1c" in fname or "t1ce" in fname:
+    label = "Enhancing"
+elif "t2f" in fname or "fl" in fname:
+    label = "Edema"
+elif "t1n" in fname or "t1" in fname:
+    label = "Necrotic"
+else:
+    label = "Other"</code></pre>
+        <div class="callout fix">
+          <p><b>Important:</b> These labels are assigned from file type names, not manually drawn ground-truth tumor labels.</p>
+          <p><b>Roman Urdu:</b> Label filename se bana hai. Yeh doctor wali exact manual annotation nahi hai.</p>
+        </div>
+        <table>
+          <tr><th>Filename clue</th><th>Assigned label</th><th>Count in CSV</th></tr>
+          <tr><td><code>t1c</code> or <code>t1ce</code></td><td>Enhancing</td><td>15</td></tr>
+          <tr><td><code>t1n</code> or <code>t1</code></td><td>Necrotic</td><td>15</td></tr>
+          <tr><td><code>t2f</code> or <code>fl</code></td><td>Edema</td><td>10</td></tr>
+          <tr><td>Anything else</td><td>Other</td><td>10</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Safe viva answer</span>
+          <p>"For this assignment, labels were derived from MRI modality/file naming rules so we could demonstrate classification using extracted features."</p>
+        </div>
+        <h4>What do these label names mean?</h4>
+        <table>
+          <tr><th>Label in A3</th><th>Medical idea</th><th>How A3 actually assigned it</th><th>Safe wording</th></tr>
+          <tr><td>Enhancing</td><td>Area that appears enhanced in contrast MRI, often visible on T1CE.</td><td>Filename contained <code>t1c</code> or <code>t1ce</code>.</td><td>"Enhancing is a proxy label from T1CE files in our A3 code."</td></tr>
+          <tr><td>Necrotic</td><td>Dead or non-enhancing tumor core region in medical context.</td><td>Filename contained <code>t1n</code> or <code>t1</code>.</td><td>"Necrotic is a proxy label from T1/T1N files here, not manual tumor-core annotation."</td></tr>
+          <tr><td>Edema</td><td>Swelling/fluid around tumor, often visible on FLAIR.</td><td>Filename contained <code>t2f</code>, <code>fl</code>, or FLAIR-like text.</td><td>"Edema is a proxy label from FL/FLAIR files."</td></tr>
+          <tr><td>Other</td><td>Remaining group not matched by the above rules.</td><td>Usually T2-style or unmatched filename.</td><td>"Other means the file did not match the first three rules."</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>What not to claim:</b> Do not say Assignment 3 precisely segmented edema, enhancing tumor, or necrotic core. The A3 mask is a classical selected region for feature extraction, and the labels are filename-derived proxy classes.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="14. Classification">
+        <h3>14. Classification Code</h3>
+        <pre><code>FEATURE_COLS = ["energy", "entropy", "contrast", "homogeneity",
+                "correlation", "area", "perimeter", "circularity"]
+
+X = feature_numbers
+y = labels
+X_scaled = StandardScaler().fit_transform(X)
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.25, random_state=42)
+
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+svm = SVC(kernel="rbf", C=10, gamma="scale", random_state=42)</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Random Forest</span><p>Many decision trees vote for the final class. It also gives feature importance.</p></div>
+          <div class="card"><span class="tag">SVM RBF</span><p>Finds a curved decision boundary between classes in feature space.</p></div>
+          <div class="card"><span class="tag">StandardScaler</span><p>Makes features comparable by scaling them. This is especially useful for SVM.</p></div>
+          <div class="card"><span class="tag">Train test split</span><p>37 samples trained the model and 13 samples tested it.</p></div>
+        </div>
+        <h4>Random Forest from zero</h4>
+        <div class="tree">
+          <div class="tree-node root"><b>Root node</b><br>First big question<br><code>contrast &lt; 15?</code></div>
+          <div class="tree-node"><b>Internal node</b><br>Next question<br><code>area &lt; 7000?</code></div>
+          <div class="tree-node"><b>Internal node</b><br>Another split<br><code>entropy &gt; 2?</code></div>
+          <div class="tree-node leaf"><b>Leaf node</b><br>Final class vote<br>Edema</div>
+        </div>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Decision tree</span>
+            <p>A decision tree asks questions about feature values. At the end it reaches a leaf node and predicts a class.</p>
+            <p><b>Roman Urdu:</b> Tree features par questions poochta hai. End par leaf node final class batata hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Random Forest</span>
+            <p>Random Forest has many trees. Each tree votes, and the class with most votes becomes final prediction.</p>
+            <p><b>Roman Urdu:</b> Random Forest mein bohat trees hotay hain. Sab vote karte hain.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Root node</span>
+            <p>The first split in a tree. The algorithm chooses the feature and threshold that separate the training samples best at the top.</p>
+            <p><b>Roman Urdu:</b> Root pe pehla aur strong question hota hai. Yeh manually nahi, training data se choose hota hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Leaf node</span>
+            <p>The final node where prediction is made. A leaf stores class counts or class probability from training samples that reached it.</p>
+            <p><b>Roman Urdu:</b> Leaf final answer deta hai. Leaf ke andar class votes/probability hoti hai.</p>
+          </div>
+        </div>
+        <table>
+          <tr><th>Tree part</th><th>What value is inside?</th><th>Significance in viva</th></tr>
+          <tr><td>Root node</td><td>A learned rule, for example <code>contrast &lt; 15</code>. This example is illustrative.</td><td>It is important because every sample passes through it first.</td></tr>
+          <tr><td>Internal node</td><td>Another learned rule on a smaller group, for example <code>area &lt; 7000</code>.</td><td>It refines the decision after the root split.</td></tr>
+          <tr><td>Leaf node</td><td>Final class vote, such as Edema, Enhancing, Necrotic, or Other.</td><td>Prediction is made here.</td></tr>
+          <tr><td>Forest vote</td><td>100 trees each give one vote.</td><td>The final class is the majority vote, so one weak tree has less effect.</td></tr>
+          <tr><td>Feature importance</td><td>How much a feature helped reduce impurity across trees.</td><td>Taller bar means that feature was used more usefully by Random Forest.</td></tr>
+        </table>
+        <div class="callout correct">
+          <p><b>Safe viva answer:</b> "In Random Forest, each tree learns thresholds from the feature values. The root node is the first major split, leaf nodes store final class votes, and the forest combines many trees by majority voting."</p>
+          <p><b>Roman Urdu:</b> Tree khud feature threshold learn karta hai. Root pe pehla split hota hai, leaf pe final vote hota hai, aur Random Forest mein bohat trees mil kar final class decide karte hain.</p>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The classifiers do not see images directly. They see feature vectors extracted from images."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="15. Outputs">
+        <h3>15. Output Images and How to Explain Them</h3>
+        <h4>GLCM plot</h4>
+        <div class="image-row">
+          <img src="outputs_a3/output_a3/glcm_plots/T1CE_to_SRI_defaced_z0075_glcm.png" alt="A3 GLCM output">
+          <div class="card">
+            <p><b>What you are looking at:</b> Original MRI slice, masked region, and GLCM texture feature bar chart.</p>
+            <p><b>What changed from input:</b> The image was masked, then texture numbers were calculated from that masked region.</p>
+            <p><b>Good output:</b> Mask covers useful region and feature bars show numeric values.</p>
+            <p><b>Bad output:</b> Mask misses the region or includes too much background, causing weak feature values.</p>
+            <p><b>Viva answer:</b> "This plot shows the original slice, selected region, and texture features extracted using GLCM."</p>
+          </div>
+        </div>
+        <div class="callout fix">
+          <p><b>Very important mask clarification:</b> The A3 masked region is not a manual tumor annotation and it is not specifically "edema mask" or "enhancing mask." It is a classical image-processing mask made by Canny edges, morphology, and largest connected component selection. Its job is to choose a useful region for feature extraction and reduce background effect.</p>
+          <p><b>Roman Urdu:</b> A3 ka mask tumor ka doctor wala exact mask nahi hai. Yeh Canny aur morphology se bana selected region hai jahan se texture aur geometry features nikale gaye.</p>
+          <p><b>Safe viva answer:</b> "The mask in Assignment 3 is a feature-extraction mask. The labels are filename-based proxy labels, so I will not claim that this mask exactly marks edema, enhancing tumor, or necrotic core."</p>
+        </div>
+        <h4>More examples from other labels</h4>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Edema example</span>
+            <img src="outputs_a3/output_a3/glcm_plots/FL_to_SRI_defaced_z0075_glcm.png" alt="A3 edema GLCM output">
+            <p class="mini">FL file was labeled Edema by the filename rule.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Necrotic example</span>
+            <img src="outputs_a3/output_a3/glcm_plots/T1_to_SRI_defaced_z0075_glcm.png" alt="A3 necrotic GLCM output">
+            <p class="mini">T1 file was labeled Necrotic by the filename rule.</p>
+          </div>
+        </div>
+        <h4>Geometry plot</h4>
+        <div class="image-row">
+          <img src="outputs_a3/output_a3/geometry_plots/T1CE_to_SRI_defaced_z0075_geometry.png" alt="A3 geometry output">
+          <div class="card">
+            <p><b>What you are looking at:</b> Mask overlay with centroid marker and a bar chart of geometric features.</p>
+            <p><b>What changed from input:</b> The selected mask region was measured for area, perimeter, and circularity.</p>
+            <p><b>Good output:</b> Centroid is inside the selected region and shape values are consistent.</p>
+            <p><b>Bad output:</b> Wrong mask leads to wrong area, perimeter, and centroid.</p>
+            <p><b>Viva answer:</b> "This plot shows shape features extracted from the clean mask."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="16. Numeric Results">
+        <h3>16. Numeric Results</h3>
+        <table>
+          <tr><th>Feature</th><th>Mean</th><th>Range</th><th>Meaning</th></tr>
+          <tr><td>Energy</td><td>0.8561</td><td>0.6967 to 0.9432</td><td>Texture uniformity.</td></tr>
+          <tr><td>Entropy</td><td>1.8533</td><td>0.7869 to 3.6148</td><td>Texture randomness.</td></tr>
+          <tr><td>Contrast</td><td>17.8636</td><td>6.7143 to 30.5813</td><td>Intensity difference strength.</td></tr>
+          <tr><td>Homogeneity</td><td>0.8894</td><td>0.7842 to 0.9517</td><td>Neighbor similarity.</td></tr>
+          <tr><td>Correlation</td><td>0.8252</td><td>0.7556 to 0.9206</td><td>Neighbor relationship.</td></tr>
+          <tr><td>Area</td><td>7731</td><td>2879 to 16738</td><td>Mask size.</td></tr>
+          <tr><td>Perimeter</td><td>1348.2591</td><td>943.1636 to 2015.2399</td><td>Boundary length.</td></tr>
+          <tr><td>Circularity</td><td>0.0515</td><td>0.0304 to 0.1084</td><td>Low values mean irregular shapes.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The feature means summarize the selected dataset. Texture features describe intensity patterns, while geometric features describe mask size and shape."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="17. Classifier Results">
+        <h3>17. Classifier Results</h3>
+        <table>
+          <tr><th>Classifier</th><th>Accuracy</th><th>Train samples</th><th>Test samples</th></tr>
+          <tr><td>Random Forest</td><td>100.00%</td><td>37</td><td>13</td></tr>
+          <tr><td>SVM RBF</td><td>92.31%</td><td>37</td><td>13</td></tr>
+        </table>
+        <div class="image-row">
+          <img src="outputs_a3/output_a3/classification/confusion_matrices.png" alt="A3 confusion matrices">
+          <div class="card">
+            <p><b>What you are looking at:</b> Confusion matrices for Random Forest and SVM.</p>
+            <p><b>How to read it:</b> Rows are true labels and columns are predicted labels. Diagonal values are correct predictions.</p>
+            <p><b>Good output:</b> Most values are on the diagonal.</p>
+            <p><b>Safe limitation:</b> Accuracy is high, but the test set is small, only 13 samples.</p>
+          </div>
+        </div>
+        <div class="callout fix">
+          <p><b>Overfitting or underfitting?</b> We cannot prove overfitting only from this output because the notebook does not report separate training accuracy. But Random Forest 100% on only 13 test samples is a possible overfitting risk or small-test-set effect.</p>
+          <p><b>Safe viva answer:</b> "The accuracy is high on our small test split, but because the dataset is small, we should not overclaim. To confirm generalization, we would need more data, cross-validation, and a separate unseen test set."</p>
+          <p><b>Roman Urdu:</b> 100 percent accuracy achi lagti hai, lekin test set sirf 13 samples ka hai. Is liye overclaim nahi karna.</p>
+        </div>
+        <div class="image-row">
+          <img src="outputs_a3/output_a3/classification/feature_importance.png" alt="A3 feature importance">
+          <div class="card">
+            <p><b>What you are looking at:</b> Random Forest feature importance plot.</p>
+            <p><b>Meaning:</b> Taller bars show features the Random Forest used more for classification.</p>
+            <p><b>Viva answer:</b> "Feature importance helps us understand which texture or geometry features contributed more to Random Forest decisions."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="18. Viva Questions">
+        <h3>18. Viva-Style Questions and Simple Answers</h3>
+        <div class="grid">
+          <div class="card"><b>Q: What was Assignment 3 about?</b><p>A: Feature extraction and classification from MRI slices.</p></div>
+          <div class="card"><b>Q: What is a feature vector?</b><p>A: One row of numbers describing one slice.</p></div>
+          <div class="card"><b>Q: What does GLCM measure?</b><p>A: Texture by counting gray-level neighbor relationships.</p></div>
+          <div class="card"><b>Q: What do texture features tell?</b><p>A: They tell the inside brightness pattern of the selected region, such as smoothness, randomness, contrast, and uniformity.</p></div>
+          <div class="card"><b>Q: What do geometry features tell?</b><p>A: They tell the mask shape, such as size, center, boundary length, and roundness.</p></div>
+          <div class="card"><b>Q: Why use a mask before GLCM?</b><p>A: To focus feature extraction on the useful region instead of background.</p></div>
+          <div class="card"><b>Q: What is energy?</b><p>A: Uniformity of texture. Higher energy means more repeated or regular texture.</p></div>
+          <div class="card"><b>Q: What is entropy?</b><p>A: Randomness or complexity of texture.</p></div>
+          <div class="card"><b>Q: What is circularity?</b><p>A: A measure of how circle-like the region is.</p></div>
+          <div class="card"><b>Q: Why use StandardScaler?</b><p>A: To scale features so large values like area do not dominate smaller values like energy.</p></div>
+          <div class="card"><b>Q: Why Random Forest?</b><p>A: It handles mixed numeric features well and gives feature importance.</p></div>
+          <div class="card"><b>Q: What is a root node?</b><p>A: The first split of a decision tree. It uses a learned feature threshold that separates samples well.</p></div>
+          <div class="card"><b>Q: What is a leaf node?</b><p>A: The final node where the tree gives a class vote or class probability.</p></div>
+          <div class="card"><b>Q: Why SVM?</b><p>A: It is a strong classifier for small feature-based datasets.</p></div>
+          <div class="card"><b>Q: How many labels?</b><p>A: Four labels: Enhancing, Necrotic, Edema, and Other.</p></div>
+          <div class="card"><b>Q: How many classifier features?</b><p>A: Eight features per sample: five GLCM texture features and three geometry features.</p></div>
+          <div class="card"><b>Q: Does 50 mean 50 features?</b><p>A: No. It means 50 sample rows. Each row used 8 classifier features.</p></div>
+          <div class="card"><b>Q: Is the A3 mask a tumor mask?</b><p>A: No. It is a classical selected region mask for feature extraction.</p></div>
+          <div class="card"><b>Q: Are A3 labels manual annotations?</b><p>A: No. They are proxy labels assigned from file names.</p></div>
+          <div class="card"><b>Q: What split was used?</b><p>A: 75 percent training and 25 percent testing, giving 37 train and 13 test samples.</p></div>
+          <div class="card"><b>Q: Is 100 percent accuracy overfitting?</b><p>A: It may be an overfitting risk or small-test-set effect, but we need training accuracy or cross-validation to confirm.</p></div>
+          <div class="card"><b>Q: Did A3 use A2 output files?</b><p>A: No. It reused the A2 mask concept, but created masks again from MRI slices.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="19. Examiner Follow-Ups">
+        <h3>19. Common Examiner Follow-Up Questions</h3>
+        <div class="grid">
+          <div class="card orange"><b>Why was Random Forest accuracy 100%?</b><p>Safe answer: It performed perfectly on this small test split, but the test set had only 13 samples, so we should not overclaim general performance.</p></div>
+          <div class="card orange"><b>Why did SVM score lower?</b><p>Safe answer: SVM uses a different decision boundary and may not separate these small feature groups as perfectly as Random Forest.</p></div>
+          <div class="card orange"><b>Are labels real tumor labels?</b><p>Safe answer: In this assignment, labels were derived from file naming rules for demonstration. They are not a full clinical ground truth annotation.</p></div>
+          <div class="card orange"><b>Why use 64 gray levels for GLCM?</b><p>Safe answer: Reducing to 64 levels makes GLCM smaller and computationally manageable while still preserving texture patterns.</p></div>
+          <div class="card orange"><b>Why use multiple angles?</b><p>Safe answer: Texture can appear in different directions, so multiple angles give a more balanced texture description.</p></div>
+          <div class="card orange"><b>What if mask is wrong?</b><p>Safe answer: Then texture and geometry features will also be affected, because feature extraction depends on mask quality.</p></div>
+          <div class="card orange"><b>Should the A3 mask show the exact tumor?</b><p>Safe answer: Not in this assignment. A3 used a classical mask for feature extraction, not the SEG ground-truth tumor annotation.</p></div>
+          <div class="card orange"><b>Why use labels like Edema if mask is not edema?</b><p>Safe answer: In A3, these are proxy class names derived from modality/file names. They are useful for demonstrating classification, but they should not be overclaimed as exact tumor subregion labels.</p></div>
+          <div class="card orange"><b>What does GLCM add to the classifier?</b><p>Safe answer: It converts visual texture into numeric features such as entropy, contrast, and homogeneity, so the classifier can compare slices using numbers.</p></div>
+          <div class="card orange"><b>Why only 50 feature vectors?</b><p>Safe answer: The submitted A3 configuration used 10 volumes and 5 center slices per volume, so it produced 50 records. It was a manageable Colab-scale experiment.</p></div>
+          <div class="card orange"><b>Why 20 plots but 50 rows?</b><p>Safe answer: Some subject-slice plot filenames repeated and later plots overwrote earlier ones. The CSV kept all 50 feature-vector rows.</p></div>
+          <div class="card orange"><b>What is the difference between subject and volume?</b><p>Safe answer: In the CSV, subject is a file identifier. A volume is the full 3D MRI file that contains many 2D slices.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="20. Final Hidden Explanation">
+        <h3>20. Final Assignment 3 Explanation</h3>
+        <p>Click only when you want the full final speech for Assignment 3.</p>
+        <button class="reveal" onclick="toggleAnswer('finalAnswer')">Show final hidden explanation</button>
+        <div class="hidden-answer" id="finalAnswer">
+          <p><b>English:</b> "Assignment 3 was about feature extraction and classification. It continued the previous milestones, but it did not directly load Assignment 2 output files. Instead, it reused the Assignment 2 mask idea and created clean masks again from MRI slices. A subject means one case, a volume means one 3D MRI scan type such as T1, T1CE, T2, or FLAIR, and a slice means one 2D image from that volume. The notebook loaded MRI NIfTI volumes from the KaggleHub chunk of BraTS-PEDs, selected 5 center slices from each of 10 volumes, normalized each slice, and created a clean mask using Canny, closing, largest connected component selection, and morphology. This A3 mask was a feature-extraction mask, not a manual tumor annotation mask. Then it extracted two types of features. The first type was GLCM texture features: energy, entropy, contrast, homogeneity, and correlation. GLCM converts visual texture into numeric neighbor-pattern features. The second type was geometric features: area, centroid, perimeter, and circularity. The classifier used 8 features per sample: 5 GLCM features plus area, perimeter, and circularity. The submitted run produced 50 feature-vector rows, meaning 50 samples, not 50 features. There were 4 proxy labels: Enhancing, Necrotic, Edema, and Other, with sample counts 15, 15, 10, and 10. These labels were assigned from file names, not from manual clinical annotations. The feature matrix was split into 75 percent training and 25 percent testing, giving 37 train samples and 13 test samples. Random Forest achieved 100 percent accuracy and SVM achieved 92.31 percent on this small test set. The safe limitation is that 100 percent accuracy may be affected by the small test set, so we should not overclaim. More data, cross-validation, and an unseen test set would be needed for stronger generalization."</p>
+          <p><b>Roman Urdu:</b> "Assignment 3 feature extraction aur classification ke bare mein tha. Is ne Assignment 2 ke saved output files ko direct input nahi banaya, balkay A2 wala clean mask concept dobara MRI slices par apply kiya. Subject aik case hota hai, volume aik 3D MRI scan type hoti hai jaise T1, T1CE, T2, ya FLAIR, aur slice us volume ki aik 2D image hoti hai. Notebook ne KaggleHub BraTS-PEDs chunk se MRI NIfTI volumes load kiye, 10 volumes mein se 5 center slices liye, normalize kiya, phir Canny aur morphology se clean mask banaya. Yeh A3 mask feature extraction ke liye selected region tha, doctor wala manual tumor annotation mask nahi tha. Phir do types ke features nikle. Pehle GLCM texture features: energy, entropy, contrast, homogeneity aur correlation. GLCM texture ko numeric neighbor-pattern features mein convert karta hai. Dusre geometric features: area, centroid, perimeter aur circularity. Classifier ne har sample ke 8 features use kiye: 5 GLCM features plus area, perimeter aur circularity. Total 50 feature-vector rows bane, iska matlab 50 samples hain, 50 features nahi. Labels 4 proxy labels thay: Enhancing, Necrotic, Edema aur Other. Counts 15, 15, 10 aur 10 thay. Yeh labels filename se assign hue, manual clinical annotation se nahi. Train-test split 75 percent training aur 25 percent testing tha, jis se 37 train samples aur 13 test samples bane. Random Forest ne 100 percent aur SVM ne 92.31 percent accuracy di. Safe limitation yeh hai ke test set chota hai, is liye 100 percent ko overclaim nahi karna. Strong result ke liye more data, cross-validation aur unseen test set chahiye."</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const nav = document.getElementById("nav");
+    steps.forEach((step, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = step.dataset.title;
+      btn.onclick = () => showStep(index);
+      if (index === 0) btn.classList.add("active");
+      nav.appendChild(btn);
+    });
+    function showStep(index) {
+      steps.forEach((s, i) => s.classList.toggle("active", i === index));
+      Array.from(nav.children).forEach((b, i) => b.classList.toggle("active", i === index));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function toggleAnswer(id) {
+      document.getElementById(id).classList.toggle("show");
+    }
+  </script>
+</body>
+</html>

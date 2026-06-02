@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assignment 1 Viva Canvas - MRI Filtering</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #566573;
+      --paper: #f6f8fb;
+      --card: #ffffff;
+      --line: #d7dee8;
+      --blue: #1f618d;
+      --green: #1e8449;
+      --orange: #a65f00;
+      --red: #a93226;
+      --soft-blue: #eaf3fb;
+      --soft-green: #edf7ef;
+      --soft-orange: #fff4e0;
+      --soft-red: #fdecea;
+      --shadow: 0 8px 24px rgba(20, 31, 48, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #102033;
+      color: white;
+      padding: 18px 14px;
+      border-right: 1px solid #0b1624;
+    }
+
+    .brand {
+      padding: 10px 10px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      margin-bottom: 12px;
+    }
+
+    .brand h1 {
+      font-size: 18px;
+      line-height: 1.25;
+      margin: 0 0 8px;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      color: #d7e4f4;
+      font-size: 13px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: block;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 7px 0;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #2e86c1;
+      border-color: #5dade2;
+    }
+
+    main {
+      padding: 26px;
+      max-width: 1220px;
+      width: 100%;
+    }
+
+    .top,
+    section.step {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .top {
+      background: linear-gradient(180deg, #ffffff, #eef6fc);
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .top h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .meta div {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    section.step {
+      display: none;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    section.step.active { display: block; }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h4 {
+      margin: 20px 0 8px;
+      font-size: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      padding: 14px;
+    }
+
+    .card.blue { background: var(--soft-blue); border-color: #b9d8ef; }
+    .card.green { background: var(--soft-green); border-color: #b9dfc1; }
+    .card.orange { background: var(--soft-orange); border-color: #f1cf8b; }
+    .card.red { background: var(--soft-red); border-color: #efb7ae; }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      color: white;
+      background: var(--blue);
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .tag.green { background: var(--green); }
+    .tag.orange { background: var(--orange); }
+    .tag.red { background: var(--red); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin: 16px 0;
+    }
+
+    .flow div {
+      border: 1px solid var(--line);
+      background: #fdfefe;
+      border-radius: 8px;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 14px;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    pre {
+      background: #101820;
+      color: #e7eef7;
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    code { font-family: Consolas, Monaco, monospace; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #edf2f7; }
+
+    img {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .image-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .gallery figure {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: white;
+    }
+
+    .gallery figcaption {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 12px;
+    }
+
+    .filter-tabs button,
+    .reveal,
+    .pause-btn {
+      border: 0;
+      background: var(--blue);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .filter-tabs button.active { background: var(--green); }
+    .pause-btn { background: var(--orange); }
+
+    .filter-panel { display: none; }
+    .filter-panel.active { display: block; }
+
+    .matrix-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin: 16px 0;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 54px);
+      grid-template-rows: repeat(3, 54px);
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #aeb6bf;
+      border-radius: 6px;
+      background: #edf2f7;
+      font-weight: bold;
+      animation: pulse 2.4s infinite;
+    }
+
+    .cell.center {
+      background: #f9e79f;
+      border-color: #b7950b;
+    }
+
+    .cell.weighted { background: #d6eaf8; }
+    .cell.sorted { background: #d5f5e3; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .hidden-answer {
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid #b9d8ef;
+      background: var(--soft-blue);
+      border-radius: 8px;
+    }
+
+    .small { color: var(--muted); font-size: 13px; }
+    .safe { color: var(--green); font-weight: bold; }
+    .dont { color: var(--red); font-weight: bold; }
+    .rank { font-size: 24px; font-weight: bold; color: var(--blue); }
+
+    @media (max-width: 950px) {
+      .layout { grid-template-columns: 1fr; }
+      aside {
+        position: relative;
+        height: auto;
+      }
+      .grid, .grid.three, .grid.four, .meta, .flow, .image-row, .gallery, .matrix-wrap {
+        grid-template-columns: 1fr;
+      }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <h1>Assignment 1 Viva Canvas</h1>
+        <p>MRI Filtering and Image Quality Check</p>
+      </div>
+      <div class="nav" id="nav"></div>
+    </aside>
+
+    <main>
+      <div class="top">
+        <h2>Computer Vision Semester Project: Assignment 1</h2>
+        <p><b>Submitted By:</b> 231192 - Muhammad Maaz Akram, 231200 - Muhammad Umar</p>
+        <p><b>Class:</b> BSAI-6A &nbsp; <b>Submitted to:</b> Ms Hina Rashid</p>
+        <div class="meta">
+          <div><b>Topic:</b> Radiometric pre-processing and noise mitigation.</div>
+          <div><b>Dataset:</b> TCIA BraTS-PEDs, practical KaggleHub chunk: <code>awansaad6797/cancer-dataset</code>.</div>
+          <div><b>Processed result:</b> 4,800 rows in <code>metrics.csv</code>, with equal metric records for Gaussian, mean, and median.</div>
+          <div><b>Main finding:</b> Median filter ranked best by average PSNR and average SSIM.</div>
+        </div>
+      </div>
+
+      <section class="step active" data-title="1. Two-Minute Overview">
+        <h3>1. Two-Minute Overview for Viva</h3>
+        <div class="card blue">
+          <span class="tag">Say this if maam asks: Explain Assignment 1 quickly</span>
+          <p><b>English:</b> "In Assignment 1, we worked on brain MRI images from the BraTS-PEDs dataset. The purpose was not tumor detection yet. The purpose was pre-processing. We downloaded the MRI data, loaded NIfTI volumes, selected useful center slices, normalized the intensity values, applied three filters, Gaussian, mean, and median, and then compared the filtered outputs using PSNR and SSIM. We also saved before images, after images, comparison images, and a metrics CSV. In our results, the median filter performed best because it gave the highest average PSNR and SSIM, so it preserved image structure better while reducing noise."</p>
+          <p><b>Roman Urdu:</b> "Assignment 1 mein hum ne brain MRI images par pre-processing ki. Is stage par tumor detect nahi karna tha. Hum ne data download kiya, NIfTI MRI volumes load kiye, center slices select kiye, intensity normalize ki, phir Gaussian, mean aur median filters apply kiye. Last mein PSNR aur SSIM se compare kiya ke kaunsa filter image structure ko zyada preserve karta hai. Hamare results mein median filter best raha."</p>
+        </div>
+
+        <div class="flow">
+          <div>Dataset</div>
+          <div>MRI volume</div>
+          <div>Center slices</div>
+          <div>Normalization</div>
+          <div>Filters</div>
+          <div>PSNR and SSIM</div>
+        </div>
+
+        <div class="grid">
+          <div class="card green">
+            <span class="tag green">Safe to say</span>
+            <p>"Assignment 1 is the base step. It cleans MRI slices before later segmentation and classification."</p>
+          </div>
+          <div class="card red">
+            <span class="tag red">Do not claim</span>
+            <p>"Do not say Assignment 1 detects tumor. It only prepares and evaluates images."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="2. Teacher Objective">
+        <h3>2. Teacher-Given Objective</h3>
+        <div class="card blue">
+          <span class="tag">Objective</span>
+          <p><b>English:</b> Clean raw medical image data by adjusting image intensity and reducing noise. Then quantify the restoration using PSNR and SSIM.</p>
+          <p><b>Roman Urdu:</b> Raw MRI image ko clean karna tha, intensity ko proper range mein lana tha, noise kam karni thi, aur phir PSNR/SSIM se measure karna tha ke result kitna acha hai.</p>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva line</span>
+          <p>"The objective was radiometric pre-processing. It means we prepared image intensity values and reduced noise before using the images in later computer vision tasks."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="3. Core Terms">
+        <h3>3. Core Terms Before Code</h3>
+        <table>
+          <tr><th>Term</th><th>English</th><th>Roman Urdu</th><th>Viva line</th></tr>
+          <tr><td>Intensity image</td><td>Image where each pixel value shows brightness or signal strength.</td><td>Har pixel ki value brightness ya MRI signal show karti hai.</td><td>"MRI is an intensity image, so pixel values matter."</td></tr>
+          <tr><td>2D grayscale image</td><td>One image with height and width only.</td><td>Aik single black-white type image, sirf rows aur columns.</td><td>"A slice is like a 2D grayscale image."</td></tr>
+          <tr><td>RGB image</td><td>Height, width, and 3 color channels.</td><td>Image mein red, green, blue channels hotay hain.</td><td>"RGB 3D means color channels, not medical depth."</td></tr>
+          <tr><td>MRI volume</td><td>A stack of many 2D slices through the brain.</td><td>Brain ki bohat si slices aik stack mein hoti hain.</td><td>"MRI volume is 3D because it has height, width, and slice depth."</td></tr>
+          <tr><td>Slice</td><td>One 2D cut from a 3D volume.</td><td>3D MRI volume ka aik 2D cut.</td><td>"We process volume slice by slice."</td></tr>
+          <tr><td>NIfTI</td><td>Common medical imaging file format, such as .nii or .nii.gz.</td><td>Medical MRI files ka format.</td><td>"NiBabel loads NIfTI files."</td></tr>
+          <tr><td>Segmentation mask</td><td>A label image that marks a region such as tumor.</td><td>Mask batata hai kaunsa area object ya tumor ka hai.</td><td>"Masks were excluded in Assignment 1 because we filter real MRI images, not labels."</td></tr>
+          <tr><td>Normalization</td><td>Scaling pixel values to a common range, here 0 to 1.</td><td>Pixel values ko 0 se 1 range mein lana.</td><td>"Normalization is not binary conversion."</td></tr>
+        </table>
+
+        <div class="card red">
+          <span class="tag red">Important correction</span>
+          <p><b>Normalization does not mean binary image.</b> Binary image means only 0 and 1. Normalization means values are scaled between 0 and 1, like 0.12, 0.45, 0.91. Roman Urdu: normalization mein image black-white labels mein convert nahi hoti, values sirf common range mein aa jati hain.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="4. PSNR and SSIM">
+        <h3>4. PSNR and SSIM, Slowly</h3>
+        <div class="grid">
+          <div class="card blue">
+            <span class="tag">PSNR</span>
+            <p><b>Full form:</b> Peak Signal-to-Noise Ratio.</p>
+            <p><b>Higher or lower?</b> Higher is better.</p>
+            <p><b>Why?</b> Higher PSNR means the filtered image is closer to the original normalized image, so less distortion was introduced.</p>
+            <p><b>Roman Urdu:</b> PSNR zyada ho to filtered image original ke zyada qareeb hai.</p>
+          </div>
+          <div class="card green">
+            <span class="tag green">SSIM</span>
+            <p><b>Full form:</b> Structural Similarity Index.</p>
+            <p><b>Usual range:</b> Mostly 0 to 1. It can become negative in rare cases if images are very structurally different.</p>
+            <p><b>Higher or lower?</b> Higher is better. 1 means very similar structure.</p>
+            <p><b>Roman Urdu:</b> SSIM zyada ho to image ki structure zyada preserve hui.</p>
+          </div>
+        </div>
+
+        <h4>How PSNR compares images</h4>
+        <p>First the code checks pixel difference between original and filtered image. If difference is small, error is small. Small error gives high PSNR. If filter changes the image too much, error is high and PSNR becomes lower.</p>
+        <pre><code>MSE = average((Original - Filtered)^2)
+PSNR = 10 * log10(MAX_PIXEL_VALUE^2 / MSE)</code></pre>
+
+        <h4>How SSIM compares images</h4>
+        <p>SSIM does not only check pixel difference. It checks brightness, contrast, and structure. Structure means the visible pattern of tissues, edges, shapes, and boundaries inside the MRI slice.</p>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"PSNR checks numeric pixel error, while SSIM checks whether the visual structure is preserved. In both metrics, higher value is better for this assignment."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="5. Filter Math Lab">
+        <h3>5. Filter Math Lab: Gaussian, Mean, Median</h3>
+        <p>Click each filter. The small 3 by 3 grid shows the local window around one pixel. The animation keeps moving to show that the same operation slides over the whole image.</p>
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="mean">Mean Filter</button>
+          <button class="filter-btn" data-filter="median">Median Filter</button>
+          <button class="filter-btn" data-filter="gaussian">Gaussian Filter</button>
+          <button class="pause-btn" onclick="toggleAnimation()">Pause or Play Grid</button>
+        </div>
+
+        <div class="matrix-wrap">
+          <div class="matrix" id="matrix">
+            <div class="cell">12</div><div class="cell">15</div><div class="cell">18</div>
+            <div class="cell">14</div><div class="cell center">90</div><div class="cell">16</div>
+            <div class="cell">13</div><div class="cell">15</div><div class="cell">17</div>
+          </div>
+          <div>
+            <div class="filter-panel active" id="panel-mean">
+              <h4>Mean filter</h4>
+              <p><b>Math idea:</b> Add all values in the local window and divide by total values.</p>
+              <pre><code>New center pixel = (12+15+18+14+90+16+13+15+17) / 9 = 23.33</code></pre>
+              <p><b>Meaning:</b> It smooths noise, but one very high value like 90 can affect the average.</p>
+              <p><b>Roman Urdu:</b> Mean filter nearby pixels ka average leta hai. Agar aik value bohat zyada ho to average disturb ho sakta hai.</p>
+            </div>
+            <div class="filter-panel" id="panel-median">
+              <h4>Median filter</h4>
+              <p><b>Math idea:</b> Sort all values and choose the middle value.</p>
+              <pre><code>Sorted: 12, 13, 14, 15, 15, 16, 17, 18, 90
+New center pixel = 15</code></pre>
+              <p><b>Meaning:</b> It ignores extreme values better, so it often preserves edges and removes spike noise.</p>
+              <p><b>Roman Urdu:</b> Median filter middle value leta hai, is liye extreme noise ka effect kam hota hai.</p>
+            </div>
+            <div class="filter-panel" id="panel-gaussian">
+              <h4>Gaussian filter</h4>
+              <p><b>Math idea:</b> Weighted average. Center and nearby pixels get more importance than far pixels.</p>
+              <pre><code>Kernel example:
+1 2 1
+2 4 2
+1 2 1
+
+New center pixel = weighted sum / 16</code></pre>
+              <p><b>Meaning:</b> It smooths naturally, but it can blur edges if smoothing is strong.</p>
+              <p><b>Roman Urdu:</b> Gaussian filter weighted average leta hai. Center ke qareeb pixels ko zyada weight milta hai.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid three">
+          <div class="card orange"><b>Gaussian advantage:</b> Natural smoothness. <br><b>Limitation:</b> Edge blur ho sakta hai.</div>
+          <div class="card orange"><b>Mean advantage:</b> Simple and fast. <br><b>Limitation:</b> Outliers se affect hota hai.</div>
+          <div class="card orange"><b>Median advantage:</b> Better for spike noise and edges. <br><b>Limitation:</b> Fine texture remove kar sakta hai.</div>
+        </div>
+      </section>
+
+      <section class="step" data-title="6. Dataset and Counts">
+        <h3>6. Dataset and How Much Work Was Done</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Original source</span>
+            <p>BraTS-PEDs from The Cancer Imaging Archive.</p>
+            <p>Full collection: about 457 subjects and around 32.7 GB.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Used in code</span>
+            <p>KaggleHub chunk: <code>awansaad6797/cancer-dataset</code>.</p>
+            <p>Reason: full dataset bohat large tha, is liye manageable chunk use kiya.</p>
+          </div>
+        </div>
+
+        <table>
+          <tr><th>Item</th><th>Your actual result</th><th>Viva meaning</th></tr>
+          <tr><td>Metric rows in <code>metrics.csv</code></td><td>4,800</td><td>One CSV row means one metric record: subject name + slice number + filter name + PSNR + SSIM.</td></tr>
+          <tr><td>Filters</td><td>3 filters</td><td>Gaussian, mean, median.</td></tr>
+          <tr><td>Slice-filter metric records</td><td>4,800</td><td>Because every processed slice is measured once for Gaussian, once for mean, and once for median.</td></tr>
+          <tr><td>Processed slice instances</td><td>1,600</td><td>4,800 metric rows divided by 3 filters. This is the number of slice instances evaluated, not the number of saved PNG files.</td></tr>
+          <tr><td>Unique subject/file names in metrics</td><td>13</td><td>The CSV column is <code>subject</code>. It stores MRI file names or subject-style names used during processing.</td></tr>
+          <tr><td>Saved comparison PNG files</td><td>56</td><td>These are visual examples saved in <code>comparisons/</code>. They are fewer because the code saves only selected slices with <code>SAVE_EVERY_N = 5</code>.</td></tr>
+        </table>
+
+        <div class="grid">
+          <div class="card orange">
+            <span class="tag orange">Metric row ka matlab</span>
+            <p><b>English:</b> A metric row is not an image. It is one line in <code>metrics.csv</code> that stores PSNR and SSIM for one filtered output.</p>
+            <p><b>Roman Urdu:</b> Metric row image nahi hoti. Yeh CSV ki aik line hoti hai jahan aik slice par aik filter ka PSNR aur SSIM save hota hai.</p>
+          </div>
+          <div class="card orange">
+            <span class="tag orange">Why 1,600?</span>
+            <p><b>Formula:</b> 4,800 metric rows / 3 filters = 1,600 processed slice instances.</p>
+            <p><b>Roman Urdu:</b> Har slice par 3 filters lagay. Is liye 1 slice ke 3 rows banay. Total rows ko 3 se divide kar ke processed slices ka count milta hai.</p>
+          </div>
+          <div class="card orange">
+            <span class="tag orange">Why only 56 comparison PNGs?</span>
+            <p><b>English:</b> The notebook calculates metrics for all processed slice instances, but it saves visual PNG examples only for selected slices. That keeps the output folder small.</p>
+            <p><b>Roman Urdu:</b> Metrics zyada slices ke liye calculate hotay hain, lekin images sirf selected slices ki save hoti hain. Is se folder bohat heavy nahi hota.</p>
+          </div>
+        </div>
+
+        <div class="card blue">
+          <span class="tag">If examiner asks how many images</span>
+          <p><b>Safe answer:</b> "The code limit was up to 100 MRI volumes and 20 center slices per volume. The metrics CSV has 4,800 rows. Since each processed slice is tested with 3 filters, that means 1,600 processed slice instances were evaluated. The saved comparison PNGs are only 56 because the notebook saves selected visual examples, not every metric record."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="7. Volume vs Image">
+        <h3>7. What Is an MRI Volume?</h3>
+        <div class="grid">
+          <div class="card blue">
+            <span class="tag">2D grayscale</span>
+            <p>Shape is usually <code>height x width</code>. Example: one PNG slice.</p>
+            <p><b>Roman Urdu:</b> Aik single flat image.</p>
+          </div>
+          <div class="card green">
+            <span class="tag green">RGB image</span>
+            <p>Shape is usually <code>height x width x 3</code>. The 3 means color channels, red, green, blue.</p>
+            <p><b>Roman Urdu:</b> Ye color channels hain, medical depth nahi.</p>
+          </div>
+          <div class="card orange">
+            <span class="tag orange">MRI volume</span>
+            <p>Shape is usually <code>height x width x slices</code>. The third dimension is physical depth through the brain.</p>
+            <p><b>Roman Urdu:</b> Ye brain ki slices ka stack hota hai.</p>
+          </div>
+          <div class="card red">
+            <span class="tag red">4D case</span>
+            <p>Some files may have <code>height x width x slices x channel/time</code>. Code takes first channel using <code>vol[..., 0]</code>.</p>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div>Slice 1</div>
+          <div>Slice 2</div>
+          <div>Slice 3</div>
+          <div>Slice 4</div>
+          <div>Many slices</div>
+          <div>One MRI volume</div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"RGB image has three color channels, but an MRI volume has many grayscale slices stacked through depth. We process the MRI volume slice by slice."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="8. Config and Folders">
+        <h3>8. Code Block: Configuration and Folder Hierarchy</h3>
+        <pre><code>MAX_VOLUMES    = 100
+MAX_SLICES     = 20
+GAUSSIAN_SIGMA = 1.0
+MEAN_SIZE      = 3
+MEDIAN_SIZE    = 3
+SAVE_EVERY_N   = 5
+OUT_DIR        = Path("output")</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">What these mean</span>
+            <p><code>MAX_VOLUMES</code> means maximum MRI volume files to process.</p>
+            <p><code>MAX_SLICES</code> means maximum center slices selected from each volume.</p>
+            <p><code>SAVE_EVERY_N</code> means save visual images only for selected slices.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Theoretical maximum</span>
+            <p>100 volumes x 20 slices = 2,000 possible slice cases before blank-slice skipping and file availability.</p>
+            <p>Your metrics show 1,600 processed slice instances. Each one has 3 metric records because 3 filters were tested.</p>
+          </div>
+        </div>
+
+        <h4>Folder hierarchy</h4>
+        <pre><code>output/
+  before/
+    original slice images
+  after/
+    gaussian/
+    mean/
+    median/
+  comparisons/
+    original + three filtered outputs in one image
+  metrics.csv
+    subject, slice, filter, psnr, ssim</code></pre>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The config block controls how much data we process, the filter parameters, and where outputs are stored. The folder structure separates original images, filtered images, comparison images, and numeric metrics."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="9. Dataset Code and SEG">
+        <h3>9. Code Block: Dataset Loading and SEG Files</h3>
+        <pre><code>path = kagglehub.dataset_download("awansaad6797/cancer-dataset")
+
+all_nii = sorted(f for f in Path(path).rglob("*.nii.gz") if f.is_file())
+if len(all_nii) == 0:
+    all_nii = sorted(f for f in Path(path).rglob("*.nii") if f.is_file())
+
+all_nii = [f for f in all_nii if "seg" not in f.name.lower()]</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">What is SEG?</span>
+            <p>SEG means segmentation. These files are usually masks or labels that mark tumor regions.</p>
+            <p><b>Roman Urdu:</b> SEG file original MRI nahi hoti. Ye label/mask hoti hai jo region mark karti hai.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Why excluded?</span>
+            <p>Assignment 1 filters real MRI intensity images. If we filter masks, PSNR/SSIM result is not meaningful for image denoising.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"Segmentation masks were present in the dataset, but I excluded them because Assignment 1 is about filtering MRI intensity images, not processing label masks."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="10. Normalize and Filter Code">
+        <h3>10. Code Block: Normalization and Filtering</h3>
+        <pre><code>def normalise(slc):
+    mn, mx = slc.min(), slc.max()
+    if mx > mn:
+        return ((slc - mn) / (mx - mn + 1e-8)).astype(np.float32)
+    return np.zeros_like(slc, dtype=np.float32)
+
+def apply_filters(slc):
+    return {
+        "gaussian": gaussian_filter(slc, sigma=GAUSSIAN_SIGMA),
+        "mean":     uniform_filter(slc,  size=MEAN_SIZE),
+        "median":   median_filter(slc,   size=MEDIAN_SIZE),
+    }</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Code goal</span>
+            <p>Make intensity values consistent, then produce three filtered versions of the same slice.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Input and output</span>
+            <p><b>Input:</b> One 2D MRI slice.</p>
+            <p><b>Output:</b> Normalized slice plus Gaussian, mean, and median outputs.</p>
+          </div>
+        </div>
+
+        <div class="card red">
+          <span class="tag red">Common confusion</span>
+          <p>Normalization is not binary conversion. Binary image has only 0 and 1. Normalized image can have values like 0.13, 0.48, 0.92.</p>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"I normalized the MRI slice to make intensity values comparable, then applied Gaussian, mean, and median filters. After that, I used PSNR and SSIM to check which filter preserved the image better."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="11. Metrics and Saving Code">
+        <h3>11. Code Block: Metrics and Saving</h3>
+        <pre><code>def compute_metrics(orig, filt):
+    p = psnr(orig, filt, data_range=1.0)
+    s = ssim(orig, filt, data_range=1.0)
+    return round(p, 4), round(float(s), 4)
+
+def save_comparison(orig, filtered, mets, fpath):
+    # Original + Gaussian + Mean + Median
+    # PSNR and SSIM written above each filtered output</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Evaluation metrics</span>
+            <p>There are 2 metrics per filter: PSNR and SSIM.</p>
+            <p>3 filters x 2 metrics = 6 metric values per slice.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Connection to output</span>
+            <p>The metrics go into <code>metrics.csv</code>. The visual comparison goes into <code>comparisons/</code>.</p>
+          </div>
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"For every slice, I calculated PSNR and SSIM for all three filters, so each slice has six evaluation values: PSNR and SSIM for Gaussian, mean, and median."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="12. Main Processing Loop">
+        <h3>12. Code Block: Main Processing Loop</h3>
+        <pre><code>for nii_path in tqdm(all_nii, desc="Volumes"):
+    vol = load_volume(nii_path)
+    if vol.ndim == 4:
+        vol = vol[..., 0]
+
+    slice_indices = centre_slice_indices(vol.shape[2], MAX_SLICES)
+
+    for z in slice_indices:
+        slc = normalise(vol[:, :, z])
+        if slc.max() < 0.01:
+            continue
+
+        filtered = apply_filters(slc)
+        mets = {fn: compute_metrics(slc, filtered[fn])
+                for fn in FILTER_NAMES}</code></pre>
+
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Goal</span>
+            <p>Process every selected volume slice by slice.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Important output</span>
+            <p>4,800 rows in <code>metrics.csv</code>, and selected images in output folders.</p>
+          </div>
+        </div>
+
+        <h4>If examiner asks: how many slices?</h4>
+        <p>The code can try up to 100 volumes and 20 center slices per volume. That is 2,000 possible slice instances before skipping unavailable or blank slices. Your actual metrics contain 4,800 CSV rows. Since each processed slice has 3 filter rows, this means 1,600 processed slice instances were evaluated. The 56 comparison images are only saved visual examples.</p>
+
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The loop loads each MRI volume, selects center slices, skips almost blank slices, normalizes the slice, applies three filters, saves metrics, and saves selected visual results."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="13. Output Images">
+        <h3>13. Output Images: What Changed?</h3>
+        <div class="gallery">
+          <figure>
+            <img src="content_A1/output/before/T1CE_to_SRI_defaced_z0075_original.png" alt="Original MRI slice">
+            <figcaption>Original normalized slice</figcaption>
+          </figure>
+          <figure>
+            <img src="content_A1/output/after/gaussian/T1CE_to_SRI_defaced_z0075_gaussian.png" alt="Gaussian output">
+            <figcaption>Gaussian output</figcaption>
+          </figure>
+          <figure>
+            <img src="content_A1/output/after/mean/T1CE_to_SRI_defaced_z0075_mean.png" alt="Mean output">
+            <figcaption>Mean output</figcaption>
+          </figure>
+          <figure>
+            <img src="content_A1/output/after/median/T1CE_to_SRI_defaced_z0075_median.png" alt="Median output">
+            <figcaption>Median output</figcaption>
+          </figure>
+        </div>
+
+        <h4>What am I looking at?</h4>
+        <p>You are looking at the same MRI slice after different filters. The filtered outputs look slightly smoother than the original. The change is subtle because MRI denoising should not destroy anatomy.</p>
+
+        <div class="image-row">
+          <div>
+            <img src="content_A1/output/comparisons/T1CE_to_SRI_defaced_z0075_comparison.png" alt="Comparison image">
+          </div>
+          <div>
+            <h4>How to explain in viva</h4>
+            <p>"This comparison image shows original, Gaussian, mean, and median outputs. The text above each filtered image gives PSNR and SSIM. A good output should reduce noise but keep tissue boundaries visible."</p>
+            <p><b>Good output:</b> smoother image, brain structure still visible.</p>
+            <p><b>Bad output:</b> too blurry, edges lost, or important tissue details removed.</p>
+          </div>
+        </div>
+
+        <div class="card orange">
+          <span class="tag orange">Why difference may look small</span>
+          <p>These filters are mild: Gaussian sigma is 1.0, mean window is 3 by 3, and median window is 3 by 3. Mild filters are used because medical details should not be destroyed.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="14. Results and Ranking">
+        <h3>14. Numeric Results and Ranking</h3>
+        <table>
+          <tr><th>Rank</th><th>Filter</th><th>Mean PSNR</th><th>Mean SSIM</th><th>Why this rank?</th></tr>
+          <tr><td><span class="rank">1</span></td><td>Median</td><td>34.6233</td><td>0.9639</td><td>Highest PSNR and highest SSIM. Best in this run.</td></tr>
+          <tr><td><span class="rank">2</span></td><td>Mean</td><td>32.1203</td><td>0.9515</td><td>Better than Gaussian by average metrics here, but can blur details.</td></tr>
+          <tr><td><span class="rank">3</span></td><td>Gaussian</td><td>31.5317</td><td>0.9484</td><td>Smooth output, but average values were lower than mean and median.</td></tr>
+        </table>
+
+        <div class="image-row">
+          <img src="report_assets/a1_mean_psnr.png" alt="Mean PSNR chart">
+          <img src="report_assets/a1_mean_ssim.png" alt="Mean SSIM chart">
+        </div>
+
+        <div class="card green">
+          <span class="tag green">Safe result answer</span>
+          <p>"According to our average PSNR and SSIM, median filter performed best. I will not say median is always best for all images, but for our dataset and settings it gave the best result."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="15. Viva Questions">
+        <h3>15. Viva Questions and Safe Answers</h3>
+        <div class="grid">
+          <div class="card"><b>Q. What is Assignment 1?</b><p>It is MRI image pre-processing using normalization and filtering, followed by PSNR and SSIM evaluation.</p></div>
+          <div class="card"><b>Q. Why normalization?</b><p>To bring different intensity ranges into 0 to 1, so filters and metrics can work consistently.</p></div>
+          <div class="card"><b>Q. Is normalization binary conversion?</b><p>No. Binary has only 0 and 1. Normalized image has decimal values between 0 and 1.</p></div>
+          <div class="card"><b>Q. What is structure in SSIM?</b><p>Structure means visible patterns, edges, tissue boundaries, and shapes inside the MRI image.</p></div>
+          <div class="card"><b>Q. Why median best?</b><p>It got the highest average PSNR and SSIM, so it preserved the original structure better in our results.</p></div>
+          <div class="card"><b>Q. What is the limitation?</b><p>PSNR and SSIM do not prove medical diagnosis. They only measure image similarity and structure preservation.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="16. Examiner Follow-Ups">
+        <h3>16. Common Examiner Follow-Up Questions</h3>
+        <div class="grid">
+          <div class="card orange"><b>If original has noise, why compare with original?</b><p>Safe answer: We use original as reference to measure how much the filter changed the image. It is not a perfect ground truth, but it helps compare filters fairly.</p></div>
+          <div class="card orange"><b>Why not make filter stronger?</b><p>Safe answer: Strong filtering can remove important MRI details. Medical images need careful smoothing.</p></div>
+          <div class="card orange"><b>Why do PSNR and SSIM both matter?</b><p>Safe answer: PSNR measures pixel error. SSIM measures visual structure. Both together give a better comparison.</p></div>
+          <div class="card orange"><b>Can median filter fail?</b><p>Safe answer: Yes. If the window is too large, it can remove fine details. We used a small 3 by 3 window.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="17. Final Hidden Explanation">
+        <h3>17. Final Explanation Practice</h3>
+        <p>Use this only after you revise the steps. Click the button when you want the complete answer.</p>
+        <button class="reveal" onclick="toggleAnswer('finalAnswer')">Show final hidden explanation</button>
+        <div class="hidden-answer" id="finalAnswer">
+          <p>"Assignment 1 was about radiometric pre-processing and noise mitigation for brain MRI images. The original source was TCIA BraTS-PEDs, and the code used a smaller KaggleHub chunk. The notebook loaded NIfTI MRI volumes, selected center slices, normalized each slice from 0 to 1, and applied Gaussian, mean, and median filters. Then it calculated PSNR and SSIM for each filtered output. PSNR tells how close the filtered image is to the original in terms of pixel error, while SSIM tells how well visual structure is preserved. The output folders contain original images, filtered images, comparison images, and metrics.csv. In our results, median filter was best because it had the highest average PSNR and SSIM. The limitation is that this is only image pre-processing, not tumor detection or medical diagnosis."</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const nav = document.getElementById("nav");
+
+    steps.forEach((step, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = step.dataset.title;
+      btn.type = "button";
+      btn.addEventListener("click", () => showStep(index));
+      nav.appendChild(btn);
+    });
+
+    function showStep(index) {
+      steps.forEach((step, i) => step.classList.toggle("active", i === index));
+      Array.from(nav.children).forEach((btn, i) => btn.classList.toggle("active", i === index));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleAnswer(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".filter-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + btn.dataset.filter).classList.add("active");
+        document.querySelectorAll(".cell").forEach(c => {
+          c.classList.remove("weighted", "sorted");
+          if (btn.dataset.filter === "gaussian") c.classList.add("weighted");
+          if (btn.dataset.filter === "median") c.classList.add("sorted");
+        });
+      });
+    });
+
+    let paused = false;
+    function toggleAnimation() {
+      paused = !paused;
+      document.querySelectorAll(".cell").forEach(c => {
+        c.style.animationPlayState = paused ? "paused" : "running";
+      });
+    }
+
+    showStep(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Computer Vision Semester Project - Deep Vision Pipeline</title>
+  <style>
+    :root {
+      --bg: #f4f6fa;
+      --ink: #172033;
+      --muted: #5c667a;
+      --panel: #ffffff;
+      --line: #d9dfeb;
+      --blue: #2457d6;
+      --blue-soft: #eaf0ff;
+      --green: #13754d;
+      --green-soft: #e7f5ee;
+      --orange: #a65a00;
+      --orange-soft: #fff1dc;
+      --red: #b42318;
+      --red-soft: #fff0ee;
+      --cyan: #087b8b;
+      --cyan-soft: #e5f7fa;
+      --shadow: 0 18px 48px rgba(23, 32, 51, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, #ffffff 0, var(--bg) 36%, #eef2f7 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #101827;
+      color: #fff;
+      padding: 18px 14px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    aside h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    aside p {
+      margin: 0 0 14px;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+    .nav button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #f8fafc;
+      padding: 10px 11px;
+      margin: 5px 0;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .nav button.active {
+      background: #ffffff;
+      color: #101827;
+      border-color: #ffffff;
+      font-weight: 700;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+    .controls button {
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px;
+      cursor: pointer;
+    }
+    main {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    .deck-header {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .deck-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .deck-header p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .progress {
+      min-width: 170px;
+      text-align: right;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .bar {
+      height: 8px;
+      width: 170px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 6%;
+      background: var(--blue);
+      border-radius: 999px;
+    }
+    .slide {
+      display: none;
+      min-height: calc(100vh - 96px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      overflow: hidden;
+    }
+    .slide.active { display: block; }
+    .kicker {
+      display: inline-block;
+      color: var(--blue);
+      background: var(--blue-soft);
+      border: 1px solid #c9d7ff;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+    h3 {
+      margin: 0 0 14px;
+      font-size: 31px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 18px;
+    }
+    p { margin: 8px 0; }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 7px 0; }
+    code {
+      background: #f1f5f9;
+      border: 1px solid #d7dee9;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-family: Consolas, Monaco, monospace;
+      color: #172033;
+    }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 0;
+    }
+    .card.blue { background: var(--blue-soft); border-color: #c8d7ff; }
+    .card.green { background: var(--green-soft); border-color: #bae6cf; }
+    .card.orange { background: var(--orange-soft); border-color: #ffd49a; }
+    .card.red { background: var(--red-soft); border-color: #ffc7bf; }
+    .card.cyan { background: var(--cyan-soft); border-color: #b6edf4; }
+    .card b.big {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--blue);
+      margin-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th { background: #f1f5f9; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+      margin: 18px 0;
+    }
+    .flow .box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 10px;
+      text-align: center;
+      font-weight: 700;
+      position: relative;
+    }
+    .flow .box:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--blue);
+      font-weight: 900;
+    }
+    .image-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+      gap: 16px;
+      align-items: start;
+    }
+    img {
+      width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .mini {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .callout {
+      border-left: 5px solid var(--blue);
+      background: #f8fbff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-top: 14px;
+    }
+    .callout.green { border-left-color: var(--green); background: var(--green-soft); }
+    .callout.orange { border-left-color: var(--orange); background: var(--orange-soft); }
+    .metric {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .metric .card { text-align: center; }
+    .metric .card p { color: var(--muted); margin: 5px 0 0; }
+    .title-slide {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: center;
+      min-height: calc(100vh - 150px);
+    }
+    .title-slide h3 {
+      font-size: 43px;
+      margin-bottom: 12px;
+    }
+    .badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .badge {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    a.file-link {
+      display: inline-block;
+      color: #fff;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+      padding: 9px 12px;
+      text-decoration: none;
+      font-weight: 700;
+      margin: 5px 6px 5px 0;
+    }
+    a.file-link.secondary {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-color: #c8d7ff;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .gallery .card {
+      padding: 10px;
+    }
+    .gallery img {
+      max-height: 260px;
+    }
+    .model-svg {
+      width: 100%;
+      min-height: 250px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+    }
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 960px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      main { padding: 14px; }
+      .slide { min-height: auto; }
+      .grid, .grid.three, .grid.four, .flow, .metric, .image-row, .title-slide, .gallery {
+        grid-template-columns: 1fr;
+      }
+      .flow .box::after { display: none; }
+      .deck-header { align-items: flex-start; flex-direction: column; }
+    }
+    @media print {
+      body { background: #fff; }
+      .shell { display: block; }
+      aside, .deck-header { display: none; }
+      main { max-width: none; padding: 0; }
+      .slide {
+        display: block !important;
+        min-height: auto;
+        box-shadow: none;
+        border: 1px solid #ccc;
+        page-break-after: always;
+        margin: 0 0 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <h1>Deep Vision Pipeline</h1>
+      <p>Teacher presentation deck</p>
+      <div class="nav" id="nav"></div>
+      <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <p class="footer-note">Tip: use left and right arrow keys during presentation.</p>
+    </aside>
+
+    <main>
+      <div class="deck-header">
+        <div>
+          <h2>Computer Vision Semester Project</h2>
+          <p>Final Deep Vision Pipeline for Brain Tumor MRI Understanding</p>
+        </div>
+        <div class="progress">
+          <span id="progressText">Slide 1</span>
+          <div class="bar"><span id="progressBar"></span></div>
+        </div>
+      </div>
+
+      <section class="slide active" data-title="Title">
+        <div class="title-slide">
+          <div>
+            <span class="kicker">Final semester project</span>
+            <h3>The Deep Vision Pipeline</h3>
+            <p><b>Focus:</b> End-to-end deep neural network application for object understanding in brain MRI slices.</p>
+            <p><b>Submitted by:</b> 231192 - Muhammad Maaz Akram, 231200 - Muhammad Umar</p>
+            <p><b>Class:</b> BSAI-6A</p>
+            <p><b>Submitted to:</b> Ms Hina Rashid</p>
+            <div class="badge-list">
+              <span class="badge">Acquisition</span>
+              <span class="badge">Pre-processing</span>
+              <span class="badge">Segmentation</span>
+              <span class="badge">Description</span>
+              <span class="badge">Recognition</span>
+            </div>
+          </div>
+          <div class="card blue">
+            <span class="tag">Project result</span>
+            <p>The final pipeline creates an annotated MRI slice dataset, trains a 3D transformer model, and evaluates tumor vs no_tumor recognition.</p>
+            <div class="metric" style="grid-template-columns: 1fr 1fr;">
+              <div class="card"><b class="big">158</b><p>Samples</p></div>
+              <div class="card"><b class="big">78.13%</b><p>Test accuracy</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objective">
+        <span class="kicker">Teacher requirement</span>
+        <h3>Project Objective</h3>
+        <div class="flow">
+          <div class="box">Acquisition</div>
+          <div class="box">Pre-processing</div>
+          <div class="box">Segmentation</div>
+          <div class="box">Description</div>
+          <div class="box">Recognition</div>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Challenge</span>
+            <p>Build a high-level application using deep neural networks for object detection and semantic understanding.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Our implementation</span>
+            <p>We used paired segmentation masks to identify tumor presence, exported image-mask-overlay samples, extracted descriptors, and trained a 3D transformer for recognition.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Research challenge</span>
+            <p>3D Transformer Integration, using five neighboring MRI slices and attention over voxel-patch tokens.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Evaluation</span>
+            <p>Confusion matrix, precision, recall, F1-score, precision-recall curve, PR AUC, and held-out test predictions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Dataset">
+        <span class="kicker">Dataset and annotation source</span>
+        <h3>Dataset Used in the Final Run</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Source</span>
+            <p>A BraTS-PEDs style MRI dataset chunk was used for a manageable Colab run.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Annotations</span>
+            <p>Existing segmentation masks from the dataset were used to create binary tumor masks. No manual drawing was done.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Task</span>
+            <p>The final recognition task was binary classification: <code>tumor</code> vs <code>no_tumor</code>.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Final data</span>
+            <p>The pipeline exported 158 annotated MRI slice samples with image, mask, overlay, and label.</p>
+          </div>
+        </div>
+        <div class="callout green">
+          <b>Key point:</b> The dataset section is kept focused because the main contribution is the end-to-end deep vision pipeline and its evaluation.
+        </div>
+      </section>
+
+      <section class="slide" data-title="Counts">
+        <span class="kicker">Final sample counts</span>
+        <h3>Dataset Counts and Split</h3>
+        <div class="metric">
+          <div class="card blue"><b class="big">158</b><p>Total annotated samples</p></div>
+          <div class="card green"><b class="big">80</b><p>no_tumor samples</p></div>
+          <div class="card green"><b class="big">78</b><p>tumor samples</p></div>
+          <div class="card orange"><b class="big">32</b><p>Held-out test samples</p></div>
+        </div>
+        <div class="grid three">
+          <div class="card"><b class="big">107</b><p>Training samples</p></div>
+          <div class="card"><b class="big">19</b><p>Validation samples</p></div>
+          <div class="card"><b class="big">32</b><p>Test samples</p></div>
+        </div>
+        <div class="callout">
+          <b>Key point:</b> The class distribution was almost balanced, with 80 no_tumor and 78 tumor samples.
+        </div>
+      </section>
+
+      <section class="slide" data-title="Previous Work">
+        <span class="kicker">Integration of Assignments 1 to 3</span>
+        <h3>How the Final Pipeline Builds on Earlier Work</h3>
+        <table>
+          <tr><th>Milestone</th><th>Core work</th><th>How it appears in final pipeline</th></tr>
+          <tr><td>Assignment 1</td><td>Filtering, normalization, denoising, PSNR, SSIM</td><td>Final pre-processing normalizes MRI intensities and applies denoising concepts.</td></tr>
+          <tr><td>Assignment 2</td><td>Segmentation, masks, morphology, shape analysis</td><td>Final pipeline uses segmentation masks and stores binary masks plus overlays.</td></tr>
+          <tr><td>Assignment 3</td><td>GLCM, geometric features, feature vectors, classification</td><td>Final pipeline exports GLCM texture and geometry descriptors, then adds deep recognition.</td></tr>
+        </table>
+        <div class="callout green">
+          The final notebook is end-to-end. It repeats the required steps in one workflow instead of depending only on old output folders.
+        </div>
+      </section>
+
+      <section class="slide" data-title="A1 Outputs">
+        <span class="kicker">Assignment 1 visual output</span>
+        <h3>Pre-processing and Filtering Results</h3>
+        <div class="image-row">
+          <img src="content_A1/output/comparisons/BraTS-PED-00195-000-t1n_z0075_comparison.png" alt="Assignment 1 filtering comparison">
+          <div>
+            <div class="card">
+              <span class="tag">What this shows</span>
+              <p>Original MRI slice compared with filtered outputs. This demonstrates intensity normalization and denoising using filters such as Gaussian, mean, and median.</p>
+            </div>
+            <div class="grid">
+              <div class="card">
+                <img src="report_assets/better_a1_psnr.png" alt="Assignment 1 PSNR chart">
+                <p class="mini">PSNR comparison for filtering quality.</p>
+              </div>
+              <div class="card">
+                <img src="report_assets/better_a1_ssim.png" alt="Assignment 1 SSIM chart">
+                <p class="mini">SSIM comparison for structural preservation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="A1 Graphs">
+        <span class="kicker">Assignment 1 metric graphs</span>
+        <h3>Filtering Quality Comparisons</h3>
+        <div class="gallery">
+          <div class="card">
+            <img src="report_assets/better_a1_psnr.png" alt="A1 PSNR filtered comparison">
+            <p><b>PSNR:</b> Higher values indicate better similarity to the reference image after filtering.</p>
+          </div>
+          <div class="card">
+            <img src="report_assets/better_a1_ssim.png" alt="A1 SSIM filtered comparison">
+            <p><b>SSIM:</b> Measures structural similarity. Higher is generally better.</p>
+          </div>
+          <div class="card">
+            <img src="report_assets/human_a1_psnr.png" alt="A1 PSNR summary">
+            <p><b>PSNR summary:</b> Shows filter behavior across processed samples.</p>
+          </div>
+          <div class="card">
+            <img src="report_assets/human_a1_ssim.png" alt="A1 SSIM summary">
+            <p><b>SSIM summary:</b> Shows structure preservation across filters.</p>
+          </div>
+          <div class="card">
+            <img src="content_A1/output/comparisons/BraTS-PED-00195-000-t2w_z0080_comparison.png" alt="A1 T2 filtering comparison">
+            <p><b>T2 example:</b> Another visual comparison of original and filtered outputs.</p>
+          </div>
+          <div class="card">
+            <img src="content_A1/output/comparisons/T1CE_to_SRI_defaced_z0075_comparison.png" alt="A1 T1CE filtering comparison">
+            <p><b>T1CE example:</b> Filter comparison on a different MRI modality.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="A2 Outputs">
+        <span class="kicker">Assignment 2 visual output</span>
+        <h3>Segmentation, Morphology, Chain Code, and Convex Hull</h3>
+        <div class="grid">
+          <div class="card">
+            <img src="content_A2/output_a2/masks/T1CE_to_SRI_defaced_z0077_masks.png" alt="Assignment 2 masks">
+            <p><b>Mask output:</b> Canny/Sobel based edge and mask creation.</p>
+          </div>
+          <div class="card">
+            <img src="content_A2/output_a2/morphology/T1CE_to_SRI_defaced_z0077_morphology.png" alt="Assignment 2 morphology">
+            <p><b>Morphology:</b> Erosion, dilation, opening, and closing refine mask regions.</p>
+          </div>
+          <div class="card">
+            <img src="content_A2/output_a2/chain_code/T1CE_to_SRI_defaced_z0077_chain.png" alt="Assignment 2 chain code">
+            <p><b>Chain code:</b> Boundary is represented using direction sequence.</p>
+          </div>
+          <div class="card">
+            <img src="content_A2/output_a2/convex_hull/T1CE_to_SRI_defaced_z0077_hull.png" alt="Assignment 2 convex hull">
+            <p><b>Convex hull:</b> Outer polygon summarizes the selected shape.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="A2 Graphs">
+        <span class="kicker">Assignment 2 summaries</span>
+        <h3>Shape Analysis Output Graphs</h3>
+        <div class="grid">
+          <div class="card">
+            <img src="report_assets/better_a2_chain_hull.png" alt="A2 chain and hull summary">
+            <p><b>Chain and hull summary:</b> Compares boundary complexity and convex hull representation.</p>
+          </div>
+          <div class="card">
+            <img src="report_assets/human_a2_chain_hull.png" alt="A2 human readable chain hull summary">
+            <p><b>Readable summary:</b> Helps present chain code length and hull vertices visually.</p>
+          </div>
+          <div class="card">
+            <img src="content_A2/output_a2/masks/T2_to_SRI_defaced_z0077_masks.png" alt="A2 T2 mask output">
+            <p><b>Mask example:</b> Shows edge-based segmentation output on a T2 slice.</p>
+          </div>
+          <div class="card">
+            <img src="content_A2/output_a2/convex_hull/T2_to_SRI_defaced_z0077_hull.png" alt="A2 T2 convex hull output">
+            <p><b>Hull example:</b> Shows outer polygon representation of the selected shape.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="A3 Outputs">
+        <span class="kicker">Assignment 3 visual output</span>
+        <h3>Feature Extraction and Classical Classification</h3>
+        <div class="grid">
+          <div class="card">
+            <img src="outputs_a3/output_a3/glcm_plots/T1CE_to_SRI_defaced_z0075_glcm.png" alt="Assignment 3 GLCM plot">
+            <p><b>GLCM features:</b> Texture descriptors such as energy, entropy, contrast, homogeneity, and correlation.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/geometry_plots/T1CE_to_SRI_defaced_z0075_geometry.png" alt="Assignment 3 geometry plot">
+            <p><b>Geometry features:</b> Area, perimeter, centroid, and circularity from the mask region.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/classification/confusion_matrices.png" alt="Assignment 3 confusion matrices">
+            <p><b>Classification:</b> Random Forest and SVM evaluated using confusion matrices.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/classification/feature_importance.png" alt="Assignment 3 feature importance">
+            <p><b>Feature importance:</b> Shows which extracted features contributed more to Random Forest decisions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="A3 Comparisons">
+        <span class="kicker">Assignment 3 extra comparisons</span>
+        <h3>Texture, Geometry, and Classifier Evidence</h3>
+        <div class="gallery">
+          <div class="card">
+            <img src="outputs_a3/output_a3/glcm_plots/FL_to_SRI_defaced_z0075_glcm.png" alt="A3 FLAIR GLCM output">
+            <p><b>GLCM example:</b> Texture features from a different label group.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/geometry_plots/FL_to_SRI_defaced_z0075_geometry.png" alt="A3 FLAIR geometry output">
+            <p><b>Geometry example:</b> Shape descriptors from the selected mask.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/glcm_plots/T2_to_SRI_defaced_z0075_glcm.png" alt="A3 T2 GLCM output">
+            <p><b>T2 GLCM:</b> Another texture descriptor output.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/geometry_plots/T2_to_SRI_defaced_z0075_geometry.png" alt="A3 T2 geometry output">
+            <p><b>T2 geometry:</b> Another shape descriptor output.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/classification/confusion_matrices.png" alt="A3 confusion matrices repeated">
+            <p><b>Confusion matrix:</b> Classifier performance summary.</p>
+          </div>
+          <div class="card">
+            <img src="outputs_a3/output_a3/classification/feature_importance.png" alt="A3 feature importance repeated">
+            <p><b>Feature importance:</b> Shows which features helped Random Forest most.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Pre-processing">
+        <span class="kicker">Pipeline stages</span>
+        <h3>Pre-processing, Segmentation, and Annotation</h3>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/preprocessing_segmentation_preview.png" alt="Preprocessing and segmentation preview">
+          <div>
+            <div class="card">
+              <span class="tag">What the figure shows</span>
+              <p>Preprocessed MRI slices, their segmentation masks, and overlay views.</p>
+            </div>
+            <div class="card">
+              <span class="tag">Segmentation source</span>
+              <p>The mask came from the existing <code>seg.nii</code> volume, not from manual drawing during this project.</p>
+            </div>
+            <div class="card">
+              <span class="tag">Output dataset</span>
+              <p>158 image PNGs, 158 mask PNGs, 158 overlay PNGs, and a manifest CSV.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Descriptors">
+        <span class="kicker">Description stage</span>
+        <h3>GLCM Texture and Geometry Descriptors</h3>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/descriptor_distributions.png" alt="Descriptor distributions">
+          <div>
+            <table>
+              <tr><th>Descriptor type</th><th>Examples</th><th>Meaning</th></tr>
+              <tr><td>GLCM texture</td><td>Energy, entropy, contrast, homogeneity, correlation</td><td>Intensity pattern inside the segmented region.</td></tr>
+              <tr><td>Geometry</td><td>Area, perimeter, centroid, circularity</td><td>Shape and location of the mask region.</td></tr>
+            </table>
+            <div class="callout">
+              <b>Box plot reading:</b> The middle line is median, the box is the middle 50 percent, whiskers show wider normal range, and dots are outliers. Less overlap between tumor and no_tumor can suggest a more useful descriptor.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Model">
+        <span class="kicker">Recognition model</span>
+        <h3>3D Transformer Architecture</h3>
+        <svg class="model-svg" viewBox="0 0 1000 260" role="img" aria-label="3D transformer model flow">
+          <rect x="35" y="82" width="125" height="76" rx="8" fill="#eaf0ff" stroke="#2457d6"/>
+          <text x="97" y="112" text-anchor="middle" font-size="15" font-weight="700">5 MRI slices</text>
+          <text x="97" y="136" text-anchor="middle" font-size="13">5 x 96 x 96 x 1</text>
+          <text x="182" y="128" font-size="24" fill="#2457d6">></text>
+          <rect x="220" y="82" width="130" height="76" rx="8" fill="#e7f5ee" stroke="#13754d"/>
+          <text x="285" y="112" text-anchor="middle" font-size="15" font-weight="700">Conv3D</text>
+          <text x="285" y="136" text-anchor="middle" font-size="13">Local 3D features</text>
+          <text x="372" y="128" font-size="24" fill="#2457d6">></text>
+          <rect x="410" y="82" width="140" height="76" rx="8" fill="#fff1dc" stroke="#a65a00"/>
+          <text x="480" y="112" text-anchor="middle" font-size="15" font-weight="700">Tokens</text>
+          <text x="480" y="136" text-anchor="middle" font-size="13">Voxel-patch features</text>
+          <text x="572" y="128" font-size="24" fill="#2457d6">></text>
+          <rect x="610" y="82" width="150" height="76" rx="8" fill="#e5f7fa" stroke="#087b8b"/>
+          <text x="685" y="112" text-anchor="middle" font-size="15" font-weight="700">Attention</text>
+          <text x="685" y="136" text-anchor="middle" font-size="13">Token relationships</text>
+          <text x="782" y="128" font-size="24" fill="#2457d6">></text>
+          <rect x="820" y="82" width="140" height="76" rx="8" fill="#fff0ee" stroke="#b42318"/>
+          <text x="890" y="112" text-anchor="middle" font-size="15" font-weight="700">Sigmoid</text>
+          <text x="890" y="136" text-anchor="middle" font-size="13">Tumor probability</text>
+        </svg>
+        <div class="grid four">
+          <div class="card"><span class="tag">Conv3D</span><p>Learns local patterns across image height, width, and slice depth.</p></div>
+          <div class="card"><span class="tag">Tokens</span><p>Encoded voxel-patch representations after convolution.</p></div>
+          <div class="card"><span class="tag">Attention</span><p>Learns relationships between important token regions.</p></div>
+          <div class="card"><span class="tag">Sigmoid</span><p>Outputs a probability for binary tumor presence.</p></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Architecture Details">
+        <span class="kicker">Neural network architecture</span>
+        <h3>Layer Details, Activations, and Units</h3>
+        <table>
+          <tr><th>Stage</th><th>Layer or block</th><th>Units, filters, or heads</th><th>Activation</th><th>Purpose</th></tr>
+          <tr><td>Input</td><td>MRI slice context</td><td><code>5 x 96 x 96 x 1</code></td><td>None</td><td>Five neighboring grayscale MRI slices.</td></tr>
+          <tr><td>Feature extraction</td><td>Conv3D</td><td>16 filters, kernel <code>3 x 5 x 5</code></td><td>ReLU</td><td>Learns local 3D image patterns.</td></tr>
+          <tr><td>Stabilization</td><td>Batch Normalization</td><td>16 channels</td><td>None</td><td>Stabilizes feature values during training.</td></tr>
+          <tr><td>Downsampling</td><td>MaxPooling3D</td><td>Pool <code>1 x 2 x 2</code></td><td>None</td><td>Reduces spatial size and memory cost.</td></tr>
+          <tr><td>Feature extraction</td><td>Conv3D</td><td>32 filters, kernel <code>3 x 3 x 3</code></td><td>ReLU</td><td>Learns deeper 3D patterns.</td></tr>
+          <tr><td>Regularization</td><td>Dropout</td><td>0.15</td><td>None</td><td>Reduces overfitting after convolution.</td></tr>
+          <tr><td>Tokenization</td><td>Reshape</td><td>Voxel-patch tokens, token size 32</td><td>None</td><td>Converts Conv3D feature maps into transformer tokens.</td></tr>
+          <tr><td>Transformer</td><td>Transformer encoder block 1</td><td>2 attention heads, FFN 64 then 32</td><td>GELU in FFN</td><td>Learns relationships between tokens.</td></tr>
+          <tr><td>Transformer</td><td>Transformer encoder block 2</td><td>2 attention heads, FFN 64 then 32</td><td>GELU in FFN</td><td>Refines token relationships.</td></tr>
+          <tr><td>Pooling</td><td>GlobalAveragePooling1D</td><td>All tokens combined</td><td>None</td><td>Creates one compact feature vector.</td></tr>
+          <tr><td>Classifier</td><td>Dense</td><td>96 neurons</td><td>ReLU</td><td>Combines learned features before prediction.</td></tr>
+          <tr><td>Regularization</td><td>Dropout</td><td>0.35</td><td>None</td><td>Reduces overfitting before final output.</td></tr>
+          <tr><td>Output</td><td>Dense</td><td>1 neuron</td><td>Sigmoid</td><td>Outputs tumor probability from 0 to 1.</td></tr>
+        </table>
+        <div class="grid">
+          <div class="card blue">
+            <span class="tag">Main activations</span>
+            <p><b>ReLU</b> in Conv3D and Dense layer, <b>GELU</b> inside transformer feed-forward blocks, and <b>sigmoid</b> at output.</p>
+          </div>
+          <div class="card green">
+            <span class="tag">Layer count</span>
+            <p>The network has 13 main stages if transformer encoder blocks are counted as blocks. Inside each transformer block, there is multi-head attention, layer normalization, and two Dense layers.</p>
+          </div>
+          <div class="card orange">
+            <span class="tag">Neurons and filters</span>
+            <p>Conv3D filters are 16 then 32. Transformer feed-forward units are 64 then 32 in each block. Final Dense layer has 96 neurons and output has 1 neuron.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag">Trainable parameters</span>
+            <p>The model has roughly 35.5k trainable parameters based on these layer settings.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Hyperparameters">
+        <span class="kicker">Deep learning settings</span>
+        <h3>Parameters and Hyperparameters</h3>
+        <div class="callout">
+          <b>Parameter:</b> learned during training, for example model weights. <b>Hyperparameter:</b> chosen before training, for example image size, batch size, dropout, and learning rate.
+        </div>
+        <table>
+          <tr><th>Setting</th><th>Value</th><th>Purpose</th></tr>
+          <tr><td>Model kind</td><td><code>3d_transformer</code></td><td>Selected architecture for the research challenge.</td></tr>
+          <tr><td>Input size</td><td><code>5 x 96 x 96 x 1</code></td><td>Five grayscale MRI slices per sample.</td></tr>
+          <tr><td>Batch size</td><td><code>8</code></td><td>Small batch to control memory usage.</td></tr>
+          <tr><td>Epochs</td><td><code>20</code> maximum</td><td>Maximum training passes, with callbacks for control.</td></tr>
+          <tr><td>Optimizer</td><td>Adam</td><td>Adaptive weight updates.</td></tr>
+          <tr><td>Learning rate</td><td><code>0.001</code> initial</td><td>Controls update step size.</td></tr>
+          <tr><td>Loss</td><td>Binary crossentropy</td><td>Appropriate for tumor vs no_tumor classification.</td></tr>
+          <tr><td>Attention heads</td><td><code>2</code></td><td>Two attention views over tokens.</td></tr>
+          <tr><td>Dropout</td><td><code>0.10</code>, <code>0.15</code>, <code>0.35</code></td><td>Regularization to reduce overfitting.</td></tr>
+        </table>
+      </section>
+
+      <section class="slide" data-title="Training">
+        <span class="kicker">Training behavior</span>
+        <h3>Training, Validation, and Fit Diagnosis</h3>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/training_curves.png" alt="Training curves">
+          <div>
+            <div class="metric" style="grid-template-columns: 1fr 1fr;">
+              <div class="card green"><b class="big">90.65%</b><p>Training accuracy</p></div>
+              <div class="card orange"><b class="big">47.37%</b><p>Validation accuracy</p></div>
+            </div>
+            <table>
+              <tr><th>Fit type</th><th>Pattern</th><th>Meaning</th></tr>
+              <tr><td>Underfitting</td><td>Train low, validation low</td><td>Model has not learned enough.</td></tr>
+              <tr><td>Good fit</td><td>Train and validation close</td><td>Model generalizes reasonably.</td></tr>
+              <tr><td>Overfitting</td><td>Train high, validation much lower</td><td>Model may memorize training patterns.</td></tr>
+            </table>
+            <div class="callout orange">
+              <b>Our diagnosis:</b> The model is not underfitting. It shows possible overfitting or generalization risk because training accuracy is much higher than validation accuracy.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Metrics">
+        <span class="kicker">Evaluation metrics</span>
+        <h3>Final Test Metrics</h3>
+        <div class="metric">
+          <div class="card green"><b class="big">78.13%</b><p>Accuracy</p></div>
+          <div class="card green"><b class="big">84.78%</b><p>Macro precision</p></div>
+          <div class="card green"><b class="big">78.13%</b><p>Macro recall</p></div>
+          <div class="card green"><b class="big">77.03%</b><p>Macro F1</p></div>
+        </div>
+        <table>
+          <tr><th>Metric</th><th>Simple meaning</th><th>Final result</th></tr>
+          <tr><td>Accuracy</td><td>Overall correct predictions.</td><td>25 out of 32 test samples correct.</td></tr>
+          <tr><td>Precision</td><td>When a class is predicted, how often it is correct.</td><td>Tumor precision 69.57 percent.</td></tr>
+          <tr><td>Recall</td><td>Out of real samples of a class, how many were found.</td><td>Tumor recall 100 percent.</td></tr>
+          <tr><td>F1-score</td><td>Balance of precision and recall.</td><td>Tumor F1 82.05 percent.</td></tr>
+          <tr><td>Support</td><td>Number of real test samples per class.</td><td>16 no_tumor, 16 tumor.</td></tr>
+          <tr><td>PR AUC</td><td>Ranking quality for tumor probability scores.</td><td>0.5372, modest.</td></tr>
+        </table>
+      </section>
+
+      <section class="slide" data-title="Confusion Matrix">
+        <span class="kicker">Test set behavior</span>
+        <h3>Confusion Matrix Interpretation</h3>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/confusion_matrix.png" alt="Confusion matrix">
+          <div>
+            <table>
+              <tr><th>Outcome</th><th>Count</th><th>Meaning</th></tr>
+              <tr><td>True no_tumor predicted no_tumor</td><td>9</td><td>Correct negative predictions.</td></tr>
+              <tr><td>True no_tumor predicted tumor</td><td>7</td><td>False positives.</td></tr>
+              <tr><td>True tumor predicted no_tumor</td><td>0</td><td>No false negatives in test set.</td></tr>
+              <tr><td>True tumor predicted tumor</td><td>16</td><td>All tumor samples detected.</td></tr>
+            </table>
+            <div class="callout green">
+              The model was cautious toward tumor detection. It found all tumor cases in the test set, but it also raised false alarms for 7 no_tumor slices.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="PR and Predictions">
+        <span class="kicker">Qualitative and threshold analysis</span>
+        <h3>Precision-Recall Curve and Sample Predictions</h3>
+        <div class="grid">
+          <div>
+            <img src="DeepVision Pipeline Output/figures/precision_recall_curve.png" alt="Precision recall curve">
+            <div class="card">
+              <span class="tag">PR curve</span>
+              <p>Shows the tradeoff between precision and recall at different tumor probability thresholds.</p>
+              <p><b>Decision threshold:</b> 0.5563. <b>PR AUC:</b> 0.5372.</p>
+            </div>
+          </div>
+          <div>
+            <img src="DeepVision Pipeline Output/figures/sample_predictions.png" alt="Sample predictions">
+            <div class="card">
+              <span class="tag">Prediction examples</span>
+              <p>Shows held-out test slices with true label, predicted label, and model score.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Final Graph Gallery">
+        <span class="kicker">Final project graphs</span>
+        <h3>Final Output Graph Gallery</h3>
+        <div class="gallery">
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/preprocessing_segmentation_preview.png" alt="Final preprocessing preview">
+            <p><b>Pre-processing and masks:</b> Image, mask, and overlay preview.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/descriptor_distributions.png" alt="Final descriptor distributions">
+            <p><b>Descriptor distributions:</b> Box plots for extracted features.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/training_curves.png" alt="Final training curves">
+            <p><b>Training curves:</b> Accuracy and loss over epochs.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/confusion_matrix.png" alt="Final confusion matrix gallery">
+            <p><b>Confusion matrix:</b> True vs predicted labels.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/precision_recall_curve.png" alt="Final PR curve gallery">
+            <p><b>Precision-recall:</b> Threshold tradeoff for tumor class.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/figures/sample_predictions.png" alt="Final sample predictions gallery">
+            <p><b>Sample predictions:</b> Qualitative held-out test examples.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Final Samples">
+        <span class="kicker">Final project output samples</span>
+        <h3>Annotated Dataset Examples</h3>
+        <div class="grid three">
+          <div class="card">
+            <img src="DeepVision Pipeline Output/annotated_dataset/images/brats_ped_00195_000_t1_z0056_00040.png" alt="Final image sample">
+            <p><b>Image:</b> Exported preprocessed MRI slice.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/annotated_dataset/masks/brats_ped_00195_000_t1_z0056_00040_mask.png" alt="Final mask sample">
+            <p><b>Mask:</b> Binary tumor annotation from paired segmentation volume.</p>
+          </div>
+          <div class="card">
+            <img src="DeepVision Pipeline Output/annotated_dataset/overlays/brats_ped_00195_000_t1_z0056_00040_overlay.png" alt="Final overlay sample">
+            <p><b>Overlay:</b> MRI slice with tumor mask visualized on top.</p>
+          </div>
+        </div>
+        <div class="callout green">
+          These exported image, mask, and overlay files are part of the final annotated dataset used for training and testing.
+        </div>
+      </section>
+
+      <section class="slide" data-title="Research Paper">
+        <span class="kicker">Written deliverable</span>
+        <h3>Research Paper and Report Files</h3>
+        <div class="grid">
+          <div class="card blue">
+            <span class="tag">Final research paper</span>
+            <p>The research paper explains the project objective, literature review, methodology, implementation, results, evaluation, limitations, and conclusion.</p>
+            <a class="file-link" href="231192_231200_Final_Project_Research_Paper.docx">Open DOCX</a>
+            <a class="file-link secondary" href="231192_231200_Final_Project_Research_Paper.md">Open Markdown</a>
+          </div>
+          <div class="card green">
+            <span class="tag">Generated report copy</span>
+            <p>A copy is also present inside the final output report folder.</p>
+            <a class="file-link" href="DeepVision Pipeline Output/report/231192_231200_Final_Project_Research_Paper.docx">Open output DOCX</a>
+            <a class="file-link secondary" href="DeepVision Pipeline Output/report/231192_231200_Final_Project_Research_Paper.md">Open output Markdown</a>
+          </div>
+          <div class="card">
+            <span class="tag">Colab notebook</span>
+            <p>The notebook contains the runnable final pipeline from dataset acquisition to evaluation.</p>
+            <a class="file-link" href="231192_231200_Final_Deep_Vision_Pipeline_Colab.ipynb">Open notebook</a>
+          </div>
+          <div class="card">
+            <span class="tag">GitHub package</span>
+            <p>The GitHub-ready README and requirements file are available in the output folder.</p>
+            <a class="file-link" href="DeepVision Pipeline Output/github_ready/README.md">Open README</a>
+            <a class="file-link secondary" href="DeepVision Pipeline Output/github_ready/requirements.txt">Open requirements</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Deliverables">
+        <span class="kicker">Final deliverables</span>
+        <h3>Generated Project Artifacts</h3>
+        <table>
+          <tr><th>Artifact</th><th>Location</th><th>Purpose</th></tr>
+          <tr><td>Colab notebook</td><td><code>231192_231200_Final_Deep_Vision_Pipeline_Colab.ipynb</code></td><td>Runnable end-to-end pipeline.</td></tr>
+          <tr><td>Annotated dataset</td><td><code>DeepVision Pipeline Output/annotated_dataset/</code></td><td>Images, masks, overlays, manifest.</td></tr>
+          <tr><td>Trained model</td><td><code>models/*.keras</code></td><td>Saved 3D transformer model.</td></tr>
+          <tr><td>Features</td><td><code>features/deep_pipeline_features.csv</code></td><td>GLCM and geometry descriptors.</td></tr>
+          <tr><td>Evaluation</td><td><code>classification_report.csv</code>, <code>metrics_summary.json</code></td><td>Performance metrics.</td></tr>
+          <tr><td>Figures</td><td><code>figures/</code></td><td>Preview, descriptors, curves, confusion matrix, predictions.</td></tr>
+          <tr><td>Research paper</td><td><code>231192_231200_Final_Project_Research_Paper.docx</code></td><td>Final written report.</td></tr>
+        </table>
+      </section>
+
+      <section class="slide" data-title="Limitations">
+        <span class="kicker">Safe claims</span>
+        <h3>Limitations and Future Improvements</h3>
+        <div class="grid">
+          <div class="card orange"><span class="tag">Small data</span><p>158 samples are enough for academic demonstration, but not enough for clinical deployment.</p></div>
+          <div class="card orange"><span class="tag">Generalization risk</span><p>Training accuracy was high while validation accuracy was low, showing possible overfitting.</p></div>
+          <div class="card orange"><span class="tag">False positives</span><p>7 no_tumor samples were predicted as tumor, lowering precision.</p></div>
+          <div class="card orange"><span class="tag">Medical safety</span><p>This is a semester project prototype, not a diagnostic system.</p></div>
+        </div>
+        <h4>Future work</h4>
+        <ul>
+          <li>Use more subjects and more MRI modalities.</li>
+          <li>Apply cross-validation and external test data.</li>
+          <li>Tune model size, dropout, learning rate, and augmentation.</li>
+          <li>Extend from tumor presence recognition to full tumor subregion segmentation.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Conclusion">
+        <span class="kicker">Conclusion</span>
+        <h3>Final Summary</h3>
+        <div class="card blue">
+          <p>The final project successfully integrates acquisition, pre-processing, segmentation, description, and recognition into one runnable deep vision workflow.</p>
+        </div>
+        <div class="grid">
+          <div class="card"><span class="tag">Data</span><p>158 annotated MRI slice samples exported with image, mask, overlay, label, and features.</p></div>
+          <div class="card"><span class="tag">Model</span><p>3D transformer using five neighboring slices and attention over voxel-patch tokens.</p></div>
+          <div class="card"><span class="tag">Result</span><p>78.13 percent test accuracy with 100 percent tumor recall on the held-out test set.</p></div>
+          <div class="card"><span class="tag">Safe claim</span><p>Promising academic prototype with clear need for more data and stronger validation.</p></div>
+        </div>
+        <div class="callout green">
+          <b>Closing line:</b> This pipeline demonstrates how classical computer vision stages and deep learning can be combined for semantic understanding of medical MRI slices.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const nav = document.getElementById("nav");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    let current = 0;
+
+    slides.forEach((slide, index) => {
+      const button = document.createElement("button");
+      button.textContent = `${index + 1}. ${slide.dataset.title}`;
+      button.onclick = () => showSlide(index);
+      if (index === 0) button.classList.add("active");
+      nav.appendChild(button);
+    });
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+      Array.from(nav.children).forEach((button, i) => button.classList.toggle("active", i === current));
+      progressText.textContent = `Slide ${current + 1} of ${slides.length}`;
+      progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown") nextSlide();
+      if (event.key === "ArrowLeft" || event.key === "PageUp") prevSlide();
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>

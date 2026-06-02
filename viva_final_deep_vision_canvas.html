@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Deep Vision Pipeline Viva Canvas</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --ink: #18202f;
+      --muted: #5d6678;
+      --panel: #ffffff;
+      --line: #d9dfeb;
+      --blue: #275efe;
+      --blue-soft: #eaf0ff;
+      --green: #157a52;
+      --green-soft: #e8f6ef;
+      --orange: #a85a00;
+      --orange-soft: #fff2df;
+      --red: #b42318;
+      --red-soft: #fff0ee;
+      --cyan: #087d8f;
+      --cyan-soft: #e6f8fb;
+      --shadow: 0 14px 38px rgba(28, 37, 62, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 300px 1fr; }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: #111827;
+      color: #fff;
+      padding: 18px 14px;
+    }
+    aside h1 { margin: 0 0 4px; font-size: 18px; letter-spacing: 0; }
+    aside p { margin: 0 0 14px; color: #c7d2fe; font-size: 13px; }
+    .nav button {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #f9fafb;
+      padding: 10px 11px;
+      margin: 5px 0;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .nav button.active { background: #fff; color: #111827; border-color: #fff; font-weight: 700; }
+    main { padding: 28px; max-width: 1220px; width: 100%; margin: 0 auto; }
+    .topbar, .step {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .topbar { padding: 18px 20px; margin-bottom: 18px; }
+    .topbar h2 { margin: 0 0 5px; font-size: 25px; }
+    .topbar p { margin: 0; color: var(--muted); }
+    .step { display: none; padding: 22px; margin-bottom: 18px; }
+    .step.active { display: block; }
+    h3 { margin: 0 0 14px; font-size: 24px; }
+    h4 { margin: 18px 0 8px; font-size: 17px; }
+    p { margin: 8px 0; }
+    code {
+      background: #f0f3f8;
+      border: 1px solid #d8dee9;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.94em;
+      color: #18202f;
+    }
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    pre code { background: transparent; border: 0; padding: 0; color: #f9fafb; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 0;
+    }
+    .card.blue { background: var(--blue-soft); border-color: #c7d6ff; }
+    .card.green { background: var(--green-soft); border-color: #bdebd2; }
+    .card.orange { background: var(--orange-soft); border-color: #ffd7a6; }
+    .card.red { background: var(--red-soft); border-color: #ffc9c2; }
+    .card.cyan { background: var(--cyan-soft); border-color: #b8edf4; }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .tag.green { color: var(--green); }
+    .tag.orange { color: var(--orange); }
+    .tag.red { color: var(--red); }
+    .tag.cyan { color: var(--cyan); }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 9px; vertical-align: top; text-align: left; }
+    th { background: #f1f4fa; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+    .flow span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-weight: 700;
+    }
+    .arrow { color: var(--muted); font-weight: 700; }
+    .image-row { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; margin-top: 12px; }
+    img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .mini { font-size: 13px; color: var(--muted); }
+    .diagram { border: 1px solid var(--line); border-radius: 8px; background: #fbfcff; padding: 14px; margin: 12px 0; }
+    .callout { border-left: 5px solid var(--blue); background: var(--blue-soft); padding: 12px 14px; border-radius: 8px; margin: 12px 0; }
+    .callout.correct { border-left-color: var(--green); background: var(--green-soft); }
+    .callout.fix { border-left-color: var(--orange); background: var(--orange-soft); }
+    .metric {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .metric .card b { font-size: 22px; display: block; }
+    .pipeline-svg {
+      width: 100%;
+      min-height: 250px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .big-answer {
+      border: 2px solid #f59e0b;
+      background: #fff7ed;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .big-answer h4 { margin-top: 0; }
+    .subject-box {
+      border: 2px solid #275efe;
+      background: #f8fbff;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .volume-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .volume-card {
+      border: 1px solid #b9c8ff;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 130px;
+    }
+    .slice-stack {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 58px;
+      margin: 8px 0;
+    }
+    .slice-thin {
+      width: 18px;
+      border-radius: 4px;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+    }
+    .sample-card {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+    .sample-part {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      min-height: 78px;
+    }
+    .sample-part b { display: block; margin-bottom: 5px; }
+    .hidden-answer {
+      display: none;
+      border: 1px solid #c7d6ff;
+      background: var(--blue-soft);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .hidden-answer.show { display: block; }
+    .reveal {
+      border: 1px solid var(--blue);
+      background: var(--blue);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 16px; }
+      .grid, .grid.three, .grid.four, .metric, .volume-row, .sample-card { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Final Pipeline</h1>
+      <p>Deep Vision Pipeline viva canvas.</p>
+      <div class="nav" id="nav"></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <h2>Final Deep Vision Pipeline Viva Preparation</h2>
+        <p>Submitted by Muhammad Maaz Akram 231192 and Muhammad Umar 231200, BSAI-6A. Submitted to Ms Hina Rashid.</p>
+      </div>
+
+      <section class="step active" data-title="1. Two-Minute Overview">
+        <h3>1. Two-Minute Overview</h3>
+        <div class="card blue">
+          <span class="tag">Say this if maam asks: Explain the final project in two minutes</span>
+          <p><b>English:</b> "Our final project is an end-to-end Deep Vision Pipeline for brain tumor MRI slice understanding. It combines the work from Assignments 1, 2, and 3. The pipeline starts with acquisition, where the BraTS-PEDs dataset chunk is loaded through KaggleHub. Then pre-processing is applied using intensity normalization and denoising ideas from Assignment 1. Next, segmentation is handled using paired tumor masks when available; in this final run all 158 samples used segmentation masks as the label source. The pipeline then saves an annotated dataset containing MRI image slices, binary masks, and overlay images. For semantic description, it computes GLCM texture features and geometric features, continuing Assignment 3. For recognition, it trains a deep neural network. The selected model was a 3D transformer, which uses a context of 5 neighboring MRI slices and applies attention over voxel-patch tokens. The recognition task was binary tumor presence classification with two classes: tumor and no_tumor. The final run produced 158 samples, 107 train samples, 19 validation samples, and 32 test samples. On the test set, the model achieved 78.13 percent accuracy, macro precision 84.78 percent, macro recall 78.13 percent, and macro F1 77.03 percent. The final outputs include the annotated dataset, trained Keras model, feature CSV, confusion matrix, precision-recall curve, training curves, prediction examples, report draft, and GitHub-ready files."</p>
+          <p><b>Roman Urdu:</b> "Final project aik complete Deep Vision Pipeline hai. Is mein A1 ki pre-processing, A2 ki segmentation aur A3 ke descriptors plus classification combine hue. Pehle dataset acquire hua, phir MRI slices normalize aur denoise hue. Phir tumor masks use hue aur annotated dataset bana jisme image, mask aur overlay save hua. Description stage mein GLCM texture aur geometric features nikle. Recognition stage mein 3D transformer train hua jo 5 neighboring slices ka context use karta hai. Task tumor vs no_tumor classification tha. Total 158 samples bane, 107 train, 19 validation aur 32 test. Test accuracy 78.13 percent, macro precision 84.78 percent, macro recall 78.13 percent aur macro F1 77.03 percent aaya."</p>
+        </div>
+        <div class="flow">
+          <span>Acquisition</span><b class="arrow">to</b>
+          <span>Pre-processing</span><b class="arrow">to</b>
+          <span>Segmentation</span><b class="arrow">to</b>
+          <span>Description</span><b class="arrow">to</b>
+          <span>Recognition</span><b class="arrow">to</b>
+          <span>Evaluation</span>
+        </div>
+        <div class="metric">
+          <div class="card green"><b>158</b><p>Annotated samples</p></div>
+          <div class="card green"><b>2</b><p>Classes: tumor and no_tumor</p></div>
+          <div class="card green"><b>78.13%</b><p>Test accuracy</p></div>
+          <div class="card green"><b>3D</b><p>Transformer research challenge</p></div>
+        </div>
+        <div class="big-answer">
+          <h4>Read This First: Annotation Source</h4>
+          <p><b>English:</b> You did not manually annotate the final masks. The Kaggle dataset chunk already contained a segmentation annotation file named <code>BraTS-PED-00195-000-seg.nii</code>. This file is a 3D mask volume. The notebook took each selected MRI slice, took the matching slice from this <code>seg.nii</code> volume, converted nonzero pixels into a binary tumor mask, and saved it as a PNG mask. That is how the annotated dataset was created.</p>
+          <p><b>Roman Urdu:</b> Manual annotation hum ne nahi ki. Dataset ke andar pehle se <code>BraTS-PED-00195-000-seg.nii</code> naam ki segmentation mask file thi. Notebook ne MRI slice ke same slice number par is mask volume se tumor mask nikala aur PNG mask save kar diya. Isi se annotated dataset bana.</p>
+          <p><b>Safe viva line:</b> "The annotations came from the paired segmentation mask already present in the dataset. We converted those 3D masks into slice-wise PNG masks and overlays."</p>
+        </div>
+        <div class="subject-box">
+          <h4>Visual Map of Your Final Dataset</h4>
+          <p><b>One subject/case:</b> <code>brats_ped_00195_000</code></p>
+          <div class="volume-row">
+            <div class="volume-card">
+              <b>Image volume 1</b>
+              <p><code>t1n.nii</code></p>
+              <div class="slice-stack">
+                <span class="slice-thin" style="height:25px"></span><span class="slice-thin" style="height:34px"></span><span class="slice-thin" style="height:45px"></span><span class="slice-thin" style="height:52px;background:#fde68a;border-color:#f59e0b"></span><span class="slice-thin" style="height:38px"></span>
+              </div>
+              <p class="mini">152 slice positions total. 79 selected slices became 79 samples.</p>
+            </div>
+            <div class="volume-card">
+              <b>Image volume 2</b>
+              <p><code>t2w.nii</code></p>
+              <div class="slice-stack">
+                <span class="slice-thin" style="height:25px"></span><span class="slice-thin" style="height:34px"></span><span class="slice-thin" style="height:45px"></span><span class="slice-thin" style="height:52px;background:#fde68a;border-color:#f59e0b"></span><span class="slice-thin" style="height:38px"></span>
+              </div>
+              <p class="mini">152 slice positions total. 79 selected slices became 79 samples.</p>
+            </div>
+            <div class="volume-card">
+              <b>Annotation volume</b>
+              <p><code>seg.nii</code></p>
+              <div class="slice-stack">
+                <span class="slice-thin" style="height:25px;background:#fee2e2;border-color:#ef4444"></span><span class="slice-thin" style="height:34px;background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="height:45px;background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="height:52px;background:#fecaca;border-color:#ef4444"></span><span class="slice-thin" style="height:38px;background:#fee2e2;border-color:#ef4444"></span>
+              </div>
+              <p class="mini">Same slice numbers give tumor masks.</p>
+            </div>
+          </div>
+          <div class="sample-card">
+            <div class="sample-part"><b>Sample</b>One selected slice</div>
+            <div class="sample-part"><b>Image</b>PNG from T1 or T2</div>
+            <div class="sample-part"><b>Mask</b>PNG from SEG</div>
+            <div class="sample-part"><b>Label</b>tumor or no_tumor</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="2. Final Objective">
+        <h3>2. Final Project Objective</h3>
+        <div class="card">
+          <span class="tag">Teacher-given final challenge</span>
+          <p>The final semester project asked for a high-level application using deep neural networks for object detection and semantic understanding. The required pipeline was:</p>
+          <p><code>Acquisition -> Pre-processing -> Segmentation -> Description -> Recognition</code></p>
+        </div>
+        <div class="card blue">
+          <span class="tag">Our final objective in simple words</span>
+          <p>Build one runnable Colab notebook that takes MRI volumes, uses existing tumor annotations when available, creates an annotated slice dataset, trains a deep model, and evaluates tumor vs no_tumor recognition.</p>
+          <p><b>Roman Urdu:</b> Hamara objective aik complete notebook banana tha jo MRI data le, existing tumor masks se annotated dataset banaye, deep model train kare, aur tumor vs no_tumor evaluate kare.</p>
+        </div>
+        <table>
+          <tr><th>Requirement</th><th>How our final pipeline satisfies it</th></tr>
+          <tr><td>Apply deep learning architecture</td><td>Used a 3D transformer model for tumor vs no_tumor recognition.</td></tr>
+          <tr><td>Research challenge</td><td>Selected 3D Transformer Integration using neighboring MRI slices and attention.</td></tr>
+          <tr><td>Evaluation</td><td>Saved confusion matrix, classification report, precision, recall, F1, and precision-recall curve.</td></tr>
+          <tr><td>Annotated dataset</td><td>Exported image slices, masks, overlays, and manifest CSV.</td></tr>
+          <tr><td>GitHub-ready code</td><td>Exported README, requirements, report draft, trained model, metrics, and figures.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The objective was to combine all previous milestones into one complete deep vision pipeline. We acquired MRI data, pre-processed it, segmented tumor regions, described them with features, trained a 3D transformer, and evaluated the model using confusion matrix and precision-recall analysis."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="3. Assignment Connection">
+        <h3>3. How Assignments 1, 2, and 3 Connect</h3>
+        <table>
+          <tr><th>Milestone</th><th>What it did</th><th>How final pipeline uses it</th></tr>
+          <tr><td>Assignment 1</td><td>MRI filtering, intensity normalization, Gaussian, mean, median, PSNR, SSIM.</td><td>Final pipeline uses normalization and denoising ideas during pre-processing.</td></tr>
+          <tr><td>Assignment 2</td><td>Segmentation, morphology, binary masks, chain code, convex hull.</td><td>Final pipeline uses segmentation masks and mask overlays. It also has fallback classical mask logic if manual masks are absent.</td></tr>
+          <tr><td>Assignment 3</td><td>GLCM texture, geometric features, feature vectors, Random Forest and SVM.</td><td>Final pipeline computes descriptor features and also trains a deep neural recognition model.</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>Important:</b> The final pipeline does not simply paste previous outputs. It re-implements the pipeline steps in one Colab notebook and exports final artifacts.</p>
+          <p><b>Roman Urdu:</b> Final notebook previous assignments ke concepts ko aik complete workflow mein dobara run karta hai.</p>
+        </div>
+        <div class="callout correct">
+          <p><b>Your understanding is right:</b> A1, A2, and A3 logic is repeated inside the final notebook because the final submission must run as one complete pipeline from dataset to trained model.</p>
+          <p><b>Why repeat code?</b> If the final notebook only depended on old output folders, it would not be a true end-to-end pipeline. So it repeats normalization, denoising, mask handling, descriptor extraction, model training, and evaluation in one place.</p>
+          <p><b>Roman Urdu:</b> Final notebook mein A1/A2/A3 ka code concept dobara aata hai taake project start se end tak aik hi notebook mein chal sake.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="4. Terms Before Code">
+        <h3>4. Important Terms Before Code</h3>
+        <table>
+          <tr><th>Term</th><th>Simple English</th><th>Roman Urdu</th></tr>
+          <tr><td>Acquisition</td><td>Getting the dataset into the notebook.</td><td>Dataset ko notebook mein lana.</td></tr>
+          <tr><td>Pre-processing</td><td>Cleaning image intensities before model training.</td><td>Image ko model se pehle clean aur normalize karna.</td></tr>
+          <tr><td>Segmentation mask</td><td>Binary image showing tumor region.</td><td>White tumor region, black background.</td></tr>
+          <tr><td>Annotated dataset</td><td>Images plus masks plus labels and manifest.</td><td>Images, masks, labels aur CSV record ka final dataset.</td></tr>
+          <tr><td>Descriptor</td><td>A numeric feature describing texture or shape.</td><td>Image ko describe karne wala number.</td></tr>
+          <tr><td>3D context</td><td>Neighboring slices around the current slice.</td><td>Current slice ke aas paas wali slices.</td></tr>
+          <tr><td>Transformer</td><td>Model using attention to learn relationships between tokens.</td><td>Attention se tokens ke relations seekhne wala model.</td></tr>
+          <tr><td>Confusion matrix</td><td>Table of true vs predicted labels.</td><td>True aur predicted labels ka table.</td></tr>
+          <tr><td>Precision</td><td>When model predicts tumor, how often it is correct.</td><td>Prediction positive ho to kitni dafa correct hai.</td></tr>
+          <tr><td>Recall</td><td>How many real tumor cases the model finds.</td><td>Real tumor cases mein se kitnay catch hue.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="5. Dataset and Counts">
+        <h3>5. Dataset and Counts</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Original dataset</span>
+            <p>BraTS-PEDs from The Cancer Imaging Archive.</p>
+            <p>Full collection: about 457 subjects and around 32.7 GB.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Practical notebook dataset</span>
+            <p>KaggleHub chunk: <code>awansaad6797/cancer-dataset</code>.</p>
+            <p>This was used because the full TCIA dataset is large for repeated Colab runs.</p>
+          </div>
+        </div>
+        <table>
+          <tr><th>Item</th><th>Actual final run</th><th>Meaning</th></tr>
+          <tr><td>Samples</td><td>158</td><td>Each sample is one exported MRI slice with image, mask, overlay, label, and features.</td></tr>
+          <tr><td>Subjects used in this run</td><td>1 subject</td><td>The manifest shows <code>brats_ped_00195_000</code> as the selected subject.</td></tr>
+          <tr><td>Image volumes used in this run</td><td>2 source volumes</td><td><code>BraTS-PED-00195-000-t1n.nii</code> and <code>BraTS-PED-00195-000-t2w.nii</code> contributed slice samples.</td></tr>
+          <tr><td>Segmentation volume used</td><td>1 mask volume</td><td><code>BraTS-PED-00195-000-seg.nii</code> provided the original tumor annotations.</td></tr>
+          <tr><td>Total slices in one image volume</td><td>152 slice positions</td><td>For this final subject, slice indices go from <code>0</code> to <code>151</code>. Since counting starts at 0, this means 152 possible 2D slices in one 3D volume.</td></tr>
+          <tr><td>Samples per image volume</td><td>79 + 79 = 158</td><td>The T1 volume produced 79 slice samples and the T2 volume produced 79 slice samples.</td></tr>
+          <tr><td>Slice index range</td><td>0 to 151 in both image volumes</td><td>The selected samples are spread through the 3D volume, not just one single slice.</td></tr>
+          <tr><td>Classes</td><td>2</td><td><code>tumor</code> and <code>no_tumor</code>.</td></tr>
+          <tr><td>Class counts</td><td>80 no_tumor, 78 tumor</td><td>The classes are almost balanced.</td></tr>
+          <tr><td>Label source</td><td>158 from segmentation masks</td><td>All final labels came from paired segmentation masks, not filename modality labels.</td></tr>
+          <tr><td>Split counts</td><td>107 train, 19 validation, 32 test</td><td>Train learns, validation tunes, test evaluates final performance.</td></tr>
+          <tr><td>Exported dataset</td><td>158 images, 158 masks, 158 overlays</td><td>These are the final annotated dataset files.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The final run created 158 annotated MRI slice samples. There were two classes, tumor and no_tumor, with 78 tumor and 80 no_tumor samples. All labels came from segmentation masks, so this final task was tumor presence recognition."</p>
+        </div>
+        <h4>Subject vs Volume vs Sample</h4>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Subject</span>
+            <p>A subject is one patient or case ID. In this final run, the selected subject was <code>brats_ped_00195_000</code>.</p>
+            <p><b>Roman Urdu:</b> Subject aik patient/case hota hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Volume</span>
+            <p>A volume is one 3D MRI file, for example <code>t1n.nii</code> or <code>t2w.nii</code>. In this final run, one image volume has 152 slice positions, indexed from 0 to 151.</p>
+            <p><b>Roman Urdu:</b> Volume poori 3D MRI file hoti hai. Is final run mein aik image volume ke andar 152 slice positions hain, index 0 se 151 tak.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Sample</span>
+            <p>A sample is one selected 2D slice exported as PNG, with its mask, overlay, label, and feature row.</p>
+            <p><b>Roman Urdu:</b> Sample aik selected slice hai jo model ko training/testing mein di gayi.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Why 158 samples?</span>
+            <p>The pipeline selected 79 slices from <code>t1n.nii</code> and 79 slices from <code>t2w.nii</code>. Those 158 selected slices became final image-mask-label samples.</p>
+          </div>
+        </div>
+        <div class="callout correct">
+          <p><b>Important counting point:</b> A volume had 152 possible slices, but the pipeline did not export all 152 slices from each image volume. It selected 79 useful slices from <code>t1n.nii</code> and 79 useful slices from <code>t2w.nii</code>, giving 158 final samples.</p>
+          <p><b>Roman Urdu:</b> Aik volume mein 152 possible slices thay, lekin pipeline ne har volume se 79 selected slices export ki. Is liye 79 plus 79 equals 158 samples bane.</p>
+        </div>
+        <div class="callout fix">
+          <p><b>One volume is not equal to one subject.</b> One subject can have multiple MRI volumes, for example T1, T2, FLAIR, T1CE, and also one segmentation mask volume. In this run, one subject had two image volumes used and one segmentation volume used.</p>
+          <p><b>Roman Urdu:</b> Volume aur subject same cheez nahi. Aik subject ke andar multiple MRI volume files ho sakti hain.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="6. Configuration">
+        <h3>6. Important Configuration</h3>
+        <pre><code>MODEL_KIND = "3d_transformer"
+IMAGE_SIZE = 96
+CONTEXT_DEPTH = 5
+MAX_SUBJECTS = 18
+MAX_VOLUMES = 48
+POSITIVE_SLICES_PER_VOLUME = 40
+NEGATIVE_SLICES_PER_VOLUME = 40
+EPOCHS = 20
+BATCH_SIZE = 8
+TEST_SIZE = 0.20
+VAL_SIZE_FROM_TRAIN = 0.15</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Set model type, image size, slice context, sampling limits, and train-test settings.</p></div>
+          <div class="card"><span class="tag">Context depth</span><p><code>CONTEXT_DEPTH = 5</code> means each sample uses 5 neighboring MRI slices.</p></div>
+          <div class="card"><span class="tag">Image size</span><p>Every slice is resized to 96 by 96 pixels for model input.</p></div>
+          <div class="card"><span class="tag">Batch size</span><p>Batch size is 8 because 3D context is heavier than single 2D images.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The configuration makes the run manageable in Colab while still using 3D slice context for the transformer model."</p>
+        </div>
+        <h4>Config words that can confuse you</h4>
+        <table>
+          <tr><th>Config</th><th>Meaning</th><th>Important clarification</th></tr>
+          <tr><td><code>MAX_SUBJECTS = 18</code></td><td>Upper limit for patient/case IDs.</td><td>It does not mean 18 were actually used. Actual manifest shows 1 subject used: <code>brats_ped_00195_000</code>.</td></tr>
+          <tr><td><code>MAX_VOLUMES = 48</code></td><td>Upper limit for MRI image volume files.</td><td>Actual manifest shows 2 source image volumes used: <code>t1n.nii</code> and <code>t2w.nii</code>.</td></tr>
+          <tr><td><code>POSITIVE_SLICES_PER_VOLUME = 40</code></td><td>Maximum tumor slices selected from each volume.</td><td>Actual run got 39 tumor slices per image volume.</td></tr>
+          <tr><td><code>NEGATIVE_SLICES_PER_VOLUME = 40</code></td><td>Maximum no_tumor slices selected from each volume.</td><td>Actual run got 40 no_tumor slices per image volume.</td></tr>
+          <tr><td><code>CONTEXT_DEPTH = 5</code></td><td>Five neighboring slices per sample.</td><td>One sample still has one center label, but the model sees five slices around it.</td></tr>
+          <tr><td><code>IMAGE_SIZE = 96</code></td><td>Every slice resized to 96 by 96.</td><td>This keeps model memory manageable.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"MAX values are limits, not final counts. The final manifest tells the actual counts: one subject, two image volumes, one segmentation volume, and 158 slice samples."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="7. Acquisition">
+        <h3>7. Acquisition Stage</h3>
+        <pre><code>def acquire_dataset():
+    if USE_UPLOAD:
+        upload a dataset zip manually
+    else:
+        path = kagglehub.dataset_download(DATASET_SLUG)
+        return Path(path)</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Load the MRI dataset either through KaggleHub or manual upload.</p></div>
+          <div class="card"><span class="tag">Input</span><p>Dataset slug <code>awansaad6797/cancer-dataset</code> or uploaded zip.</p></div>
+          <div class="card"><span class="tag">Output</span><p>A local dataset root containing NIfTI files.</p></div>
+          <div class="card"><span class="tag">Connection to results</span><p>Everything after this depends on finding MRI volumes and segmentation masks.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"Acquisition means bringing the MRI dataset into Colab. We used KaggleHub for the working dataset chunk."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="8. Volume Discovery">
+        <h3>8. Volume Discovery and Mask Pairing</h3>
+        <pre><code>all_nii = sorted(set(DATA_ROOT.rglob("*.nii")) |
+                 set(DATA_ROOT.rglob("*.nii.gz")))
+
+is_segmentation_name(name)
+modality_from_name(name)
+subject_key(name)
+
+segmented_subjects = image subjects that also have masks
+recognition_task = "tumor_presence" if masks exist else "modality"</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">Code goal</span><p>Find all MRI image volumes and segmentation volumes.</p></div>
+          <div class="card"><span class="tag">Mask pairing</span><p>The code matches image volumes and segmentation masks using subject-style keys.</p></div>
+          <div class="card"><span class="tag">Recognition task</span><p>Since masks existed, the final task became <code>tumor_presence</code>.</p></div>
+          <div class="card"><span class="tag">Modality fallback</span><p>If no segmentation masks existed, the pipeline would fall back to modality classification.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"The notebook first discovers image volumes and segmentation volumes. Because segmentation masks were available, our recognition task became tumor vs no_tumor."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="9. Pre-processing">
+        <h3>9. Pre-processing Stage</h3>
+        <pre><code>def normalise_slice(slc):
+    lo, hi = percentile values at 1 and 99
+    return clipped image scaled to 0..1
+
+def preprocess_slice(slc):
+    slc = normalise_slice(slc)
+    slc = gaussian(slc, sigma=0.65)
+    slc = median_filter(slc, size=3)
+    slc = uniform_filter(slc, size=2)
+    return clipped image</code></pre>
+        <table>
+          <tr><th>Step</th><th>Why it is used</th><th>Roman Urdu</th></tr>
+          <tr><td>Percentile normalization</td><td>Reduces extreme intensity effect and scales values to 0 to 1.</td><td>Brightness ko stable range mein lata hai.</td></tr>
+          <tr><td>Gaussian filter</td><td>Smooths random noise.</td><td>Noise ko soft karta hai.</td></tr>
+          <tr><td>Median filter</td><td>Removes small impulse-like noise while preserving edges better.</td><td>Choti sharp noise remove karta hai.</td></tr>
+          <tr><td>Uniform filter</td><td>Applies light local averaging.</td><td>Local smoothing karta hai.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"This is where Assignment 1 connects. The final pipeline normalizes MRI intensities and applies denoising before segmentation and deep learning."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="10. Segmentation">
+        <h3>10. Segmentation Stage</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Primary path</span>
+            <p>If a paired segmentation volume exists, the pipeline uses it as tumor mask:</p>
+            <p><code>mask = seg_vol[:, :, z] > 0</code></p>
+          </div>
+          <div class="card">
+            <span class="tag">Fallback path</span>
+            <p>If no segmentation mask exists, the pipeline can create a classical fallback mask using thresholding, Canny, morphology, hole filling, and largest connected component.</p>
+          </div>
+        </div>
+        <div class="big-answer">
+          <h4>Segmentation Step in Plain Words</h4>
+          <p><b>English:</b> The tumor mask was not drawn by hand during this final run. The dataset already had a segmentation file. The code loaded that file as a 3D mask volume. For every MRI slice selected from T1 or T2, the code took the same slice number from the segmentation volume. If that mask slice had tumor pixels, it became a tumor annotation for that sample. Then the notebook saved that mask as a PNG file in <code>annotated_dataset/masks</code>.</p>
+          <p><b>Roman Urdu:</b> Final run mein tumor mask hand-drawn nahi tha. Dataset ke andar pehle se segmentation file thi. Code ne us 3D mask volume ko load kiya. Har selected MRI slice ke same number wali mask slice li. Agar us mask mein tumor pixels thay to sample tumor label hua. Phir yeh mask PNG file ke form mein save hua.</p>
+        </div>
+        <table>
+          <tr><th>Label rule in final run</th><th>Meaning</th></tr>
+          <tr><td><code>mask.sum() >= MIN_TUMOR_PIXELS</code></td><td>Label is tumor.</td></tr>
+          <tr><td><code>mask.sum() < MIN_TUMOR_PIXELS</code></td><td>Label is no_tumor.</td></tr>
+          <tr><td><code>MIN_TUMOR_PIXELS = 15</code></td><td>At least 15 tumor pixels are needed to call a slice tumor.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Short viva answer</span>
+          <p>"In the final run, labels came from segmentation masks. If the mask had enough tumor pixels, the slice was labeled tumor, otherwise no_tumor."</p>
+        </div>
+        <h4>Where did annotations come from?</h4>
+        <div class="card blue">
+          <span class="tag">Important for viva</span>
+          <p>You did not manually annotate these final masks. The dataset chunk already contained segmentation NIfTI files. In this final run, the annotation source was <code>BraTS-PED-00195-000-seg.nii</code>.</p>
+          <p>The notebook read this 3D segmentation volume, took the same slice index as the MRI image, converted nonzero pixels into a binary tumor mask, resized it, and saved it as PNG in the final annotated dataset.</p>
+          <p><b>Roman Urdu:</b> Manual annotation hum ne nahi ki. Dataset mein pehle se <code>seg.nii</code> mask file thi. Notebook ne us se slice-wise masks banaye aur PNG files save kar di.</p>
+        </div>
+        <table>
+          <tr><th>Original annotation file</th><th>Exported final annotation files</th></tr>
+          <tr><td><code>BraTS-PED-00195-000-seg.nii</code></td><td><code>DeepVision Pipeline Output/annotated_dataset/masks/*.png</code></td></tr>
+          <tr><td>3D segmentation mask volume</td><td>158 binary mask PNG files, one for each exported sample.</td></tr>
+          <tr><td>Used for labels</td><td>If mask has tumor pixels, label is <code>tumor</code>; otherwise <code>no_tumor</code>.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="11. Annotated Dataset">
+        <h3>11. Annotated Dataset Export</h3>
+        <pre><code>image_path = annotated_dataset/images/sample.png
+mask_path = annotated_dataset/masks/sample_mask.png
+overlay_path = annotated_dataset/overlays/sample_overlay.png
+
+manifest row:
+sample_id, subject, modality, slice_index, label,
+image_path, mask_path, overlay_path, descriptors</code></pre>
+        <div class="metric">
+          <div class="card green"><b>158</b><p>Image PNGs</p></div>
+          <div class="card green"><b>158</b><p>Mask PNGs</p></div>
+          <div class="card green"><b>158</b><p>Overlay PNGs</p></div>
+          <div class="card green"><b>1</b><p>Manifest CSV</p></div>
+        </div>
+        <div class="card blue">
+          <span class="tag">Where to show maam</span>
+          <p><b>Images:</b> <code>DeepVision Pipeline Output/annotated_dataset/images/</code></p>
+          <p><b>Masks:</b> <code>DeepVision Pipeline Output/annotated_dataset/masks/</code></p>
+          <p><b>Overlays:</b> <code>DeepVision Pipeline Output/annotated_dataset/overlays/</code></p>
+          <p><b>Manifest:</b> <code>DeepVision Pipeline Output/annotated_dataset/annotated_dataset_manifest.csv</code></p>
+          <p>The manifest proves where each sample image, mask, overlay, label, source volume, segmentation volume, and split came from.</p>
+        </div>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/preprocessing_segmentation_preview.png" alt="Final preprocessing and segmentation preview">
+          <div class="card">
+            <p><b>What you are looking at:</b> Preview rows showing preprocessed MRI slices, masks, and overlays.</p>
+            <p><b>What changed from input:</b> Raw MRI intensities were normalized and resized, masks were attached, and overlays visualize selected tumor regions.</p>
+            <p><b>Good output:</b> Mask aligns with the highlighted region and background stays mostly black.</p>
+            <p><b>Bad output:</b> Mask misses the tumor region or covers irrelevant brain/background areas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="12. Descriptor Features">
+        <h3>12. Description Stage: GLCM and Geometry</h3>
+        <div class="flow">
+          <span>Image</span><b class="arrow">plus</b>
+          <span>Mask</span><b class="arrow">to</b>
+          <span>GLCM texture</span><b class="arrow">plus</b>
+          <span>Geometry</span><b class="arrow">to</b>
+          <span>Feature CSV</span>
+        </div>
+        <table>
+          <tr><th>Feature group</th><th>Features</th><th>Meaning</th></tr>
+          <tr><td>GLCM texture</td><td>Energy, entropy, contrast, homogeneity, correlation</td><td>Intensity pattern inside the mask.</td></tr>
+          <tr><td>Geometry</td><td>Area, perimeter, centroid, circularity</td><td>Shape and location of segmented region.</td></tr>
+        </table>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/descriptor_distributions.png" alt="Descriptor distributions">
+          <div class="card">
+            <p><b>What you are looking at:</b> Distributions of descriptor features across the final annotated dataset.</p>
+            <p><b>Why it matters:</b> It shows whether tumor and no_tumor samples have different feature patterns.</p>
+            <p><b>Viva answer:</b> "The descriptor stage continues Assignment 3 by exporting texture and geometric features from the segmented region."</p>
+          </div>
+        </div>
+        <h4>How to Read a Box Plot</h4>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Middle line</span>
+            <p>The line inside the box is the median. It is the middle value of that feature.</p>
+            <p><b>Roman Urdu:</b> Box ke andar wali line median hoti hai, yani middle value.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Box height</span>
+            <p>The box shows the middle 50 percent of values. A tall box means values are spread out more.</p>
+            <p><b>Roman Urdu:</b> Box middle 50 percent values dikhata hai. Box bara ho to spread zyada hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Whiskers</span>
+            <p>The lines outside the box show the wider normal range of values.</p>
+            <p><b>Roman Urdu:</b> Box ke bahar lines normal range dikhati hain.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Dots</span>
+            <p>Dots outside the whiskers are outliers. They are unusual values compared with the group.</p>
+            <p><b>Roman Urdu:</b> Bahar dots unusual values hoti hain, jin ko outliers kehte hain.</p>
+          </div>
+        </div>
+        <div class="callout correct">
+          <p><b>How to compare tumor vs no_tumor:</b> Look at the median lines first. If the median of tumor is clearly higher or lower than no_tumor, that feature may help separate the classes. If boxes overlap a lot, that feature alone is weak and the model needs multiple features together.</p>
+          <p><b>Roman Urdu:</b> Pehle median lines compare karo. Agar tumor aur no_tumor ke median alag hain to feature useful ho sakta hai. Agar boxes overlap kar rahe hain to single feature strong separator nahi.</p>
+          <p><b>Safe viva answer:</b> "The box plot summarizes feature distribution. I compare median, spread, overlap, and outliers to see whether a descriptor may help distinguish tumor from no_tumor."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="13. Model Input">
+        <h3>13. Model Input: 3D Slice Context</h3>
+        <pre><code>def context_from_volume(vol, z):
+    for dz in [-2, -1, 0, 1, 2]:
+        take neighboring slice z + dz
+        preprocess and resize it
+    return stack of 5 slices</code></pre>
+        <div class="grid">
+          <div class="card"><span class="tag">2D input</span><p>A single slice has shape <code>96 x 96 x 1</code>.</p></div>
+          <div class="card"><span class="tag">3D context input</span><p>Final transformer input has shape <code>5 x 96 x 96 x 1</code>.</p></div>
+          <div class="card"><span class="tag">Why use context</span><p>A tumor region is not isolated to one slice. Neighboring slices provide continuity.</p></div>
+          <div class="card"><span class="tag">Roman Urdu</span><p>Current slice ke aas paas wali slices se model ko zyada context milta hai.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"Instead of giving one 2D slice only, the 3D transformer receives five neighboring slices so it can learn spatial context across the MRI volume."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="14. 3D Transformer">
+        <h3>14. Deep Model: 3D Transformer</h3>
+        <pre><code>Input: 5 x 96 x 96 x 1 MRI context
+Conv3D layers create local 3D feature maps
+Reshape creates voxel-patch tokens
+Transformer encoder uses MultiHeadAttention
+GlobalAveragePooling combines token information
+Dense output predicts tumor probability</code></pre>
+        <svg class="pipeline-svg" viewBox="0 0 1000 260" role="img" aria-label="3D transformer model flow">
+          <rect x="30" y="85" width="130" height="70" rx="8" fill="#eaf0ff" stroke="#275efe"/>
+          <text x="95" y="115" text-anchor="middle" font-size="15" font-weight="700">5 MRI</text>
+          <text x="95" y="137" text-anchor="middle" font-size="15">slices</text>
+          <text x="180" y="125" font-size="24">to</text>
+          <rect x="220" y="85" width="130" height="70" rx="8" fill="#e8f6ef" stroke="#157a52"/>
+          <text x="285" y="115" text-anchor="middle" font-size="15" font-weight="700">Conv3D</text>
+          <text x="285" y="137" text-anchor="middle" font-size="15">features</text>
+          <text x="370" y="125" font-size="24">to</text>
+          <rect x="410" y="85" width="140" height="70" rx="8" fill="#fff2df" stroke="#a85a00"/>
+          <text x="480" y="115" text-anchor="middle" font-size="15" font-weight="700">Voxel-patch</text>
+          <text x="480" y="137" text-anchor="middle" font-size="15">tokens</text>
+          <text x="570" y="125" font-size="24">to</text>
+          <rect x="610" y="85" width="145" height="70" rx="8" fill="#e6f8fb" stroke="#087d8f"/>
+          <text x="682" y="115" text-anchor="middle" font-size="15" font-weight="700">Multi-head</text>
+          <text x="682" y="137" text-anchor="middle" font-size="15">attention</text>
+          <text x="775" y="125" font-size="24">to</text>
+          <rect x="815" y="85" width="140" height="70" rx="8" fill="#fff0ee" stroke="#b42318"/>
+          <text x="885" y="115" text-anchor="middle" font-size="15" font-weight="700">Tumor</text>
+          <text x="885" y="137" text-anchor="middle" font-size="15">probability</text>
+        </svg>
+        <div class="grid">
+          <div class="card cyan"><span class="tag cyan">Conv3D</span><p>Learns local patterns across height, width, and slice depth.</p></div>
+          <div class="card cyan"><span class="tag cyan">Token</span><p>A small encoded voxel-patch representation.</p></div>
+          <div class="card cyan"><span class="tag cyan">Attention</span><p>Learns which tokens are important relative to other tokens.</p></div>
+          <div class="card cyan"><span class="tag cyan">Research challenge</span><p>This satisfies 3D Transformer Integration by learning dependencies across neighboring MRI slices.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The 3D transformer first uses Conv3D to embed neighboring MRI slices, then converts features into tokens and applies self-attention so the model can learn relationships between voxel-patch regions."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="15. DL Concepts">
+        <h3>15. Deep Learning Concepts Used in Code</h3>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Tensor</span>
+            <p>The model input is a numeric array. Here one sample is <code>5 x 96 x 96 x 1</code>: 5 slices, height 96, width 96, 1 grayscale channel.</p>
+            <p><b>Roman Urdu:</b> Tensor numbers ka block hota hai jo model input leta hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Conv3D</span>
+            <p>Conv3D learns local patterns across height, width, and slice depth. It can see small 3D neighborhoods, not only one flat image.</p>
+            <p><b>Roman Urdu:</b> Conv3D image ke andar aur slices ke beech local patterns seekhta hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Batch Normalization</span>
+            <p>Stabilizes intermediate values so training is smoother and less sensitive to scale changes.</p>
+            <p><b>Roman Urdu:</b> Training ko stable banata hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Dropout</span>
+            <p>Randomly turns off some neurons during training so the model does not depend too much on one path.</p>
+            <p><b>Roman Urdu:</b> Overfitting kam karne ke liye kuch neurons temporary off karta hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Token</span>
+            <p>After Conv3D, feature maps are reshaped into small feature tokens. Transformer attention compares these tokens.</p>
+            <p><b>Roman Urdu:</b> Token chota encoded feature part hota hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Multi-head Attention</span>
+            <p>Lets the model learn which voxel-patch tokens are related or important. Multiple heads look at relationships in different ways.</p>
+            <p><b>Roman Urdu:</b> Attention model ko batata hai ke kon se parts zyada important relation rakhte hain.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Dense Layer</span>
+            <p>A fully connected layer that combines learned features before final prediction.</p>
+            <p><b>Roman Urdu:</b> Dense layer learned features ko combine karta hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Sigmoid Output</span>
+            <p>Because task is binary, final Dense layer uses sigmoid and outputs tumor probability from 0 to 1.</p>
+            <p><b>Roman Urdu:</b> Sigmoid output probability deta hai, jaise tumor chance.</p>
+          </div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The model uses Conv3D for local 3D patterns, transformer attention for relationships between voxel-patch tokens, dropout for regularization, and sigmoid output for binary tumor probability."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="16. Parameters">
+        <h3>16. Parameters and Hyperparameters</h3>
+        <div class="callout correct">
+          <p><b>Parameter vs hyperparameter:</b> A parameter is learned by the model during training, such as weights inside Conv3D and Dense layers. A hyperparameter is chosen by us before training, such as batch size, epochs, learning rate, dropout, image size, and context depth.</p>
+          <p><b>Roman Urdu:</b> Parameter model khud learn karta hai. Hyperparameter hum pehle set karte hain.</p>
+        </div>
+        <h4>Hyperparameters used in final code</h4>
+        <table>
+          <tr><th>Hyperparameter</th><th>Value used</th><th>What it controls</th><th>Viva line</th></tr>
+          <tr><td><code>MODEL_KIND</code></td><td><code>3d_transformer</code></td><td>Selected the deep architecture.</td><td>"We used 3D transformer for the research challenge."</td></tr>
+          <tr><td><code>IMAGE_SIZE</code></td><td><code>96</code></td><td>Every slice resized to 96 by 96 pixels.</td><td>"This keeps memory manageable in Colab."</td></tr>
+          <tr><td><code>CONTEXT_DEPTH</code></td><td><code>5</code></td><td>Model receives 5 neighboring slices per sample.</td><td>"It gives 3D context around the center slice."</td></tr>
+          <tr><td><code>BATCH_SIZE</code></td><td><code>8</code></td><td>Number of samples processed before one weight update.</td><td>"Small batch size reduces GPU memory pressure."</td></tr>
+          <tr><td><code>EPOCHS</code></td><td><code>20</code> max</td><td>Maximum full passes over training data.</td><td>"Callbacks stopped training earlier when needed."</td></tr>
+          <tr><td><code>learning_rate</code></td><td><code>1e-3</code></td><td>Step size used by Adam optimizer.</td><td>"Learning rate controls how fast weights update."</td></tr>
+          <tr><td><code>TEST_SIZE</code></td><td><code>0.20</code></td><td>20 percent of data reserved for final test split.</td><td>"Test data checks final performance."</td></tr>
+          <tr><td><code>VAL_SIZE_FROM_TRAIN</code></td><td><code>0.15</code></td><td>15 percent of remaining train-val part used for validation.</td><td>"Validation monitors training during fitting."</td></tr>
+          <tr><td><code>MIN_TUMOR_PIXELS</code></td><td><code>15</code></td><td>Minimum mask pixels needed to label a slice as tumor.</td><td>"This avoids calling tiny noise tumor."</td></tr>
+        </table>
+        <h4>Architecture choices in the model</h4>
+        <table>
+          <tr><th>Model setting</th><th>Value</th><th>Meaning</th></tr>
+          <tr><td>First Conv3D filters</td><td>16</td><td>Learns 16 local 3D feature maps.</td></tr>
+          <tr><td>First Conv3D kernel</td><td><code>3 x 5 x 5</code></td><td>Looks across 3 slices and 5 by 5 image area.</td></tr>
+          <tr><td>Second Conv3D filters</td><td>32</td><td>Learns deeper 3D features.</td></tr>
+          <tr><td>Transformer blocks</td><td>2</td><td>Attention is applied twice for stronger token relationships.</td></tr>
+          <tr><td>Attention heads</td><td>2</td><td>Two attention views learn relationships differently.</td></tr>
+          <tr><td>Transformer dropout</td><td>0.10</td><td>Regularization inside attention/MLP block.</td></tr>
+          <tr><td>Final dropout</td><td>0.35</td><td>Stronger regularization before output.</td></tr>
+          <tr><td>Output activation</td><td>Sigmoid</td><td>Outputs tumor probability for binary classification.</td></tr>
+          <tr><td>Loss function</td><td>Binary crossentropy</td><td>Penalty used for tumor vs no_tumor classification.</td></tr>
+          <tr><td>Optimizer</td><td>Adam</td><td>Updates model weights efficiently using adaptive step sizes.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Safe viva answer</span>
+          <p>"The trainable parameters are the learned weights of Conv3D, attention, and Dense layers. The hyperparameters are values we set before training, such as image size, context depth, batch size, epochs, learning rate, dropout, filters, and number of attention heads."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="17. Training">
+        <h3>17. Training Stage</h3>
+        <pre><code>callbacks = [
+    EarlyStopping(monitor="val_loss", patience=4),
+    ModelCheckpoint(save_best_only=True),
+    ReduceLROnPlateau(monitor="val_loss", patience=2)
+]
+
+history = model.fit(train_ds, validation_data=val_ds,
+                    epochs=20, class_weight=class_weight)</code></pre>
+        <table>
+          <tr><th>Training item</th><th>Actual final run</th><th>Meaning</th></tr>
+          <tr><td>Epochs completed</td><td>5</td><td>Training stopped early or best weights were restored due to callbacks.</td></tr>
+          <tr><td>Final train accuracy</td><td>90.65%</td><td>Model fit the training data strongly.</td></tr>
+          <tr><td>Validation accuracy</td><td>47.37%</td><td>Validation split was difficult and small, so accuracy stayed low.</td></tr>
+          <tr><td>Class weights</td><td>Balanced from training labels</td><td>Helps handle class imbalance.</td></tr>
+        </table>
+        <h4>Callbacks used during training</h4>
+        <table>
+          <tr><th>Callback</th><th>What it does</th><th>Why used</th></tr>
+          <tr><td>EarlyStopping</td><td>Stops training if validation loss does not improve.</td><td>Reduces overfitting and wasted training time.</td></tr>
+          <tr><td>ModelCheckpoint</td><td>Saves the best model weights.</td><td>Final model uses the best validation state, not just the last epoch.</td></tr>
+          <tr><td>ReduceLROnPlateau</td><td>Lowers learning rate when validation loss stops improving.</td><td>Helps optimizer take smaller steps near a difficult region.</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>Overfitting signal:</b> Training accuracy was high, but validation accuracy was low. This does not make the project useless, but it means we should say it is an academic prototype and needs more subjects for stronger generalization.</p>
+          <p><b>Roman Urdu:</b> Train accuracy high aur validation low ho to overfitting/generalization risk hota hai.</p>
+        </div>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/training_curves.png" alt="Training curves">
+          <div class="card">
+            <p><b>What you are looking at:</b> Training and validation loss plus accuracy over epochs.</p>
+            <p><b>Good output:</b> Training improves and validation does not collapse.</p>
+            <p><b>Limitation visible:</b> Training accuracy became high while validation accuracy stayed low. This suggests limited generalization risk due to small dataset and hard validation split.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="18. Evaluation">
+        <h3>18. Evaluation Results</h3>
+        <div class="metric">
+          <div class="card green"><b>78.13%</b><p>Test accuracy</p></div>
+          <div class="card green"><b>84.78%</b><p>Macro precision</p></div>
+          <div class="card green"><b>78.13%</b><p>Macro recall</p></div>
+          <div class="card green"><b>77.03%</b><p>Macro F1</p></div>
+        </div>
+        <table>
+          <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr>
+          <tr><td>no_tumor</td><td>1.0000</td><td>0.5625</td><td>0.7200</td><td>16</td></tr>
+          <tr><td>tumor</td><td>0.6957</td><td>1.0000</td><td>0.8205</td><td>16</td></tr>
+        </table>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/confusion_matrix.png" alt="Final confusion matrix">
+          <div class="card">
+            <p><b>Confusion matrix values:</b> no_tumor correct 9, no_tumor predicted as tumor 7, tumor predicted as no_tumor 0, tumor correct 16.</p>
+            <p><b>Meaning:</b> The model caught all tumor cases in the test set, so tumor recall was 1.0. But it also marked 7 no_tumor slices as tumor, which lowered no_tumor recall and tumor precision.</p>
+            <p><b>Safe viva answer:</b> "The model was cautious toward tumor detection. It avoided false negatives for tumor, but created some false positives."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="19. Fit Diagnosis">
+        <h3>19. Training, Validation, Test Accuracy and Fit Diagnosis</h3>
+        <div class="grid">
+          <div class="card cyan">
+            <span class="tag cyan">Training accuracy</span>
+            <p>Accuracy on data used to update model weights.</p>
+            <p><b>Your run:</b> final train accuracy was about <code>90.65%</code>.</p>
+            <p><b>Roman Urdu:</b> Yeh woh data hai jisse model seekh raha hota hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Validation accuracy</span>
+            <p>Accuracy on data used during training to monitor generalization and callbacks.</p>
+            <p><b>Your run:</b> validation accuracy was about <code>47.37%</code>.</p>
+            <p><b>Roman Urdu:</b> Yeh training ke dauran check hota hai ke model new data par kaisa hai.</p>
+          </div>
+          <div class="card cyan">
+            <span class="tag cyan">Test accuracy</span>
+            <p>Final accuracy on held-out data after training decisions.</p>
+            <p><b>Your run:</b> test accuracy was <code>78.13%</code>.</p>
+            <p><b>Roman Urdu:</b> Yeh final unseen test data par performance hoti hai.</p>
+          </div>
+        </div>
+        <h4>How to identify underfitting and overfitting</h4>
+        <table>
+          <tr><th>Situation</th><th>Training accuracy</th><th>Validation/test accuracy</th><th>Meaning</th></tr>
+          <tr><td>Underfitting</td><td>Low</td><td>Low</td><td>Model has not learned enough from training data.</td></tr>
+          <tr><td>Good fit</td><td>High or reasonable</td><td>Close to training accuracy</td><td>Model learned useful patterns and generalizes reasonably.</td></tr>
+          <tr><td>Overfitting</td><td>High</td><td>Much lower</td><td>Model learned training data too specifically and does not generalize well.</td></tr>
+        </table>
+        <div class="callout fix">
+          <p><b>What is your model doing?</b> Your model shows an overfitting/generalization risk signal because training accuracy is high at <code>90.65%</code>, but validation accuracy is low at <code>47.37%</code>. Test accuracy is better at <code>78.13%</code>, but the test set has only 32 samples, so we should not overclaim.</p>
+          <p><b>Roman Urdu:</b> Tumhara model training data par achha seekh raha hai, lekin validation par weak hai. Is liye safe bolna hai ke overfitting ya generalization risk present hai.</p>
+        </div>
+        <div class="callout correct">
+          <p><b>Safe viva answer:</b> "The training accuracy was much higher than validation accuracy, so there is a generalization risk and possible overfitting. However, the test accuracy was 78.13 percent on a small test set, so the model is useful as an academic prototype but needs more data and cross-validation before strong claims."</p>
+        </div>
+        <h4>How to improve overfitting risk</h4>
+        <table>
+          <tr><th>Improvement</th><th>Why it helps</th></tr>
+          <tr><td>More subjects</td><td>Model sees more variation and memorizes less.</td></tr>
+          <tr><td>Data augmentation</td><td>Creates more diverse training examples.</td></tr>
+          <tr><td>Cross-validation</td><td>Checks performance across multiple splits.</td></tr>
+          <tr><td>Stronger regularization</td><td>Dropout, weight decay, or smaller model can reduce memorization.</td></tr>
+          <tr><td>External test set</td><td>Best way to verify real generalization.</td></tr>
+        </table>
+      </section>
+
+      <section class="step" data-title="20. Metrics Explained">
+        <h3>20. All Evaluation Metrics Explained</h3>
+        <table>
+          <tr><th>Metric</th><th>What it tells</th><th>Your result</th><th>Simple viva line</th></tr>
+          <tr><td>Accuracy</td><td>Overall percent of correct predictions.</td><td>78.13 percent</td><td>"Out of 32 test samples, 25 were correct."</td></tr>
+          <tr><td>Confusion matrix</td><td>True labels vs predicted labels.</td><td><code>[[9, 7], [0, 16]]</code></td><td>"9 no_tumor correct, 7 false positives, 0 false negatives, 16 tumor correct."</td></tr>
+          <tr><td>Precision</td><td>When model predicts a class, how often it is correct.</td><td>tumor precision 69.57 percent</td><td>"Tumor precision dropped because 7 no_tumor slices were predicted as tumor."</td></tr>
+          <tr><td>Recall</td><td>Out of real class samples, how many the model found.</td><td>tumor recall 100 percent</td><td>"The model found all tumor samples in the test set."</td></tr>
+          <tr><td>F1-score</td><td>Balance between precision and recall.</td><td>tumor F1 82.05 percent</td><td>"F1 summarizes precision and recall together."</td></tr>
+          <tr><td>Macro precision</td><td>Average precision across classes equally.</td><td>84.78 percent</td><td>"Macro means both classes get equal importance."</td></tr>
+          <tr><td>Macro recall</td><td>Average recall across classes equally.</td><td>78.13 percent</td><td>"Macro recall averages no_tumor recall and tumor recall."</td></tr>
+          <tr><td>Macro F1</td><td>Average F1 across classes equally.</td><td>77.03 percent</td><td>"Macro F1 is useful when we care about both classes."</td></tr>
+          <tr><td>Support</td><td>Number of real samples of each class in test set.</td><td>16 no_tumor, 16 tumor</td><td>"Support tells how many test examples were used per class."</td></tr>
+          <tr><td>Decision threshold</td><td>Probability cutoff for tumor prediction.</td><td>0.5563</td><td>"Above this score, model predicts tumor."</td></tr>
+          <tr><td>PR AUC</td><td>Area under precision-recall curve. Shows ranking quality for tumor scores.</td><td>0.5372</td><td>"PR AUC is modest, so probability ranking can improve."</td></tr>
+          <tr><td>Loss</td><td>Training error optimized by the model.</td><td>binary crossentropy</td><td>"Lower loss means predictions are closer to true labels."</td></tr>
+        </table>
+        <h4>Class-wise numbers from classification report</h4>
+        <table>
+          <tr><th>Class</th><th>Precision meaning</th><th>Recall meaning</th><th>F1 meaning</th></tr>
+          <tr><td>no_tumor</td><td><code>1.0000</code>: every sample predicted as no_tumor was actually no_tumor.</td><td><code>0.5625</code>: only 9 of 16 real no_tumor samples were found as no_tumor.</td><td><code>0.7200</code>: balanced score for no_tumor.</td></tr>
+          <tr><td>tumor</td><td><code>0.6957</code>: some predicted tumor samples were false positives.</td><td><code>1.0000</code>: all 16 real tumor samples were found.</td><td><code>0.8205</code>: balanced score for tumor.</td></tr>
+          <tr><td>macro avg</td><td>Simple average across both classes.</td><td>Gives equal importance to no_tumor and tumor.</td><td>Useful when class balance or fairness matters.</td></tr>
+          <tr><td>weighted avg</td><td>Average weighted by support count.</td><td>Here it matches macro closely because both classes have 16 test samples.</td><td>Useful when classes are imbalanced.</td></tr>
+        </table>
+        <div class="callout correct">
+          <p><b>Safe overall interpretation:</b> The model was strong at not missing tumor in the test set because tumor recall was 100 percent. But it produced false positives, so tumor precision was lower and no_tumor recall was only 56.25 percent.</p>
+          <p><b>Roman Urdu:</b> Model ne tumor miss nahi kiya, lekin kuch no_tumor ko tumor bol diya. Is liye recall tumor ka high hai, precision lower hai.</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="21. Precision Recall">
+        <h3>21. Precision-Recall Analysis</h3>
+        <div class="grid">
+          <div class="card">
+            <span class="tag">Precision</span>
+            <p>Out of the samples predicted as tumor, how many were truly tumor?</p>
+            <p><b>Roman Urdu:</b> Jo tumor predict hue, un mein se kitnay actually tumor thay?</p>
+          </div>
+          <div class="card">
+            <span class="tag">Recall</span>
+            <p>Out of all real tumor samples, how many did the model find?</p>
+            <p><b>Roman Urdu:</b> Real tumor samples mein se model ne kitnay pakray?</p>
+          </div>
+        </div>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/precision_recall_curve.png" alt="Precision recall curve">
+          <div class="card">
+            <p><b>What you are looking at:</b> Tradeoff between precision and recall for the tumor class.</p>
+            <p><b>Decision threshold:</b> The validation-tuned threshold was 0.5563.</p>
+            <p><b>PR AUC:</b> 0.5372.</p>
+            <p><b>Safe interpretation:</b> Recall was strong on the final test set, but PR AUC shows the ranking quality is modest and more data would help.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="22. Predictions">
+        <h3>22. Sample Predictions</h3>
+        <div class="image-row">
+          <img src="DeepVision Pipeline Output/figures/sample_predictions.png" alt="Sample predictions">
+          <div class="card">
+            <p><b>What you are looking at:</b> Held-out test slices with true label, predicted label, and score.</p>
+            <p><b>Green title:</b> Correct prediction.</p>
+            <p><b>Red title:</b> Wrong prediction.</p>
+            <p><b>Score:</b> Model confidence or tumor probability-style score.</p>
+            <p><b>Viva answer:</b> "This figure shows qualitative test predictions, so we can inspect where the model was correct and where it confused no_tumor with tumor."</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="23. Output Files">
+        <h3>23. Final Deliverables and Output Files</h3>
+        <table>
+          <tr><th>Artifact</th><th>File or folder</th><th>Purpose</th></tr>
+          <tr><td>Annotated dataset</td><td><code>annotated_dataset/</code></td><td>Final images, masks, overlays, and manifest.</td></tr>
+          <tr><td>Feature CSV</td><td><code>features/deep_pipeline_features.csv</code></td><td>GLCM and geometry descriptors for final samples.</td></tr>
+          <tr><td>Model</td><td><code>models/231192_231200_Final_Deep_Vision_Pipeline_3d_transformer.keras</code></td><td>Trained Keras model.</td></tr>
+          <tr><td>Evaluation</td><td><code>classification_report.csv</code>, <code>metrics_summary.json</code></td><td>Final numeric performance.</td></tr>
+          <tr><td>Figures</td><td><code>figures/</code></td><td>Training curves, confusion matrix, PR curve, descriptors, previews, predictions.</td></tr>
+          <tr><td>GitHub-ready</td><td><code>github_ready/README.md</code>, <code>requirements.txt</code></td><td>Files for repository packaging.</td></tr>
+          <tr><td>Report</td><td><code>report/231192_231200_Final_Project_Research_Paper.docx</code></td><td>Final research paper draft.</td></tr>
+        </table>
+        <div class="card green">
+          <span class="tag green">Viva answer</span>
+          <p>"The final deliverables include code, annotated dataset, trained model, evaluation metrics, figures, GitHub-ready files, and the final research paper."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="24. Limitations">
+        <h3>24. Limitations and Safe Claims</h3>
+        <div class="grid">
+          <div class="card orange"><b>Small dataset</b><p>158 samples are useful for project demonstration, but not enough for clinical deployment.</p></div>
+          <div class="card orange"><b>Validation issue</b><p>Training accuracy was high but validation accuracy stayed low, so generalization is a concern.</p></div>
+          <div class="card orange"><b>False positives</b><p>The model predicted 7 no_tumor samples as tumor. This means it was cautious but not perfectly specific.</p></div>
+          <div class="card orange"><b>Medical safety</b><p>This is not a diagnostic system. It is a computer vision semester project demonstration.</p></div>
+        </div>
+        <div class="card green">
+          <span class="tag green">Safe viva answer</span>
+          <p>"The model performed reasonably on a small held-out test set and caught all tumor cases, but the dataset is small and validation performance was weak, so we present it as an academic prototype, not a clinical tool."</p>
+        </div>
+      </section>
+
+      <section class="step" data-title="25. Viva Questions">
+        <h3>25. Viva-Style Questions and Simple Answers</h3>
+        <div class="grid">
+          <div class="card"><b>Q: What is the final project about?</b><p>A: An end-to-end MRI deep vision pipeline from acquisition to recognition.</p></div>
+          <div class="card"><b>Q: What are the final classes?</b><p>A: tumor and no_tumor.</p></div>
+          <div class="card"><b>Q: How many samples?</b><p>A: 158 annotated slice samples.</p></div>
+          <div class="card"><b>Q: How many slices are in one volume?</b><p>A: In this final run, one image volume has 152 slice positions, indexed from 0 to 151.</p></div>
+          <div class="card"><b>Q: Did you use all 152 slices?</b><p>A: No. The pipeline selected 79 useful slices from T1 and 79 useful slices from T2, giving 158 samples.</p></div>
+          <div class="card"><b>Q: What does a box plot show?</b><p>A: It shows median, spread, normal range, and outliers of a feature.</p></div>
+          <div class="card"><b>Q: How do you compare two box plots?</b><p>A: Compare median lines, box overlap, spread, and outliers. Less overlap usually means better class separation.</p></div>
+          <div class="card"><b>Q: What model did you use?</b><p>A: A 3D transformer with Conv3D feature extraction and attention over voxel-patch tokens.</p></div>
+          <div class="card"><b>Q: What is Conv3D?</b><p>A: It learns local patterns across height, width, and neighboring slices.</p></div>
+          <div class="card"><b>Q: What is attention?</b><p>A: It helps the model learn which voxel-patch tokens are more related or important.</p></div>
+          <div class="card"><b>Q: What is dropout?</b><p>A: It randomly turns off some neurons during training to reduce overfitting.</p></div>
+          <div class="card"><b>Q: What is a hyperparameter?</b><p>A: A value set before training, like learning rate, batch size, epochs, image size, or dropout.</p></div>
+          <div class="card"><b>Q: What is a model parameter?</b><p>A: A learned value inside the model, such as weights in Conv3D, attention, or Dense layers.</p></div>
+          <div class="card"><b>Q: Which loss did you use?</b><p>A: Binary crossentropy because the final task has two classes: tumor and no_tumor.</p></div>
+          <div class="card"><b>Q: Which optimizer did you use?</b><p>A: Adam optimizer with learning rate 0.001.</p></div>
+          <div class="card"><b>Q: Why 3D transformer?</b><p>A: It uses neighboring slices, so it can learn context across the MRI volume.</p></div>
+          <div class="card"><b>Q: What is the research challenge?</b><p>A: 3D Transformer Integration.</p></div>
+          <div class="card"><b>Q: What is the accuracy?</b><p>A: 78.13 percent on 32 test samples.</p></div>
+          <div class="card"><b>Q: What is precision?</b><p>A: Out of predicted tumor samples, how many were actually tumor.</p></div>
+          <div class="card"><b>Q: What is recall?</b><p>A: Out of real tumor samples, how many the model found.</p></div>
+          <div class="card"><b>Q: What is F1-score?</b><p>A: A balance between precision and recall.</p></div>
+          <div class="card"><b>Q: What is macro precision?</b><p>A: Average precision across classes, here 84.78 percent.</p></div>
+          <div class="card"><b>Q: What is support?</b><p>A: The number of real test samples in each class.</p></div>
+          <div class="card"><b>Q: What is underfitting?</b><p>A: When training accuracy and validation accuracy are both low, meaning the model has not learned enough.</p></div>
+          <div class="card"><b>Q: What is overfitting?</b><p>A: When training accuracy is high but validation/test accuracy is much lower, meaning the model memorized training patterns too much.</p></div>
+          <div class="card"><b>Q: Is your model overfitting?</b><p>A: It shows overfitting/generalization risk because train accuracy was 90.65 percent and validation accuracy was 47.37 percent.</p></div>
+          <div class="card"><b>Q: What does the confusion matrix show?</b><p>A: It caught 16 out of 16 tumor samples but confused 7 no_tumor samples as tumor.</p></div>
+          <div class="card"><b>Q: Is this overfitting?</b><p>A: There is generalization risk because train accuracy was high and validation accuracy low. More data and cross-validation are needed.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="26. Examiner Follow-Ups">
+        <h3>26. Common Examiner Follow-Up Questions</h3>
+        <div class="grid">
+          <div class="card orange"><b>Why not YOLO?</b><p>Safe answer: YOLO is mainly for bounding-box localization. Our available final labels were segmentation masks, so we used tumor presence recognition with masks and a 3D transformer.</p></div>
+          <div class="card orange"><b>Why use slices instead of full volume?</b><p>Safe answer: Full 3D volumes are memory-heavy in Colab. We used 5-slice context as a practical middle path.</p></div>
+          <div class="card orange"><b>Why use binary crossentropy?</b><p>Safe answer: The final recognition task has two classes, tumor and no_tumor, so binary crossentropy is appropriate for sigmoid output.</p></div>
+          <div class="card orange"><b>Why use Adam?</b><p>Safe answer: Adam is a common optimizer that adapts learning rates for weights and works well for deep models with limited tuning.</p></div>
+          <div class="card orange"><b>Why use dropout?</b><p>Safe answer: Dropout reduces overfitting by preventing the model from relying too much on specific neurons.</p></div>
+          <div class="card orange"><b>Why validation accuracy low?</b><p>Safe answer: The validation set was small and difficult. It shows generalization risk, so we should not overclaim clinical reliability.</p></div>
+          <div class="card orange"><b>Why use fallback mask if masks exist?</b><p>Safe answer: It makes the notebook robust. In this final run masks existed, so labels came from segmentation masks.</p></div>
+          <div class="card orange"><b>Why tumor recall is 1.0?</b><p>Safe answer: In the test set, the model found all tumor samples. But it also produced false positives, so precision was lower.</p></div>
+          <div class="card orange"><b>Why PR AUC is modest?</b><p>Safe answer: The test set is small and probability ranking is not perfect. The model caught tumor cases but confidence calibration can improve.</p></div>
+          <div class="card orange"><b>How to improve?</b><p>Safe answer: Use more subjects, stronger augmentation, cross-validation, better architecture tuning, and external test data.</p></div>
+        </div>
+      </section>
+
+      <section class="step" data-title="27. Final Hidden Speech">
+        <h3>27. Final Deep Vision Pipeline Explanation</h3>
+        <p>Click only when you want the full final speech.</p>
+        <button class="reveal" onclick="toggleAnswer('finalAnswer')">Show final hidden explanation</button>
+        <div class="hidden-answer" id="finalAnswer">
+          <p><b>English:</b> "Our final semester project is a complete Deep Vision Pipeline for brain tumor MRI slice understanding. It integrates the work from Assignments 1, 2, and 3 by repeating the needed steps in one final Colab notebook. The pipeline begins with acquisition, where the working BraTS-PEDs dataset chunk is loaded through KaggleHub. In this final run, the manifest shows one selected subject, brats_ped_00195_000, two source MRI image volumes, and one paired segmentation volume named BraTS-PED-00195-000-seg.nii. These segmentation masks already existed inside the dataset chunk, so we did not manually draw masks. Each image volume had 152 possible slice positions, indexed from 0 to 151. The pipeline selected 79 useful slices from the T1 volume and 79 useful slices from the T2 volume, giving 158 exported samples. The notebook converted the 3D segmentation volume into matching slice-wise binary mask PNG files. Then pre-processing is applied using percentile intensity normalization and denoising with Gaussian, median, and uniform filtering. If the segmentation mask slice had at least 15 tumor pixels, the slice was labeled tumor; otherwise it was labeled no_tumor. The pipeline exports an annotated dataset containing 158 image slices, 158 masks, 158 overlays, and a manifest CSV. A sample means one selected 2D slice with its image, mask, overlay, label, and features. A volume means a full 3D MRI file containing many slices. A subject means one patient or case ID. For description, the system computes GLCM texture features and geometric features, continuing Assignment 3. For recognition, we selected the 3D transformer research challenge. The model takes five neighboring MRI slices as context, uses Conv3D layers, reshapes features into voxel-patch tokens, and applies multi-head self-attention. Important hyperparameters included image size 96, context depth 5, batch size 8, maximum 20 epochs, Adam learning rate 0.001, two attention heads, and dropout for regularization. The loss was binary crossentropy because the task was tumor vs no_tumor. The dataset split was 107 training samples, 19 validation samples, and 32 test samples. Training accuracy reached about 90.65 percent, validation accuracy stayed low at about 47.37 percent, and test accuracy was 78.13 percent. This means the model shows possible overfitting or generalization risk, because training performance is much higher than validation performance. On the test set, the model achieved macro precision 84.78 percent, macro recall 78.13 percent, macro F1 77.03 percent, and PR AUC 0.5372. The confusion matrix showed that all 16 tumor test samples were detected, but 7 no_tumor samples were predicted as tumor. The limitation is that this is a small academic prototype, not a clinical diagnostic system."</p>
+          <p><b>Roman Urdu:</b> "Hamra final semester project aik complete Deep Vision Pipeline hai. Is mein A1, A2 aur A3 ke zaroori steps aik final Colab notebook mein dobara run hotay hain. Pehle KaggleHub se BraTS-PEDs ka working chunk load hota hai. Final run mein manifest ke mutabiq aik subject use hua: brats_ped_00195_000, do image volumes use hue, aur aik segmentation volume use hui: BraTS-PED-00195-000-seg.nii. Yeh segmentation mask dataset ke andar pehle se maujood thi, is liye hum ne manually masks draw nahi kiye. Har image volume mein 152 possible slice positions thay, index 0 se 151 tak. Pipeline ne T1 volume se 79 useful slices aur T2 volume se 79 useful slices select ki, jis se 158 exported samples bane. Notebook ne 3D segmentation volume ko matching slice-wise binary mask PNG files mein convert kiya. Phir percentile normalization aur Gaussian, median aur uniform denoising hui. Agar kisi slice ke mask mein 15 ya us se zyada tumor pixels thay to label tumor bana, warna no_tumor. Pipeline ne 158 image slices, 158 masks, 158 overlays aur manifest CSV export kiya. Sample ka matlab aik selected 2D slice hai jiske sath image, mask, overlay, label aur features hain. Volume ka matlab full 3D MRI file hai jisme bohat slices hoti hain. Subject ka matlab aik patient ya case ID hai. Description stage mein GLCM texture aur geometric features nikle. Recognition ke liye 3D transformer use hua jo 5 neighboring MRI slices ka context leta hai. Important hyperparameters image size 96, context depth 5, batch size 8, maximum 20 epochs, Adam learning rate 0.001, two attention heads aur dropout thay. Loss binary crossentropy tha kyun ke task tumor vs no_tumor tha. Split mein 107 train, 19 validation aur 32 test samples thay. Training accuracy about 90.65 percent tak gayi, validation accuracy about 47.37 percent rahi, aur test accuracy 78.13 percent aayi. Is ka matlab model mein possible overfitting ya generalization risk hai, kyun ke training performance validation se kaafi zyada hai. Test par macro precision 84.78 percent, macro recall 78.13 percent, macro F1 77.03 percent aur PR AUC 0.5372 aaya. Confusion matrix mein model ne 16 out of 16 tumor samples catch kiye, lekin 7 no_tumor samples ko tumor predict kiya. Limitation yeh hai ke yeh academic prototype hai, clinical diagnostic system nahi."</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const nav = document.getElementById("nav");
+    steps.forEach((step, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = step.dataset.title;
+      btn.onclick = () => showStep(index);
+      if (index === 0) btn.classList.add("active");
+      nav.appendChild(btn);
+    });
+    function showStep(index) {
+      steps.forEach((s, i) => s.classList.toggle("active", i === index));
+      Array.from(nav.children).forEach((b, i) => b.classList.toggle("active", i === index));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function toggleAnswer(id) {
+      document.getElementById(id).classList.toggle("show");
+    }
+  </script>
+</body>
+</html>
